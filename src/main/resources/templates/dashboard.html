@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+    <script defer th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
+    <script defer th:src="@{/dashboardScript.js}"></script>
+    <title>Title</title>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        let tempList = /*[[${tempList}]]*/ 'Sebastian';
+        let tempList_timestamp = /*[[${tempList_timestamp}]]*/ 'Sebastian';
+        let humidList = /*[[${humidList}]]*/ 'Sebastian';
+        let humidList_timestamp = /*[[${humidList_timestamp}]]*/ 'Sebastian';
+        /*]]>*/
+    </script>
+</head>
+<body>
+
+    <canvas id="tempChart" style="width:100%;max-width:700px"></canvas>
+    <canvas id="humidChart" style="width:100%;max-width:700px"></canvas>
+
+</body>
+
+</html>
