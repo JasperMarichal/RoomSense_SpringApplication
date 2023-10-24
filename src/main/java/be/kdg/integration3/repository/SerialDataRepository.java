@@ -4,7 +4,6 @@ import be.kdg.integration3.domain.*;
 import com.fazecast.jSerialComm.SerialPort;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -12,9 +11,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@Repository
-public class SerialRawDataRepository implements RawDataRepository {
-    private final Logger logger = LoggerFactory.getLogger(SerialRawDataRepository.class);
+//@Repository
+public class SerialDataRepository implements DataRepository {
+    private final Logger logger = LoggerFactory.getLogger(SerialDataRepository.class);
     private SerialPort port;
     private boolean readingDataValue;
     private int currentValue;
@@ -22,7 +21,7 @@ public class SerialRawDataRepository implements RawDataRepository {
 
     private final List<RawDataRecord> recordList;
 
-    public SerialRawDataRepository() {
+    public SerialDataRepository() {
         this.recordList = new ArrayList<>();
         initSerial();
         this.currentDataType = ' ';
@@ -41,7 +40,7 @@ public class SerialRawDataRepository implements RawDataRepository {
     }
 
     @Override
-    public int readSerial() {
+    public void read() {
         try {
             while (port.bytesAvailable() > 0) {
                 byte[] readBuffer = new byte[port.bytesAvailable()];
@@ -50,12 +49,12 @@ public class SerialRawDataRepository implements RawDataRepository {
                 for(int i = 0; i < readChars.length; i++) {
                     readChars[i] = (char)readBuffer[i];
                 }
-                return parseSerial(readChars);
+                parseSerial(readChars);
             }
         } catch (Exception e) {
             logger.error(Arrays.toString(e.getStackTrace()));
         }
-        return 0;
+//        return 0;
     }
 
     private int parseSerial(char[] newSerialData) {

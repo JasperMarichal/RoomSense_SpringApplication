@@ -21,4 +21,12 @@ public class HumidityData implements RawDataRecord{
     public int getValue() {
         return humidity;
     }
+
+    @Override
+    public String toString() {
+        return "HumidityData{" +
+                "timestamp=" + timestamp +
+                ", humidity=" + humidity +
+                '}';
+    }
 }

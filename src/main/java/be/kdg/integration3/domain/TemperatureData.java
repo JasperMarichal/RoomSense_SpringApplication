@@ -21,4 +21,12 @@ public class TemperatureData implements RawDataRecord {
     public int getValue() {
         return temperature;
     }
+
+    @Override
+    public String toString() {
+        return "TemperatureData{" +
+                "timestamp=" + timestamp +
+                ", temperature=" + temperature +
+                '}';
+    }
 }

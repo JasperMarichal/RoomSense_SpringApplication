@@ -3,16 +3,16 @@ package be.kdg.integration3.service;
 import be.kdg.integration3.domain.HumidityData;
 import be.kdg.integration3.domain.RawDataRecord;
 import be.kdg.integration3.domain.TemperatureData;
-import be.kdg.integration3.repository.RawDataRepository;
+import be.kdg.integration3.repository.DataRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class DashboardService {
-    private final RawDataRepository repository;
+    private final DataRepository repository;
 
-    public DashboardService(RawDataRepository repository) {
+    public DashboardService(DataRepository repository) {
         this.repository = repository;
     }
 

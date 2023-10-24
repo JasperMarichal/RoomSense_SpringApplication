@@ -4,8 +4,8 @@ import be.kdg.integration3.domain.RawDataRecord;
 
 import java.util.List;
 
-public interface RawDataRepository {
-    int readSerial();
+public interface DataRepository {
+    void read();
 
     List<RawDataRecord> getRecordList();
 }
