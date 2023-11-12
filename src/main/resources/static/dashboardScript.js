@@ -37,5 +37,23 @@ new Chart("humidChart", {
     }
 });
 
-console.log(tempList);
+// new Chart("CO2Chart", {
+//     type: "line",
+//     data: {
+//         labels: CO2List_timestamp,
+//         datasets: [{
+//             backgroundColor:"rgba(0,128,0,1)",
+//             borderColor: "rgba(0,128,0,1)",
+//             borderWidth: 4,
+//             fill: false,
+//             data: CO2List,
+//             label: "CO2"
+//         }]
+//     },
+//     options: {
+//
+//     }
+// });
+
+// console.log(tempList);
 

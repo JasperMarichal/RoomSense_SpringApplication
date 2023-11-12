@@ -1,11 +1,21 @@
 package be.kdg.integration3.domain;
 
-import java.sql.Timestamp;
+import be.kdg.integration3.util.deserializers.HumidityDataDeserializer;
+import com.google.gson.annotations.JsonAdapter;
 
+import java.sql.Timestamp;
+import java.time.Instant;
+
+@JsonAdapter(HumidityDataDeserializer.class)
 public class HumidityData implements RawDataRecord{
 
     private final Timestamp timestamp;
     private final int humidity;
+
+    public HumidityData(long timestamp, int humidity) {
+        this.timestamp = Timestamp.from(Instant.ofEpochMilli(timestamp));
+        this.humidity = humidity;
+    }
 
     public HumidityData(Timestamp timestamp, int humidity) {
         this.timestamp = timestamp;

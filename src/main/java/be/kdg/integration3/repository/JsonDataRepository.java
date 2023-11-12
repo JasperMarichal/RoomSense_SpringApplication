@@ -9,6 +9,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Repository;
 
 import java.io.*;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -37,7 +38,7 @@ public class JsonDataRepository implements DataRepository {
 
         readAllFiles();
 
-        System.out.println(getRecordList());
+        System.out.println(getRecordList().toString());
     }
 
     private void findFiles(String name) {
@@ -64,9 +65,16 @@ public class JsonDataRepository implements DataRepository {
                     TemperatureData[] tempData = gson.fromJson(data, TemperatureData[].class);
                     for (TemperatureData dataPoint : tempData){
                         recordList.add(new TemperatureData(dataPoint.getTimestamp(), dataPoint.getValue()));
+//                        System.out.println(dataPoint);
                     }
                 } catch (IOException e) {
                     logger.error("Something went wrong reading temperature!");
+                }
+
+                if (file.delete()) {
+                    logger.debug("File " + file.getName() + " has been successfully processed and deleted.");
+                } else {
+                    logger.warn("File " + file.getName() + " could not be deleted.");
                 }
             });
         }
@@ -77,9 +85,16 @@ public class JsonDataRepository implements DataRepository {
                     HumidityData[] humidData = gson.fromJson(data, HumidityData[].class);
                     for (HumidityData dataPoint : humidData){
                         recordList.add(new HumidityData(dataPoint.getTimestamp(), dataPoint.getValue()));
+//                        System.out.println(dataPoint);
                     }
                 } catch (IOException e) {
                     logger.error("Something went wrong reading humidity!");
+                }
+
+                if (file.delete()) {
+                    logger.debug("File " + file.getName() + " has been successfully processed and deleted.");
+                } else {
+                    logger.warn("File " + file.getName() + " could not be deleted.");
                 }
             });
         }
@@ -94,6 +109,12 @@ public class JsonDataRepository implements DataRepository {
                 } catch (IOException e) {
                     logger.error("Something went wrong reading sound data!");
                 }
+
+                if (file.delete()) {
+                    logger.debug("File " + file.getName() + " has been successfully processed and deleted.");
+                } else {
+                    logger.warn("File " + file.getName() + " could not be deleted.");
+                }
             });
         }
 
@@ -103,9 +124,16 @@ public class JsonDataRepository implements DataRepository {
                     CO2Data[] CO2Data = gson.fromJson(data, CO2Data[].class);
                     for (CO2Data dataPoint : CO2Data){
                         recordList.add(new CO2Data(dataPoint.getTimestamp(), dataPoint.getValue()));
+//                        System.out.println(dataPoint);
                     }
                 } catch (IOException e) {
                     logger.error("Something went wrong reading CO2!");
+                }
+
+                if (file.delete()) {
+                    logger.debug("File " + file.getName() + " has been successfully processed and deleted.");
+                } else {
+                    logger.warn("File " + file.getName() + " could not be deleted.");
                 }
             });
         }

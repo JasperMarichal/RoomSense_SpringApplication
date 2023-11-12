@@ -6,20 +6,37 @@
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
     <script defer th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
     <script defer th:src="@{/dashboardScript.js}"></script>
-    <title>Title</title>
+    <title>Temp & Humidity</title>
     <script th:inline="javascript">
         /*<![CDATA[*/
         let tempList = /*[[${tempList}]]*/ 'Sebastian';
         let tempList_timestamp = /*[[${tempList_timestamp}]]*/ 'Sebastian';
         let humidList = /*[[${humidList}]]*/ 'Sebastian';
         let humidList_timestamp = /*[[${humidList_timestamp}]]*/ 'Sebastian';
+        let CO2List = /*[[${CO2List}]]*/ 'Sebastian';
+        let CO2List_timestamp = /*[[${CO2List_timestamp}]]*/ 'Sebastian';
         /*]]>*/
     </script>
 </head>
-<body>
+<body class="bg-dark-subtle">
+    <div class="container-fluid d-flex justify-content-center m-2">
+        <div class="row">
+            <div class="col-12">
+                <h1>Temperature Graph</h1>
+                <canvas id="tempChart" style="width:100%;max-width:700px"></canvas>
+            </div>
 
-    <canvas id="tempChart" style="width:100%;max-width:700px"></canvas>
-    <canvas id="humidChart" style="width:100%;max-width:700px"></canvas>
+            <div class="col-12">
+                <h1>Humidity Graph</h1>
+                <canvas id="humidChart" style="width:100%;max-width:700px"></canvas>
+            </div>
+
+<!--            <div class="col-12">-->
+<!--                <h1>CO2 Graph</h1>-->
+<!--                <canvas id="CO2Chart" style="width:100%;max-width:700px"></canvas>-->
+<!--            </div>-->
+        </div>
+    </div>
 
 </body>
 
