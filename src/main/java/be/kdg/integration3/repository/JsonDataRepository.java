@@ -71,6 +71,7 @@ public class JsonDataRepository implements DataRepository {
                     logger.error("Something went wrong reading temperature!");
                 }
 
+
                 if (file.delete()) {
                     logger.debug("File " + file.getName() + " has been successfully processed and deleted.");
                 } else {
@@ -90,6 +91,7 @@ public class JsonDataRepository implements DataRepository {
                 } catch (IOException e) {
                     logger.error("Something went wrong reading humidity!");
                 }
+
 
                 if (file.delete()) {
                     logger.debug("File " + file.getName() + " has been successfully processed and deleted.");

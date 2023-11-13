@@ -11,31 +11,54 @@
         /*<![CDATA[*/
         let tempList = /*[[${tempList}]]*/ 'Sebastian';
         let tempList_timestamp = /*[[${tempList_timestamp}]]*/ 'Sebastian';
+        let tempList_rawTimes = /*[[${tempList_rawTimes}]]*/ 'Sebastian';
         let humidList = /*[[${humidList}]]*/ 'Sebastian';
         let humidList_timestamp = /*[[${humidList_timestamp}]]*/ 'Sebastian';
+        let humidList_rawTimes = /*[[${humidList_rawTimes}]]*/ 'Sebastian';
         let CO2List = /*[[${CO2List}]]*/ 'Sebastian';
         let CO2List_timestamp = /*[[${CO2List_timestamp}]]*/ 'Sebastian';
+        let CO2List_rawTimes = /*[[${CO2List_rawTimes}]]*/ 'Sebastian';
         /*]]>*/
     </script>
 </head>
 <body class="bg-dark-subtle">
 <div th:insert="~{fragment/navbar::navbarcopy}">navbar</div>
-    <div class="container-fluid d-flex justify-content-center m-2">
-        <div class="row">
-            <div class="col-11">
-                <h1>Temperature Graph</h1>
-                <canvas id="tempChart" style="width:100%;max-width:700px"></canvas>
-            </div>
+    <div class="container-fluid d-flex justify-content-center">
+        <div class="col-12">
+            <div class="m-2 row">
+                <form method="post" id="timeForm">
+                    <label for="dateTime">Date to view:</label>
+                    <input type="datetime-local" id="dateTime">
 
-            <div class="col-11">
-                <h1>Humidity Graph</h1>
-                <canvas id="humidChart" style="width:100%;max-width:700px"></canvas>
+                    <label for="timePeriod">Time period to view:</label>
+                    <select id="timePeriod">
+                        <option value=10>10m</option>
+                        <option value=30>30m</option>
+                        <option value=60>1h</option>
+                        <option value=360>6h</option>
+                        <option value=720>12h</option>
+                        <option value=1440>24h</option>
+                        <option value=7200>5d</option>
+                        <option value=10080>1w</option>
+                    </select>
+                </form>
             </div>
+            <div class="m-2 row">
+                <div class="col-lg-6 col-md-12 col-sm-12 text-center" th:if="${tempList != null}">
+                    <h1>Temperature Graph</h1>
+                    <canvas id="tempChart" style="width:100%;max-width:700px"></canvas>
+                </div>
 
-<!--            <div class="col-12">-->
-<!--                <h1>CO2 Graph</h1>-->
-<!--                <canvas id="CO2Chart" style="width:100%;max-width:700px"></canvas>-->
-<!--            </div>-->
+                <div class="col-lg-6 col-md-12 col-sm-12 text-center" th:if="${humidList != null}">
+                    <h1>Humidity Graph</h1>
+                    <canvas id="humidChart" style="width:100%;max-width:700px"></canvas>
+                </div>
+
+                <div class="col-lg-6 col-md-12 col-sm-12 text-center" th:if="${CO2List != null}">
+                    <h1>CO2 Graph</h1>
+                    <canvas id="CO2Chart" style="width:100%;max-width:700px"></canvas>
+                </div>
+            </div>
         </div>
     </div>
 <div th:insert="~{fragment/footer::footercopy}">footer</div>
