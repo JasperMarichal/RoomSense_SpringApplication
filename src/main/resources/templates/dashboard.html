@@ -19,15 +19,15 @@
     </script>
 </head>
 <body class="bg-dark-subtle">
-<div th:insert="~{navbar::navbarcopy}">navbar</div>
+<div th:insert="~{fragment/navbar::navbarcopy}">navbar</div>
     <div class="container-fluid d-flex justify-content-center m-2">
         <div class="row">
-            <div class="col-12">
+            <div class="col-11">
                 <h1>Temperature Graph</h1>
                 <canvas id="tempChart" style="width:100%;max-width:700px"></canvas>
             </div>
 
-            <div class="col-12">
+            <div class="col-11">
                 <h1>Humidity Graph</h1>
                 <canvas id="humidChart" style="width:100%;max-width:700px"></canvas>
             </div>
@@ -38,7 +38,7 @@
 <!--            </div>-->
         </div>
     </div>
-<div th:insert="~{footer::footercopy}">footer</div>
+<div th:insert="~{fragment/footer::footercopy}">footer</div>
 </body>
 
 </html>
