@@ -38,7 +38,7 @@ public class JsonDataRepository implements DataRepository {
 
         readAllFiles();
 
-        System.out.println(getRecordList().toString());
+//        System.out.println(getRecordList().toString());
     }
 
     private void findFiles(String name) {

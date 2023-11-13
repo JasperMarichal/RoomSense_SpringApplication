@@ -11,7 +11,8 @@ new Chart("tempChart", {
             borderWidth: 4,
             fill: false,
             data: tempList,
-            label: "Temperature"
+            label: "Temperature",
+            tension: 0
         }]
     },
     options: {
@@ -29,7 +30,8 @@ new Chart("humidChart", {
             borderWidth: 4,
             fill: false,
             data: humidList,
-            label: "Humidity"
+            label: "Humidity",
+            tension: 0
         }]
     },
     options: {
