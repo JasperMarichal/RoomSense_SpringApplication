@@ -1,5 +1,6 @@
 package be.kdg.integration3.repository;
 
+import be.kdg.integration3.SpringProjectApplication;
 import be.kdg.integration3.domain.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -16,6 +17,8 @@ import java.util.List;
 
 @Repository
 public class JsonDataRepository implements DataRepository {
+    private boolean development = SpringProjectApplication.development;
+
     private final Logger logger = LoggerFactory.getLogger(JsonDataRepository.class);
 
     List<File> temperatureFiles = new ArrayList<>();
@@ -71,11 +74,12 @@ public class JsonDataRepository implements DataRepository {
                     logger.error("Something went wrong reading temperature!");
                 }
 
-
-                if (file.delete()) {
-                    logger.debug("File " + file.getName() + " has been successfully processed and deleted.");
-                } else {
-                    logger.warn("File " + file.getName() + " could not be deleted.");
+                if (!development) {
+                    if (file.delete()) {
+                        logger.debug("File " + file.getName() + " has been successfully processed and deleted.");
+                    } else {
+                        logger.warn("File " + file.getName() + " could not be deleted.");
+                    }
                 }
             });
         }
@@ -92,11 +96,12 @@ public class JsonDataRepository implements DataRepository {
                     logger.error("Something went wrong reading humidity!");
                 }
 
-
-                if (file.delete()) {
-                    logger.debug("File " + file.getName() + " has been successfully processed and deleted.");
-                } else {
-                    logger.warn("File " + file.getName() + " could not be deleted.");
+                if (!development) {
+                    if (file.delete()) {
+                        logger.debug("File " + file.getName() + " has been successfully processed and deleted.");
+                    } else {
+                        logger.warn("File " + file.getName() + " could not be deleted.");
+                    }
                 }
             });
         }
@@ -112,10 +117,12 @@ public class JsonDataRepository implements DataRepository {
                     logger.error("Something went wrong reading sound data!");
                 }
 
-                if (file.delete()) {
-                    logger.debug("File " + file.getName() + " has been successfully processed and deleted.");
-                } else {
-                    logger.warn("File " + file.getName() + " could not be deleted.");
+                if (!development) {
+                    if (file.delete()) {
+                        logger.debug("File " + file.getName() + " has been successfully processed and deleted.");
+                    } else {
+                        logger.warn("File " + file.getName() + " could not be deleted.");
+                    }
                 }
             });
         }
@@ -132,10 +139,12 @@ public class JsonDataRepository implements DataRepository {
                     logger.error("Something went wrong reading CO2!");
                 }
 
-                if (file.delete()) {
-                    logger.debug("File " + file.getName() + " has been successfully processed and deleted.");
-                } else {
-                    logger.warn("File " + file.getName() + " could not be deleted.");
+                if (!development) {
+                    if (file.delete()) {
+                        logger.debug("File " + file.getName() + " has been successfully processed and deleted.");
+                    } else {
+                        logger.warn("File " + file.getName() + " could not be deleted.");
+                    }
                 }
             });
         }

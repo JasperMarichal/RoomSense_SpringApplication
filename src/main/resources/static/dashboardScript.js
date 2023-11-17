@@ -64,38 +64,49 @@ function getData() {
         if (endOfTimePeriodHumid < startHumidTime && humidity) endOfTimePeriodHumid = startHumidTime;
         if (endOfTimePeriodCO2 < startCO2Time && CO2) endOfTimePeriodCO2 = startCO2Time;
 
-        if(temperature) sortTemperatureChartData(lastTempTime, endOfTimePeriodTemp);
+        if(temperature) sortTemperatureData(lastTempTime, endOfTimePeriodTemp);
 
-        if(humidity) sortHumidityChartData(lastHumidTime, endOfTimePeriodHumid);
+        if(humidity) sortHumidityData(lastHumidTime, endOfTimePeriodHumid);
 
-        if(CO2) sortCO2ChartData(lastCO2Time, endOfTimePeriodCO2);
+        if(CO2) sortCO2Data(lastCO2Time, endOfTimePeriodCO2);
     } else {
         const startDate = Date.parse(date.value)
 
-        if(temperature) endOfTimePeriodTemp = startDate - (timePeriod.value * 60000);
-        if(humidity) endOfTimePeriodHumid = startDate - (timePeriod.value * 60000);
-        if(CO2) endOfTimePeriodCO2 = startDate - (timePeriod.value * 60000)
+        let startTemp = startDate;
+        let startHumid = startDate;
+        let startCO2 = startDate;
+
+        if (temperature && startDate > lastTempTime) startTemp = lastTempTime;
+        if (humidity && startDate > lastHumidTime) startHumid = lastHumidTime;
+        if (CO2 && startDate > lastCO2Time) startCO2 = lastCO2Time;
+
+        if(temperature) endOfTimePeriodTemp = startTemp - (timePeriod.value * 60000);
+        if(humidity) endOfTimePeriodHumid = startHumid - (timePeriod.value * 60000);
+        if(CO2) endOfTimePeriodCO2 = startCO2 - (timePeriod.value * 60000)
 
         if (endOfTimePeriodTemp < startTempTime && temperature) endOfTimePeriodTemp = startTempTime;
         if (endOfTimePeriodHumid < startHumidTime && humidity) endOfTimePeriodHumid = startHumidTime;
         if (endOfTimePeriodCO2 < startCO2Time && CO2) endOfTimePeriodCO2 = startCO2Time;
 
-        if(temperature) sortTemperatureChartData(startDate, endOfTimePeriodTemp);
+        if(temperature) sortTemperatureData(startDate, endOfTimePeriodTemp);
 
-        if(humidity) sortHumidityChartData(startDate, endOfTimePeriodHumid);
+        if(humidity) sortHumidityData(startDate, endOfTimePeriodHumid);
 
-        if(CO2) sortCO2ChartData(lastCO2Time, endOfTimePeriodCO2);
+        if(CO2) sortCO2Data(startCO2, endOfTimePeriodCO2);
     }
 
 }
 
 
-function sortTemperatureChartData(startOfRange, endOfRange) {
+function sortTemperatureData(startOfRange, endOfRange) {
     tempTimeToUse = [];
     tempDataToUse = [];
 
+    let allTemperatureInRange = [];
+    let allTimeInRange = [];
+
     for (let i = 0; i < tempList_rawTimes.length; i++){
-        let time = Date.parse(tempList_rawTimes[i])
+        let time = Date.parse(tempList_rawTimes[i]);
         if (time < startOfRange && time > endOfRange) {
             let convertedTime = Math.round((time - endOfRange) / 1000);
 
@@ -104,41 +115,61 @@ function sortTemperatureChartData(startOfRange, endOfRange) {
                 tempTimeToUse[tempTimeToUse.length - 1] - convertedTime < -50) &&
                 !tempTimeToUse.includes(convertedTime)) {
 
-                tempTimeToUse.push(convertedTime)
-                tempDataToUse.push(tempList[i])
+                tempTimeToUse.push(convertedTime);
+                tempDataToUse.push(tempList[i]);
+            }
+
+            if (!allTimeInRange.includes(time)){
+                allTimeInRange.push(tempList_rawTimes[i]);
+                allTemperatureInRange.push(tempList[i]);
             }
         }
     }
+
+    getStatistics(allTemperatureInRange, allTimeInRange, "tempStats", "temperature")
 
     temperatureChart();
 }
 
-function sortHumidityChartData(startOfRange, endOfRange) {
+function sortHumidityData(startOfRange, endOfRange) {
     humidTimeToUse = [];
     humidDataToUse = [];
 
+    let allHumidityInRange = [];
+    let allTimeInRange = [];
+
     for (let i = 0; i < humidList_rawTimes.length; i++){
-        let time = Date.parse(humidList_rawTimes[i])
+        let time = Date.parse(humidList_rawTimes[i]);
         if (time < startOfRange && time > endOfRange) {
             let convertedTime = Math.round((time - endOfRange) / 1000);
 
             if ((humidList[i] !== humidList[i - 1] || humidList[i] !== humidList[i + 1] ||
-                (humidDataToUse.length === 0) || (i === humidList_rawTimes.length - 2)||
-                humidTimeToUse[humidTimeToUse.length - 1] - convertedTime < -50) &&
+                    (humidDataToUse.length === 0) || (i === humidList_rawTimes.length - 2) ||
+                    humidTimeToUse[humidTimeToUse.length - 1] - convertedTime < -50) &&
                 !humidTimeToUse.includes(convertedTime)) {
 
-                humidTimeToUse.push(convertedTime)
-                humidDataToUse.push(humidList[i])
+                humidTimeToUse.push(convertedTime);
+                humidDataToUse.push(humidList[i]);
+            }
+
+            if (!allTimeInRange.includes(time)){
+                allTimeInRange.push(humidList_rawTimes[i]);
+                allHumidityInRange.push(humidList[i]);
             }
         }
     }
 
+    getStatistics(allHumidityInRange, allTimeInRange, "humidStats", "humidity");
+
     humidityChart();
 }
 
-function sortCO2ChartData(startOfRange, endOfRange) {
+function sortCO2Data(startOfRange, endOfRange) {
     CO2TimeToUse = [];
     CO2DataToUse = [];
+
+    let allCO2InRange = [];
+    let allTimeInRange = [];
 
     for (let i = 0; i < CO2List_rawTimes.length; i++){
         let time = Date.parse(CO2List_rawTimes[i])
@@ -153,10 +184,47 @@ function sortCO2ChartData(startOfRange, endOfRange) {
                 CO2TimeToUse.push(convertedTime)
                 CO2DataToUse.push(CO2List[i])
             }
+
+            if (!allTimeInRange.includes(time)){
+                allTimeInRange.push(CO2List_rawTimes[i]);
+                allCO2InRange.push(CO2List[i]);
+            }
         }
     }
 
+    getStatistics(allCO2InRange, allTimeInRange, "CO2Stats", "CO2");
+
     CO2Chart();
+}
+
+function getStatistics(allDataInRange, allTimeInRange, textID, dataType){
+    const textObject = document.getElementById(textID);
+
+    let total = 0;
+    let minData = 100;
+    let maxData = 0;
+
+    allDataInRange.forEach(data => {
+        total += data;
+        if (data < minData) minData = data;
+        if (data > maxData) maxData = data;
+    })
+
+    if (allDataInRange.length === 0){
+        textObject.innerHTML = "No Data For Time Period Available";
+    } else {
+        textObject.innerHTML = "Average " + dataType + ": " + Math.round(total / allDataInRange.length) +
+            "<br>" + "Minimum " + dataType + ": " + minData +
+            "<br>" + "Maximum " + dataType + ": " + maxData + "<br><br>" +
+            "First reading time: " + getDateTimeString(allTimeInRange, 0) +
+            "<br>" + "Last reading time: " + getDateTimeString(allTimeInRange, allTimeInRange.length - 1);
+    }
+}
+
+function getDateTimeString(timeArray, position) {
+    let date = new Date(timeArray[position])
+    return ("00" + date.getDate()).slice(-2) + "/" + ("00" + (date.getMonth() + 1)).slice(-2) + "/" + date.getFullYear() + " " +
+        ("00" + date.getHours()).slice(-2) + ":" + ("00" + date.getMinutes()).slice(-2) + ":" + ("00" + date.getSeconds()).slice(-2)
 }
 
 

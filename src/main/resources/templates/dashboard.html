@@ -47,16 +47,19 @@
                 <div class="col-lg-6 col-md-12 col-sm-12 text-center" th:if="${tempList != null}">
                     <h1>Temperature Graph</h1>
                     <canvas id="tempChart" style="width:100%;max-width:700px"></canvas>
+                    <p id="tempStats">No Data Available</p>
                 </div>
 
                 <div class="col-lg-6 col-md-12 col-sm-12 text-center" th:if="${humidList != null}">
                     <h1>Humidity Graph</h1>
                     <canvas id="humidChart" style="width:100%;max-width:700px"></canvas>
+                    <p id="humidStats">No Data Available</p>
                 </div>
 
                 <div class="col-lg-6 col-md-12 col-sm-12 text-center" th:if="${CO2List != null}">
                     <h1>CO2 Graph</h1>
                     <canvas id="CO2Chart" style="width:100%;max-width:700px"></canvas>
+                    <p id="CO2Stats">No Data Available</p>
                 </div>
             </div>
         </div>
