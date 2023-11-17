@@ -57,6 +57,11 @@ public class SerialDataRepository implements DataRepository {
 //        return 0;
     }
 
+    @Override
+    public void read(int id) {
+        read();
+    }
+
     private int parseSerial(char[] newSerialData) {
         int newDataCount = 0;
         for(char c : newSerialData) {

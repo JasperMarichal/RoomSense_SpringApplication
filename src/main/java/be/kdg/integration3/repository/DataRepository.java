@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface DataRepository {
     void read();
-
+    void read(int id);
     List<RawDataRecord> getRecordList();
 }

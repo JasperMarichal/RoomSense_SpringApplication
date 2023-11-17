@@ -10,13 +10,10 @@
     <script th:inline="javascript">
         /*<![CDATA[*/
         let tempList = /*[[${tempList}]]*/ 'Sebastian';
-        let tempList_timestamp = /*[[${tempList_timestamp}]]*/ 'Sebastian';
         let tempList_rawTimes = /*[[${tempList_rawTimes}]]*/ 'Sebastian';
         let humidList = /*[[${humidList}]]*/ 'Sebastian';
-        let humidList_timestamp = /*[[${humidList_timestamp}]]*/ 'Sebastian';
         let humidList_rawTimes = /*[[${humidList_rawTimes}]]*/ 'Sebastian';
         let CO2List = /*[[${CO2List}]]*/ 'Sebastian';
-        let CO2List_timestamp = /*[[${CO2List_timestamp}]]*/ 'Sebastian';
         let CO2List_rawTimes = /*[[${CO2List_rawTimes}]]*/ 'Sebastian';
         /*]]>*/
     </script>
@@ -26,7 +23,7 @@
     <div class="container-fluid d-flex justify-content-center">
         <div class="col-12">
             <div class="m-2 row">
-                <form method="post" id="timeForm">
+                <form id="timeForm">
                     <label for="dateTime">Date to view:</label>
                     <input type="datetime-local" id="dateTime">
 
@@ -43,6 +40,16 @@
                     </select>
                 </form>
             </div>
+            <div class="m-2 row">
+                <form method="post" id="selectRoom">
+                    <label for="rooms">Select Room to Show: </label>
+                    <select id="rooms" name="roomId">
+                        <option th:each="room : ${userRooms}" th:text="${room.values()[0]}" th:value="${room.keySet()[0]}"></option>
+                    </select>
+                    <button type="submit">Search for Room</button>
+                </form>
+            </div>
+            <h1 th:if="chooseRoom" th:text="${chooseRoom}"></h1>
             <div class="m-2 row">
                 <div class="col-lg-6 col-md-12 col-sm-12 text-center" th:if="${tempList != null}">
                     <h1>Temperature Graph</h1>

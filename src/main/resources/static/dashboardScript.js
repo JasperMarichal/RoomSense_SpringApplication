@@ -286,13 +286,13 @@ function CO2Chart() {
     CO2ChartCanvas = new Chart("CO2Chart", {
         type: "line",
         data: {
-            labels: CO2List_timestamp,
+            labels: CO2TimeToUse,
             datasets: [{
                 backgroundColor: "rgba(0,128,0,1)",
                 borderColor: "rgba(0,128,0,1)",
                 borderWidth: 4,
                 fill: false,
-                data: CO2List,
+                data: CO2DataToUse,
                 label: "CO2",
                 tension: 0
             }]

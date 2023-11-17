@@ -6,6 +6,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Repository;
 
@@ -16,6 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Repository
+@Profile("jsonrepository")
 public class JsonDataRepository implements DataRepository {
     private boolean development = SpringProjectApplication.development;
 
@@ -28,11 +32,14 @@ public class JsonDataRepository implements DataRepository {
 
     private final List<RawDataRecord> recordList;
 
-    public JsonDataRepository() {
+    private JdbcTemplate jdbcTemplate;
+
+    public JsonDataRepository(JdbcTemplate jdbcTemplate) {
         this.recordList = new ArrayList<>();
+        this.jdbcTemplate = jdbcTemplate;
     }
 
-    @Scheduled(fixedDelay = 30000)
+    @Scheduled(fixedDelay = 3000000)
     public void read(){
         findFiles("temperature");
         findFiles("humidity");
@@ -42,6 +49,11 @@ public class JsonDataRepository implements DataRepository {
         readAllFiles();
 
 //        System.out.println(getRecordList().toString());
+    }
+
+    @Override
+    public void read(int id) {
+        read();
     }
 
     private void findFiles(String name) {
