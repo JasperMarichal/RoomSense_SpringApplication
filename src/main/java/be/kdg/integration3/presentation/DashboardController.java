@@ -31,6 +31,11 @@ public class DashboardController {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    /**
+     * Shows the dashboard view before any room, time or date has been selected
+     * @param model The mode for the view
+     * @return Returns the dashboard view
+     */
     @GetMapping
     public String getDashboardView(Model model) {
 
@@ -46,6 +51,12 @@ public class DashboardController {
         return "redirect:/dashboard/" + roomId;
     }
 
+    /**
+     * Uses the roomId from the path is order to display the data for the right room, requests data from service and sends it to model
+     * @param model The model for the view
+     * @param roomId The roomId to look for from the path
+     * @return Returns the dashboard page with the data
+     */
     @GetMapping("/{roomId}")
     public String searchForRoom(Model model, @PathVariable int roomId){
         if (!service.getTemperatureList(roomId).isEmpty()){
@@ -77,6 +88,10 @@ public class DashboardController {
         return "redirect:/dashboard/" + roomId;
     }
 
+    /**
+     * Get all the rooms owned by the user and adds them to the model
+     * @param model The model for the view
+     */
     private void addRoomsToModel(Model model){
         List<Map<Integer, String>> rooms = jdbcTemplate.query("SELECT * FROM room WHERE account = ?", (rs, rowNum) -> Map.of(rs.getInt("room_id"), rs.getString("room_name")), account);
 

@@ -31,6 +31,10 @@ public class DatabaseDataRepository implements DataRepository{
 
     }
 
+    /**
+     * Get the data from the database based on the roomId, resets the recordList at every read to avoid duplicate data
+     * @param id The room ID to search for
+     */
     @Override
     public void read(int id) {
         recordList = new ArrayList<>();
