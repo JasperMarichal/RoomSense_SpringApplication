@@ -22,6 +22,8 @@ import java.util.Map;
 public class DashboardController {
     private final DashboardService service;
     private JdbcTemplate jdbcTemplate;
+
+    //TODO: Make this linked to user that is logged in
     private final String account = "roman.gordon@student.kdg.be";
 
     public DashboardController(DashboardService service, JdbcTemplate jdbcTemplate) {

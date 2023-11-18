@@ -126,7 +126,7 @@ function sortTemperatureData(startOfRange, endOfRange) {
         }
     }
 
-    getStatistics(allTemperatureInRange, allTimeInRange, "tempStats", "temperature")
+    getStatistics(allTemperatureInRange, allTimeInRange, "temp", "temperature")
 
     temperatureChart();
 }
@@ -159,7 +159,7 @@ function sortHumidityData(startOfRange, endOfRange) {
         }
     }
 
-    getStatistics(allHumidityInRange, allTimeInRange, "humidStats", "humidity");
+    getStatistics(allHumidityInRange, allTimeInRange, "humid", "humidity");
 
     humidityChart();
 }
@@ -192,13 +192,15 @@ function sortCO2Data(startOfRange, endOfRange) {
         }
     }
 
-    getStatistics(allCO2InRange, allTimeInRange, "CO2Stats", "CO2");
+    getStatistics(allCO2InRange, allTimeInRange, "CO2", "CO2");
 
     CO2Chart();
 }
 
 function getStatistics(allDataInRange, allTimeInRange, textID, dataType){
-    const textObject = document.getElementById(textID);
+    const textObject = document.getElementById(textID + "Stats");
+    const warnObject = document.getElementById(textID + "Warn");
+    const recommendObject = document.getElementById(textID + "Recommend");
 
     let total = 0;
     let minData = 100;
@@ -218,6 +220,46 @@ function getStatistics(allDataInRange, allTimeInRange, textID, dataType){
             "<br>" + "Maximum " + dataType + ": " + maxData + "<br><br>" +
             "First reading time: " + getDateTimeString(allTimeInRange, 0) +
             "<br>" + "Last reading time: " + getDateTimeString(allTimeInRange, allTimeInRange.length - 1);
+    }
+
+    warnObject.innerHTML = "";
+    recommendObject.innerHTML = "";
+
+    switch (dataType){
+        case "temperature": {
+            if (maxData > 30) warnObject.innerHTML = warnObject.innerHTML + "<br>Maximum temperature is too high consider cooling the room!<br>"
+            if (minData < 20) warnObject.innerHTML = warnObject.innerHTML + "<br>Minimum temperature is too low consider heating the room!<br>"
+            if (total / allDataInRange.length > 30) warnObject.innerHTML = warnObject.innerHTML + "<br>Average temperature is too high consider cooling the room!<br>"
+            if (total / allDataInRange.length < 20) warnObject.innerHTML = warnObject.innerHTML + "<br>Average temperature is too low consider heating the room!<br>"
+
+            if (maxData > 24 && !(total / allDataInRange.length > 24)) recommendObject.innerHTML = recommendObject.innerHTML + "Maximum temperature is getting too high consider maintaining between 20°C and 24°C for an optimal work environment.<br>"
+            else if (total / allDataInRange.length > 24 && !(maxData > 24)) recommendObject.innerHTML = recommendObject.innerHTML + "Average temperature is getting too high consider maintaining between 20°C and 24°C for an optimal work environment.<br>"
+            else if (maxData > 24 && total / allDataInRange.length > 24) recommendObject.innerHTML = recommendObject.innerHTML + "Average and Maximum temperature is getting too high consider maintaining between 20°C and 24°C for an optimal work environment.<br>"
+
+            break;
+        }
+        case "humidity": {
+            if (maxData > 70) warnObject.innerHTML = warnObject.innerHTML + "<br>Maximum humidity is too high consider using a dehumidifier!<br>"
+            if (minData < 30) warnObject.innerHTML = warnObject.innerHTML + "<br>Minimum humidity is too low consider using a humidifier!<br>"
+            if (total / allDataInRange.length > 70) warnObject.innerHTML = warnObject.innerHTML + "<br>Average humidity is too high consider using a dehumidifier!<br>"
+            if (total / allDataInRange.length < 30) warnObject.innerHTML = warnObject.innerHTML + "<br>Average humidity is too low consider using a humidifier!<br>"
+
+            if (maxData > 60 && !(total / allDataInRange.length > 60)) recommendObject.innerHTML = recommendObject.innerHTML + "Maximum humidity is getting too high consider maintaining between 40% and 60% humidity for an optimal work environment.<br>"
+            else if (total / allDataInRange.length > 60 && !(maxData > 60)) recommendObject.innerHTML = recommendObject.innerHTML + "Average humidity is getting too high consider maintaining between 40% and 60% humidity for an optimal work environment.<br>"
+            else if (maxData > 60 && total / allDataInRange.length > 60) recommendObject.innerHTML = recommendObject.innerHTML + "Average and Maximum humidity is getting too high consider maintaining between 40% and 60% humidity for an optimal work environment.<br>"
+
+            break;
+        }
+        case "CO2": {
+            if (maxData > 5000) warnObject.innerHTML = warnObject.innerHTML + "Maximum CO2 concentration is too high, ventilate the room, do not maintain this concentration for over 8 hours, there is a risk of serious health issues!<br>"
+            if (total / allDataInRange.length > 5000) warnObject.innerHTML = warnObject.innerHTML + "Average CO2 concentration is too high, ventilate the room, do not maintain this concentration for over 8 hours, there is a risk of serious health issues!<br>"
+
+            if (maxData > 1000 && !(total / allDataInRange.length > 1000)) recommendObject.innerHTML = recommendObject.innerHTML + "Maximum CO2 concentration is getting too high, consider ventilating the room, maintain a concentration of less than 1000ppm.<br>"
+            else if (total / allDataInRange.length > 1000 && !(maxData > 1000)) recommendObject.innerHTML = recommendObject.innerHTML + "Average CO2 concentration is getting too high, consider ventilating the room, maintain a concentration of less than 1000ppm.<br>"
+            else if (maxData > 1000 && total / allDataInRange.length > 1000) recommendObject.innerHTML = recommendObject.innerHTML + "Average and Maximum CO2 concentration is getting too high, consider ventilating the room, maintain a concentration of less than 1000ppm.<br>"
+
+            break;
+        }
     }
 }
 
