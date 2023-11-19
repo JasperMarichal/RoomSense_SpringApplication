@@ -1,22 +1,21 @@
 package be.kdg.integration3.service;
 
-import be.kdg.integration3.domain.CO2Data;
-import be.kdg.integration3.domain.HumidityData;
-import be.kdg.integration3.domain.RawDataRecord;
-import be.kdg.integration3.domain.TemperatureData;
+import be.kdg.integration3.domain.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 public interface DashboardService {
-    List<TemperatureData> getTemperatureList(int id);
+    void getData(int roomID, LocalDateTime startTime, LocalDateTime endTime);
 
-    List<HumidityData> getHumidityList(int id);
-
-    List<CO2Data> getCO2List(int id);
+    List<Room> getUserRooms(String userAccount);
 
     List<TemperatureData> getTemperatureList();
 
     List<HumidityData> getHumidityList();
 
     List<CO2Data> getCO2List();
+
+    LocalDateTime getLastTime(int roomID);
 }

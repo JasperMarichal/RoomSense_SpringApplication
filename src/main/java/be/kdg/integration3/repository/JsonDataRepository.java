@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import java.io.*;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -40,7 +41,7 @@ public class JsonDataRepository implements DataRepository {
     }
 
     @Scheduled(fixedDelay = 3000000)
-    public void read(){
+    public void read(int roomID, LocalDateTime startDateTime, LocalDateTime endDateTime){
         findFiles("temperature");
         findFiles("humidity");
         findFiles("sound");
@@ -52,8 +53,13 @@ public class JsonDataRepository implements DataRepository {
     }
 
     @Override
-    public void read(int id) {
-        read();
+    public List<Room> getUserRooms(String userAccount) {
+        return null;
+    }
+
+    @Override
+    public LocalDateTime getLastReadingTime(int roomID){
+        return null;
     }
 
     private void findFiles(String name) {

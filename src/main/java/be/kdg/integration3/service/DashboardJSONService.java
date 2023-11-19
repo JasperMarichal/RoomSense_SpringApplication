@@ -1,13 +1,12 @@
 package be.kdg.integration3.service;
 
-import be.kdg.integration3.domain.CO2Data;
-import be.kdg.integration3.domain.HumidityData;
-import be.kdg.integration3.domain.RawDataRecord;
-import be.kdg.integration3.domain.TemperatureData;
+import be.kdg.integration3.domain.*;
 import be.kdg.integration3.repository.DataRepository;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,18 +24,13 @@ public class DashboardJSONService implements DashboardService {
     }
 
     @Override
-    public List<TemperatureData> getTemperatureList(int id) {
-        return getTemperatureList();
+    public void getData(int roomID, LocalDateTime startTime, LocalDateTime endTime) {
+
     }
 
     @Override
-    public List<HumidityData> getHumidityList(int id) {
-        return getHumidityList();
-    }
-
-    @Override
-    public List<CO2Data> getCO2List(int id) {
-        return getCO2List();
+    public List<Room> getUserRooms(String userAccount) {
+        return new ArrayList<>();
     }
 
     @Override
@@ -52,5 +46,10 @@ public class DashboardJSONService implements DashboardService {
     @Override
     public List<CO2Data> getCO2List() {
         return getRecordList().stream().filter(record3 -> record3 instanceof CO2Data).map(rawDataRecord3 -> (CO2Data) rawDataRecord3).toList();
+    }
+
+    @Override
+    public LocalDateTime getLastTime(int roomID){
+        return null;
     }
 }

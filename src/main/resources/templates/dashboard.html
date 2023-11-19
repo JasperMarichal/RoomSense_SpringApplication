@@ -6,7 +6,8 @@
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
     <script defer th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
     <script defer th:src="@{/dashboardScript.js}"></script>
-    <title>Temp & Humidity</title>
+    <link rel="stylesheet" th:href="@{/css/dashboardStyle.css}">
+    <title>Dashboard</title>
     <script th:inline="javascript">
         /*<![CDATA[*/
         let tempList = /*[[${tempList}]]*/ 'Sebastian';
@@ -26,13 +27,13 @@
             <div class="text-center mb-3">
                 <h4 class="mt-2">Data Filtering Options</h4>
                 <div class="m-2 row">
-                    <form id="timeForm" class="form-inline">
-                        <div class="form-group">
-                            <label for="dateTime">Date to view:</label>
-                            <input type="datetime-local" id="dateTime" class="form-control-sm">
+                    <form method="post" id="selectRoom" class="form-inline">
+                        <div class="form-group mb-2">
+                            <label th:for="dateTimeStart">Date to view:</label>
+                            <input type="datetime-local" th:field="*{dashboardViewModel.dateTimeStart}" class="form-control-sm">
 
-                            <label for="timePeriod">Time period to view:</label>
-                            <select id="timePeriod" class="form-select-sm">
+                            <label th:for="timePeriod">Time period to view:</label>
+                            <select th:field="*{dashboardViewModel.timePeriod}" class="form-select-sm">
                                 <option value=10>10m</option>
                                 <option value=30>30m</option>
                                 <option value=60>1h</option>
@@ -44,14 +45,10 @@
                                 <option value=10080>1w</option>
                             </select>
                         </div>
-                    </form>
-                </div>
-                <div class="m-2 row">
-                    <form method="post" id="selectRoom" class="form-inline">
                         <div class="form-group">
-                            <label for="rooms">Select Room to Show: </label>
-                            <select id="rooms" class="form-select-sm" name="roomId">
-                                <option th:each="room : ${userRooms}" th:text="${room.values()[0]}" th:value="${room.keySet()[0]}"></option>
+                            <label th:for="roomID">Select Room to Show: </label>
+                            <select class="form-select-sm" th:field="*{dashboardViewModel.roomId}">
+                                <option th:each="room : ${userRooms}" th:text="${room.getName()}" th:value="${room.getId()}"></option>
                             </select>
                             <button type="submit" class="btn btn-primary btn-sm">Search for Room</button>
                         </div>
@@ -65,7 +62,7 @@
             <div class="m-2 row">
                 <div class="col-lg-6 col-md-12 col-sm-12 text-center" th:if="${tempList != null}">
                     <h2>Temperature Data</h2>
-                    <canvas id="tempChart" class="mx-auto" style="width:100%;max-width:700px"></canvas>
+                    <canvas id="tempChart" class="mx-auto"></canvas>
                     <p id="tempWarn" class="text-danger"></p>
                     <p id="tempRecommend"></p>
                     <p id="tempStats">No Data Available</p>
@@ -73,7 +70,7 @@
 
                 <div class="col-lg-6 col-md-12 col-sm-12 text-center" th:if="${humidList != null}">
                     <h2>Humidity Data</h2>
-                    <canvas id="humidChart" class="mx-auto" style="width:100%;max-width:700px"></canvas>
+                    <canvas id="humidChart" class="mx-auto"></canvas>
                     <p id="humidWarn" class="text-danger"></p>
                     <p id="humidRecommend"></p>
                     <p id="humidStats">No Data Available</p>
@@ -81,7 +78,7 @@
 
                 <div class="col-lg-6 col-md-12 col-sm-12 text-center" th:if="${CO2List != null}">
                     <h2>CO2 Data</h2>
-                    <canvas id="CO2Chart" class="mx-auto" style="width:100%;max-width:700px"></canvas>
+                    <canvas id="CO2Chart" class="mx-auto"></canvas>
                     <p id="CO2Warn" class="text-danger"></p>
                     <p id="CO2Recommend"></p>
                     <p id="CO2Stats">No Data Available</p>

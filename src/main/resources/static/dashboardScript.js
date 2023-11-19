@@ -1,4 +1,3 @@
-const form = document.getElementById("timeForm");
 const date = document.getElementById("dateTime");
 const timePeriod = document.getElementById("timePeriod");
 
@@ -14,17 +13,6 @@ let CO2DataToUse = [];
 let tempChartCanvas;
 let humidChartCanvas;
 let CO2ChartCanvas;
-
-let endOfTimePeriodTemp;
-let endOfTimePeriodHumid;
-let endOfTimePeriodCO2;
-
-let startTempTime;
-let lastTempTime;
-let startHumidTime;
-let lastHumidTime;
-let startCO2Time;
-let lastCO2Time;
 
 let temperature = false;
 let humidity = false;
@@ -42,12 +30,10 @@ function init() {
     humidity = humidList != null;
     CO2 = CO2List != null;
 
-    // console.log(temperature + " " + humidity + " " + CO2)
-
     getData();
 
-    date.addEventListener("change", getData)
-    timePeriod.addEventListener("change", getData)
+    // date.addEventListener("change", getData)
+    // timePeriod.addEventListener("change", getData)
 }
 
 /**
@@ -58,167 +44,84 @@ function init() {
  * Calls methods to sort the data for the different data-types
  */
 function getData() {
-    if(temperature) startTempTime = Date.parse(tempList_rawTimes[0]);
-    if(temperature) lastTempTime = Date.parse(tempList_rawTimes[tempList_rawTimes.length - 1]);
-    if(humidity) startHumidTime = Date.parse(humidList_rawTimes[0]);
-    if(humidity) lastHumidTime = Date.parse(humidList_rawTimes[humidList_rawTimes.length - 1]);
-    if(CO2) startCO2Time = Date.parse(CO2List_rawTimes[0]);
-    if(CO2) lastCO2Time = Date.parse(CO2List_rawTimes[CO2List_rawTimes.length - 1]);
 
-    // console.log(date.value)
-    if (!date.value){
-        if(temperature) endOfTimePeriodTemp = lastTempTime - (timePeriod.value * 60000);
-        if(humidity) endOfTimePeriodHumid = lastHumidTime - (timePeriod.value * 60000);
-        if(CO2) endOfTimePeriodCO2 = lastCO2Time - (timePeriod.value * 60000);
-
-        if (endOfTimePeriodTemp < startTempTime && temperature) endOfTimePeriodTemp = startTempTime;
-        if (endOfTimePeriodHumid < startHumidTime && humidity) endOfTimePeriodHumid = startHumidTime;
-        if (endOfTimePeriodCO2 < startCO2Time && CO2) endOfTimePeriodCO2 = startCO2Time;
-
-        if(temperature) sortTemperatureData(lastTempTime, endOfTimePeriodTemp);
-
-        if(humidity) sortHumidityData(lastHumidTime, endOfTimePeriodHumid);
-
-        if(CO2) sortCO2Data(lastCO2Time, endOfTimePeriodCO2);
-    } else {
-        const startDate = Date.parse(date.value)
-
-        let startTemp = startDate;
-        let startHumid = startDate;
-        let startCO2 = startDate;
-
-        if (temperature && startDate > lastTempTime) startTemp = lastTempTime;
-        if (humidity && startDate > lastHumidTime) startHumid = lastHumidTime;
-        if (CO2 && startDate > lastCO2Time) startCO2 = lastCO2Time;
-
-        if(temperature) endOfTimePeriodTemp = startTemp - (timePeriod.value * 60000);
-        if(humidity) endOfTimePeriodHumid = startHumid - (timePeriod.value * 60000);
-        if(CO2) endOfTimePeriodCO2 = startCO2 - (timePeriod.value * 60000)
-
-        if (endOfTimePeriodTemp < startTempTime && temperature) endOfTimePeriodTemp = startTempTime;
-        if (endOfTimePeriodHumid < startHumidTime && humidity) endOfTimePeriodHumid = startHumidTime;
-        if (endOfTimePeriodCO2 < startCO2Time && CO2) endOfTimePeriodCO2 = startCO2Time;
-
-        if(temperature) sortTemperatureData(startDate, endOfTimePeriodTemp);
-
-        if(humidity) sortHumidityData(startDate, endOfTimePeriodHumid);
-
-        if(CO2) sortCO2Data(startCO2, endOfTimePeriodCO2);
-    }
+    if(temperature) prepareTemperatureData();
+    if(humidity) prepareHumidityData();
+    if(CO2) prepareCO2Data();
 
 }
 
-
-/**
- * Gets the temperature for the time period needed and then calls the method to generate the statistical insights for the temperature
- * @param startOfRange The start of the time period for data to use
- * @param endOfRange The end of the time period for data to use
- */
-function sortTemperatureData(startOfRange, endOfRange) {
+function prepareTemperatureData() {
     tempTimeToUse = [];
     tempDataToUse = [];
 
-    let allTemperatureInRange = [];
-    let allTimeInRange = [];
+    let firstTime = Date.parse(tempList_rawTimes[0]);
 
     for (let i = 0; i < tempList_rawTimes.length; i++){
         let time = Date.parse(tempList_rawTimes[i]);
-        if (time < startOfRange && time > endOfRange) {
-            let convertedTime = Math.round((time - endOfRange) / 1000);
+        let convertedTime = Math.round((time - firstTime) / 1000);
 
-            if ((tempList[i] !== tempList[i - 1] || tempList[i] !== tempList[i + 1] ||
+        if ((tempList[i] !== tempList[i - 1] || tempList[i] !== tempList[i + 1] ||
                 (tempDataToUse.length === 0) || (i === tempList_rawTimes.length - 2) ||
                 tempTimeToUse[tempTimeToUse.length - 1] - convertedTime < -50) &&
-                !tempTimeToUse.includes(convertedTime)) {
+            !tempTimeToUse.includes(convertedTime)) {
 
-                tempTimeToUse.push(convertedTime);
-                tempDataToUse.push(tempList[i]);
-            }
-
-            if (!allTimeInRange.includes(time)){
-                allTimeInRange.push(tempList_rawTimes[i]);
-                allTemperatureInRange.push(tempList[i]);
-            }
+            tempTimeToUse.push(convertedTime);
+            tempDataToUse.push(tempList[i]);
         }
     }
 
-    getStatistics(allTemperatureInRange, allTimeInRange, "temp", "temperature")
+    getStatistics(tempList, tempList_rawTimes, "temp", "temperature")
 
     temperatureChart();
 }
 
-/**
- * Gets the temperature for the time period needed and then calls the method to generate the statistical insights for the temperature
- * @param startOfRange The start of the time period for data to use
- * @param endOfRange The end of the time period for data to use
- */
-function sortHumidityData(startOfRange, endOfRange) {
+function prepareHumidityData() {
     humidTimeToUse = [];
     humidDataToUse = [];
 
-    let allHumidityInRange = [];
-    let allTimeInRange = [];
+    let firstTime = Date.parse(humidList_rawTimes[0]);
 
     for (let i = 0; i < humidList_rawTimes.length; i++){
         let time = Date.parse(humidList_rawTimes[i]);
-        if (time < startOfRange && time > endOfRange) {
-            let convertedTime = Math.round((time - endOfRange) / 1000);
+        let convertedTime = Math.round((time - firstTime) / 1000);
 
-            if ((humidList[i] !== humidList[i - 1] || humidList[i] !== humidList[i + 1] ||
-                    (humidDataToUse.length === 0) || (i === humidList_rawTimes.length - 2) ||
-                    humidTimeToUse[humidTimeToUse.length - 1] - convertedTime < -50) &&
-                !humidTimeToUse.includes(convertedTime)) {
+        if ((humidList[i] !== humidList[i - 1] || humidList[i] !== humidList[i + 1] ||
+                (humidDataToUse.length === 0) || (i === humidList_rawTimes.length - 2) ||
+                humidTimeToUse[humidTimeToUse.length - 1] - convertedTime < -50) &&
+            !humidTimeToUse.includes(convertedTime)) {
 
-                humidTimeToUse.push(convertedTime);
-                humidDataToUse.push(humidList[i]);
-            }
-
-            if (!allTimeInRange.includes(time)){
-                allTimeInRange.push(humidList_rawTimes[i]);
-                allHumidityInRange.push(humidList[i]);
-            }
+            humidTimeToUse.push(convertedTime);
+            humidDataToUse.push(humidList[i]);
         }
     }
 
-    getStatistics(allHumidityInRange, allTimeInRange, "humid", "humidity");
+    getStatistics(humidList, humidList_rawTimes, "humid", "humidity");
 
     humidityChart();
 }
 
-/**
- * Gets the temperature for the time period needed and then calls the method to generate the statistical insights for the temperature
- * @param startOfRange The start of the time period for data to use
- * @param endOfRange The end of the time period for data to use
- */
-function sortCO2Data(startOfRange, endOfRange) {
+function prepareCO2Data() {
     CO2TimeToUse = [];
     CO2DataToUse = [];
 
-    let allCO2InRange = [];
-    let allTimeInRange = [];
+    let firstTime = Date.parse(CO2List_rawTimes[0]);
 
     for (let i = 0; i < CO2List_rawTimes.length; i++){
         let time = Date.parse(CO2List_rawTimes[i])
-        if (time < startOfRange && time > endOfRange) {
-            let convertedTime = Math.round((time - endOfRange) / 1000);
+        let convertedTime = Math.round((time - firstTime) / 1000);
 
-            if ((CO2List[i] !== CO2List[i - 1] || CO2List[i] !== CO2List[i + 1] ||
+        if ((CO2List[i] !== CO2List[i - 1] || CO2List[i] !== CO2List[i + 1] ||
                 (CO2DataToUse.length === 0) || (i === CO2List_rawTimes.length - 2)||
                 CO2TimeToUse[CO2TimeToUse.length - 1] - convertedTime < -50) &&
-                !CO2TimeToUse.includes(convertedTime)) {
+            !CO2TimeToUse.includes(convertedTime)) {
 
-                CO2TimeToUse.push(convertedTime)
-                CO2DataToUse.push(CO2List[i])
-            }
-
-            if (!allTimeInRange.includes(time)){
-                allTimeInRange.push(CO2List_rawTimes[i]);
-                allCO2InRange.push(CO2List[i]);
-            }
+            CO2TimeToUse.push(convertedTime)
+            CO2DataToUse.push(CO2List[i])
         }
     }
 
-    getStatistics(allCO2InRange, allTimeInRange, "CO2", "CO2");
+    getStatistics(CO2List, CO2List_rawTimes, "CO2", "CO2");
 
     CO2Chart();
 }

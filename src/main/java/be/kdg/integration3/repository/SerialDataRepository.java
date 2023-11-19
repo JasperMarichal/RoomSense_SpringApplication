@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -40,7 +41,7 @@ public class SerialDataRepository implements DataRepository {
     }
 
     @Override
-    public void read() {
+    public void read(int roomID, LocalDateTime startDateTime, LocalDateTime endDateTime) {
         try {
             while (port.bytesAvailable() > 0) {
                 byte[] readBuffer = new byte[port.bytesAvailable()];
@@ -58,8 +59,13 @@ public class SerialDataRepository implements DataRepository {
     }
 
     @Override
-    public void read(int id) {
-        read();
+    public List<Room> getUserRooms(String userAccount) {
+        return null;
+    }
+
+    @Override
+    public LocalDateTime getLastReadingTime(int roomID){
+        return null;
     }
 
     private int parseSerial(char[] newSerialData) {
