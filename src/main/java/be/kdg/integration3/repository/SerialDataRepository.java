@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -40,7 +41,7 @@ public class SerialDataRepository implements DataRepository {
     }
 
     @Override
-    public void read() {
+    public void read(int roomID, LocalDateTime startDateTime, LocalDateTime endDateTime) {
         try {
             while (port.bytesAvailable() > 0) {
                 byte[] readBuffer = new byte[port.bytesAvailable()];
@@ -55,6 +56,16 @@ public class SerialDataRepository implements DataRepository {
             logger.error(Arrays.toString(e.getStackTrace()));
         }
 //        return 0;
+    }
+
+    @Override
+    public List<Room> getUserRooms(String userAccount) {
+        return null;
+    }
+
+    @Override
+    public LocalDateTime getLastReadingTime(int roomID){
+        return null;
     }
 
     private int parseSerial(char[] newSerialData) {
@@ -98,7 +109,17 @@ public class SerialDataRepository implements DataRepository {
     }
 
     @Override
-    public List<RawDataRecord> getRecordList() {
-        return recordList;
+    public List<TemperatureData> getTemperatureRecordList() {
+        return recordList.stream().filter(record -> record instanceof TemperatureData).map(rawDataRecord -> (TemperatureData) rawDataRecord).toList();
+    }
+
+    @Override
+    public List<HumidityData> getHumidityRecordList() {
+        return recordList.stream().filter(record -> record instanceof HumidityData).map(rawDataRecord -> (HumidityData) rawDataRecord).toList();
+    }
+
+    @Override
+    public List<CO2Data> getCO2RecordList() {
+        return recordList.stream().filter(record -> record instanceof CO2Data).map(rawDataRecord -> (CO2Data) rawDataRecord).toList();
     }
 }
