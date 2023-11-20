@@ -19,10 +19,6 @@ public class DashboardJSONService implements DashboardService {
     }
 
 
-    public List<RawDataRecord> getRecordList() {
-        return repository.getRecordList();
-    }
-
     @Override
     public void getData(int roomID, LocalDateTime startTime, LocalDateTime endTime) {
 
@@ -35,17 +31,17 @@ public class DashboardJSONService implements DashboardService {
 
     @Override
     public List<TemperatureData> getTemperatureList() {
-        return getRecordList().stream().filter(record -> record instanceof TemperatureData).map(rawDataRecord -> (TemperatureData) rawDataRecord).toList();
+        return repository.getTemperatureRecordList();
     }
 
     @Override
     public List<HumidityData> getHumidityList() {
-        return getRecordList().stream().filter(record2 -> record2 instanceof HumidityData).map(rawDataRecord2 -> (HumidityData) rawDataRecord2).toList();
+        return repository.getHumidityRecordList();
     }
 
     @Override
     public List<CO2Data> getCO2List() {
-        return getRecordList().stream().filter(record3 -> record3 instanceof CO2Data).map(rawDataRecord3 -> (CO2Data) rawDataRecord3).toList();
+        return repository.getCO2RecordList();
     }
 
     @Override

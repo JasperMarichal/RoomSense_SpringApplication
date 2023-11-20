@@ -109,7 +109,17 @@ public class SerialDataRepository implements DataRepository {
     }
 
     @Override
-    public List<RawDataRecord> getRecordList() {
-        return recordList;
+    public List<TemperatureData> getTemperatureRecordList() {
+        return recordList.stream().filter(record -> record instanceof TemperatureData).map(rawDataRecord -> (TemperatureData) rawDataRecord).toList();
+    }
+
+    @Override
+    public List<HumidityData> getHumidityRecordList() {
+        return recordList.stream().filter(record -> record instanceof HumidityData).map(rawDataRecord -> (HumidityData) rawDataRecord).toList();
+    }
+
+    @Override
+    public List<CO2Data> getCO2RecordList() {
+        return recordList.stream().filter(record -> record instanceof CO2Data).map(rawDataRecord -> (CO2Data) rawDataRecord).toList();
     }
 }

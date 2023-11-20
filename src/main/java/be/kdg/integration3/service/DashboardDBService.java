@@ -46,7 +46,7 @@ public class DashboardDBService implements DashboardService{
      */
     @Override
     public List<TemperatureData> getTemperatureList() {
-        return repository.getRecordList().stream().filter(record -> record instanceof TemperatureData).map(rawDataRecord -> (TemperatureData) rawDataRecord).toList();
+        return repository.getTemperatureRecordList();
     }
 
     /**
@@ -55,7 +55,7 @@ public class DashboardDBService implements DashboardService{
      */
     @Override
     public List<HumidityData> getHumidityList() {
-        return repository.getRecordList().stream().filter(record2 -> record2 instanceof HumidityData).map(rawDataRecord2 -> (HumidityData) rawDataRecord2).toList();
+        return repository.getHumidityRecordList();
     }
 
     /**
@@ -64,6 +64,6 @@ public class DashboardDBService implements DashboardService{
      */
     @Override
     public List<CO2Data> getCO2List() {
-        return repository.getRecordList().stream().filter(record3 -> record3 instanceof CO2Data).map(rawDataRecord3 -> (CO2Data) rawDataRecord3).toList();
+        return repository.getCO2RecordList();
     }
 }
