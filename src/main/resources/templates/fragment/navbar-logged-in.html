@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title></title>
+</head>
+
+<body>
+<nav th:fragment="navbar-logged-in" class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">RoomSense</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="/about-us">About us</a>
+            </li>
+            <li class="nav-item active">
+                <!--        change to /dashboard later-->
+                <a class="nav-link" href="/dashboard">Dashboard</a>
+            </li>
+            <li class="nav-item active">
+                <!--        change to /dashboard later-->
+                <a class="nav-link" href="/log-out">Log out</a>
+            </li>
+
+            <!--      add other pages below-->
+        </ul>
+        <div class="navbar-text">
+            <span th:if="${session.loggedIn}" th:text="${session.userEmail}"></span>
+        </div>
+    </div>
+</nav>
+</body>
+
+</html>

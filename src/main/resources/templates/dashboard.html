@@ -20,10 +20,9 @@
     </script>
 </head>
 <body class="bg-dark-subtle">
-<div th:insert="~{fragment/navbar::navbarcopy}">navbar</div>
+<div th:insert="~{fragment/navbar-logged-in::navbar-logged-in}">navbar</div>
     <div class="container-fluid d-flex justify-content-center">
         <div class="col-12">
-
             <div th:if="${databaseError != null}">
                 <h1 class="text-danger text-center" th:text="${databaseError}"></h1>
             </div>
