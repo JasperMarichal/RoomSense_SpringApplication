@@ -44,9 +44,9 @@ public class LoginController {
 
         if (count.orElse(0) == 1) {
             logger.info("login successful");
-            httpSession.setAttribute("sessionUserEmail", loginViewModel.getEmail());
-            model.addAttribute("loggedIn", true);
-            model.addAttribute("userEmail", loginViewModel.getEmail());
+            httpSession.setAttribute("loggedIn", true);
+            httpSession.setAttribute("userEmail", loginViewModel.getEmail());
+
             // later direct to another page
             return "redirect:/";
         } else {
