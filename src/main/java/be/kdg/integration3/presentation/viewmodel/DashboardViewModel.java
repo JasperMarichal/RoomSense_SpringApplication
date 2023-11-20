@@ -1,4 +1,4 @@
-package be.kdg.integration3.presentation.viewmodels;
+package be.kdg.integration3.presentation.viewmodel;
 
 import java.time.LocalDateTime;
 

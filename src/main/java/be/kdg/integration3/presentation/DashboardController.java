@@ -4,22 +4,19 @@ import be.kdg.integration3.domain.CO2Data;
 import be.kdg.integration3.domain.HumidityData;
 import be.kdg.integration3.domain.Room;
 import be.kdg.integration3.domain.TemperatureData;
-import be.kdg.integration3.presentation.viewmodels.DashboardViewModel;
+import be.kdg.integration3.presentation.viewmodel.DashboardViewModel;
 import be.kdg.integration3.service.DashboardService;
 import be.kdg.integration3.util.exception.DatabaseException;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequestMapping("/dashboard")
