@@ -48,7 +48,7 @@ public class LoginController {
             httpSession.setAttribute("userEmail", loginViewModel.getEmail());
 
             // later direct to another page
-            return "redirect:/";
+            return "redirect:/dashboard";
         } else {
             logger.info("login unsuccessful");
             model.addAttribute("loginError", "User not found.");

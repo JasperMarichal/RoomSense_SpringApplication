@@ -137,10 +137,10 @@ public class DashboardController {
         DashboardViewModel viewModelFromSession = (DashboardViewModel) session.getAttribute("dashboardViewModel");
         if (viewModelFromSession == null){
             viewModelFromSession = new DashboardViewModel();
-            viewModelFromSession.setRoomId(room);
+            viewModelFromSession.setRoomId(dashboardViewModel.getRoomId());
             session.setAttribute("dashboardViewModel", viewModelFromSession);
         } else {
-            dashboardViewModel.setRoomId(room);
+            dashboardViewModel.setRoomId(dashboardViewModel.getRoomId());
             session.setAttribute("dashboardViewModel", dashboardViewModel);
         }
 

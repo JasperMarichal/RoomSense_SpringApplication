@@ -15,6 +15,6 @@ public class LogoutController {
     @GetMapping
     public String getLogoutView(Model model) {
         logger.info("Request for logout view!");
-        return "/log-out";
+        return "redirect:/login";
     }
 }
