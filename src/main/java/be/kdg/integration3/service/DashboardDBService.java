@@ -5,6 +5,7 @@ import be.kdg.integration3.domain.HumidityData;
 import be.kdg.integration3.domain.Room;
 import be.kdg.integration3.domain.TemperatureData;
 import be.kdg.integration3.repository.DataRepository;
+import be.kdg.integration3.util.exception.DatabaseException;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 

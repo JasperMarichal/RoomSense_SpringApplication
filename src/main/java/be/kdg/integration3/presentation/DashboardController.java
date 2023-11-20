@@ -6,6 +6,7 @@ import be.kdg.integration3.domain.Room;
 import be.kdg.integration3.domain.TemperatureData;
 import be.kdg.integration3.presentation.viewmodels.DashboardViewModel;
 import be.kdg.integration3.service.DashboardService;
+import be.kdg.integration3.util.exception.DatabaseException;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -91,38 +92,42 @@ public class DashboardController {
         LocalDateTime endDateTime;
         LocalDateTime startDateTime;
 
-        if (viewModelFromSession.getDateTimeStart() != null) {
-            startDateTime = viewModelFromSession.getDateTimeStart();
-        } else {
-            startDateTime = service.getLastTime(viewModelFromSession.getRoomId());
+        try {
+            if (viewModelFromSession.getDateTimeStart() != null) {
+                startDateTime = viewModelFromSession.getDateTimeStart();
+            } else {
+                startDateTime = service.getLastTime(viewModelFromSession.getRoomId());
+            }
+
+            long startDateTimeMillis = startDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+            long endDateTimeMillis = startDateTimeMillis - (viewModelFromSession.getTimePeriod() * 60000L);
+            endDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(endDateTimeMillis), ZoneId.systemDefault());
+
+            service.getData(viewModelFromSession.getRoomId(), startDateTime, endDateTime);
+
+            if (!service.getTemperatureList().isEmpty()) {
+                model.addAttribute("tempList", service.getTemperatureList().stream().map(TemperatureData::getValue).toList());
+                model.addAttribute("tempList_rawTimes", service.getTemperatureList().stream().map(TemperatureData::getTimestamp).toList());
+            }
+
+            if (!service.getHumidityList().isEmpty()) {
+                model.addAttribute("humidList", service.getHumidityList().stream().map(HumidityData::getValue).toList());
+                model.addAttribute("humidList_rawTimes", service.getHumidityList().stream().map(HumidityData::getTimestamp).toList());
+            }
+
+            if (!service.getCO2List().isEmpty()) {
+                model.addAttribute("CO2List", service.getCO2List().stream().map(CO2Data::getValue).toList());
+                model.addAttribute("CO2List_rawTimes", service.getCO2List().stream().map(CO2Data::getTimestamp).toList());
+            }
+
+            if (service.getTemperatureList().isEmpty() && service.getHumidityList().isEmpty() && service.getCO2List().isEmpty()) {
+                model.addAttribute("chooseRoom", "There is no data available for your room of choice");
+            }
+
+            addRoomsToModel(model);
+        } catch (DatabaseException e){
+            model.addAttribute("databaseError", e.getMessage());
         }
-
-        long startDateTimeMillis = startDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-        long endDateTimeMillis = startDateTimeMillis - (viewModelFromSession.getTimePeriod() * 60000L);
-        endDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(endDateTimeMillis), ZoneId.systemDefault());
-
-        service.getData(viewModelFromSession.getRoomId(), startDateTime, endDateTime);
-
-        if (!service.getTemperatureList().isEmpty()){
-            model.addAttribute("tempList", service.getTemperatureList().stream().map(TemperatureData::getValue).toList());
-            model.addAttribute("tempList_rawTimes", service.getTemperatureList().stream().map(TemperatureData::getTimestamp).toList());
-        }
-
-        if (!service.getHumidityList().isEmpty()){
-            model.addAttribute("humidList", service.getHumidityList().stream().map(HumidityData::getValue).toList());
-            model.addAttribute("humidList_rawTimes", service.getHumidityList().stream().map(HumidityData::getTimestamp).toList());
-        }
-
-        if (!service.getCO2List().isEmpty()){
-            model.addAttribute("CO2List", service.getCO2List().stream().map(CO2Data::getValue).toList());
-            model.addAttribute("CO2List_rawTimes", service.getCO2List().stream().map(CO2Data::getTimestamp).toList());
-        }
-
-        if (service.getTemperatureList().isEmpty() && service.getHumidityList().isEmpty() && service.getCO2List().isEmpty()){
-            model.addAttribute("chooseRoom", "There is no data available for your room of choice");
-        }
-
-        addRoomsToModel(model);
 
         return "dashboard";
     }
