@@ -1,6 +1,7 @@
 package be.kdg.integration3.presentation;
 
 import be.kdg.integration3.presentation.viewmodel.LoginViewModel;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +33,7 @@ public class LoginController {
 
     // get rid of jdbcTemplate and use Connection, use try with resources
     @PostMapping
-    public String logIn(@Valid @ModelAttribute("loginviewmodel") LoginViewModel loginViewModel, BindingResult errors, Model model) {
+    public String logIn(@Valid @ModelAttribute("loginviewmodel") LoginViewModel loginViewModel, BindingResult errors, Model model, HttpSession httpSession) {
         logger.info(String.format("Processing email: %s and password: %s", loginViewModel.getEmail(), loginViewModel.getPassword()));
         if (errors.hasErrors()) {
             errors.getAllErrors().forEach(error -> logger.error(error.toString()));
@@ -43,6 +44,9 @@ public class LoginController {
 
         if (count.orElse(0) == 1) {
             logger.info("login successful");
+            httpSession.setAttribute("sessionUserEmail", loginViewModel.getEmail());
+            model.addAttribute("loggedIn", true);
+            model.addAttribute("userEmail", loginViewModel.getEmail());
             // later direct to another page
             return "redirect:/";
         } else {

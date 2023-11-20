@@ -20,15 +20,12 @@
                 <!--        change to /dashboard later-->
                 <a class="nav-link" href="/dashboard">Dashboard</a>
             </li>
-            <li class="nav-item active">
-                <a class="nav-link" href="#signup">Sign up</a>
-            </li>
-            <li class="nav-item active">
-                <a class="nav-link" href="/login">Log in</a>
-            </li>
 
             <!--      add other pages below-->
         </ul>
+        <div class="navbar-text">
+            <span th:if="${loggedIn}" th:text="${userEmail}"></span>
+        </div>
     </div>
 </nav>
 </body>
