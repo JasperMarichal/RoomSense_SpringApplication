@@ -122,4 +122,9 @@ public class SerialDataRepository implements DataRepository {
     public List<CO2Data> getCO2RecordList() {
         return recordList.stream().filter(record -> record instanceof CO2Data).map(rawDataRecord -> (CO2Data) rawDataRecord).toList();
     }
+
+    @Override
+    public List<SoundData> getNoiseRecordList() {
+        return null;
+    }
 }

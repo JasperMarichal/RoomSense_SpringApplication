@@ -11,5 +11,6 @@ public interface DataRepository {
     List<TemperatureData> getTemperatureRecordList();
     List<HumidityData> getHumidityRecordList();
     List<CO2Data> getCO2RecordList();
+    List<SoundData> getNoiseRecordList();
     LocalDateTime getLastReadingTime(int roomID);
 }

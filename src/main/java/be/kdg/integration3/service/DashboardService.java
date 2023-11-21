@@ -16,6 +16,7 @@ public interface DashboardService {
     List<HumidityData> getHumidityList();
 
     List<CO2Data> getCO2List();
+    List<SoundData> getNoiseList();
 
     LocalDateTime getLastTime(int roomID);
 }

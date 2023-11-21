@@ -10,13 +10,18 @@ let humidDataToUse = [];
 let CO2TimeToUse = [];
 let CO2DataToUse = [];
 
+let noiseTimeToUse = [];
+let noiseDataToUse = [];
+
 let tempChartCanvas;
 let humidChartCanvas;
 let CO2ChartCanvas;
+let noiseChartCanvas;
 
 let temperature = false;
 let humidity = false;
 let CO2 = false;
+let noise = false;
 
 
 init()
@@ -29,6 +34,7 @@ function init() {
     temperature = tempList != null;
     humidity = humidList != null;
     CO2 = CO2List != null;
+    noise = noiseList != null;
 
     getData();
 
@@ -48,6 +54,7 @@ function getData() {
     if(temperature) prepareTemperatureData();
     if(humidity) prepareHumidityData();
     if(CO2) prepareCO2Data();
+    if(noise) prepareNoiseData();
 
 }
 
@@ -55,14 +62,14 @@ function prepareTemperatureData() {
     tempTimeToUse = [];
     tempDataToUse = [];
 
-    let firstTime = Date.parse(tempList_rawTimes[0]);
+    let firstTime = Date.parse(tempListTimes[0]);
 
-    for (let i = 0; i < tempList_rawTimes.length; i++){
-        let time = Date.parse(tempList_rawTimes[i]);
+    for (let i = 0; i < tempListTimes.length; i++){
+        let time = Date.parse(tempListTimes[i]);
         let convertedTime = Math.round((time - firstTime) / 1000);
 
         if ((tempList[i] !== tempList[i - 1] || tempList[i] !== tempList[i + 1] ||
-                (tempDataToUse.length === 0) || (i === tempList_rawTimes.length - 2) ||
+                (tempDataToUse.length === 0) || (i === tempListTimes.length - 2) ||
                 tempTimeToUse[tempTimeToUse.length - 1] - convertedTime < -50) &&
             !tempTimeToUse.includes(convertedTime)) {
 
@@ -71,7 +78,7 @@ function prepareTemperatureData() {
         }
     }
 
-    getStatistics(tempList, tempList_rawTimes, "temp", "temperature")
+    getStatistics(tempList, tempListTimes, "temp", "temperature")
 
     temperatureChart();
 }
@@ -80,14 +87,14 @@ function prepareHumidityData() {
     humidTimeToUse = [];
     humidDataToUse = [];
 
-    let firstTime = Date.parse(humidList_rawTimes[0]);
+    let firstTime = Date.parse(humidListTimes[0]);
 
-    for (let i = 0; i < humidList_rawTimes.length; i++){
-        let time = Date.parse(humidList_rawTimes[i]);
+    for (let i = 0; i < humidListTimes.length; i++){
+        let time = Date.parse(humidListTimes[i]);
         let convertedTime = Math.round((time - firstTime) / 1000);
 
         if ((humidList[i] !== humidList[i - 1] || humidList[i] !== humidList[i + 1] ||
-                (humidDataToUse.length === 0) || (i === humidList_rawTimes.length - 2) ||
+                (humidDataToUse.length === 0) || (i === humidListTimes.length - 2) ||
                 humidTimeToUse[humidTimeToUse.length - 1] - convertedTime < -50) &&
             !humidTimeToUse.includes(convertedTime)) {
 
@@ -96,7 +103,7 @@ function prepareHumidityData() {
         }
     }
 
-    getStatistics(humidList, humidList_rawTimes, "humid", "humidity");
+    getStatistics(humidList, humidListTimes, "humid", "humidity");
 
     humidityChart();
 }
@@ -105,14 +112,14 @@ function prepareCO2Data() {
     CO2TimeToUse = [];
     CO2DataToUse = [];
 
-    let firstTime = Date.parse(CO2List_rawTimes[0]);
+    let firstTime = Date.parse(CO2ListTimes[0]);
 
-    for (let i = 0; i < CO2List_rawTimes.length; i++){
-        let time = Date.parse(CO2List_rawTimes[i])
+    for (let i = 0; i < CO2ListTimes.length; i++){
+        let time = Date.parse(CO2ListTimes[i])
         let convertedTime = Math.round((time - firstTime) / 1000);
 
         if ((CO2List[i] !== CO2List[i - 1] || CO2List[i] !== CO2List[i + 1] ||
-                (CO2DataToUse.length === 0) || (i === CO2List_rawTimes.length - 2)||
+                (CO2DataToUse.length === 0) || (i === CO2ListTimes.length - 2)||
                 CO2TimeToUse[CO2TimeToUse.length - 1] - convertedTime < -50) &&
             !CO2TimeToUse.includes(convertedTime)) {
 
@@ -121,9 +128,34 @@ function prepareCO2Data() {
         }
     }
 
-    getStatistics(CO2List, CO2List_rawTimes, "CO2", "CO2");
+    getStatistics(CO2List, CO2ListTimes, "CO2", "CO2");
 
     CO2Chart();
+}
+
+function prepareNoiseData() {
+    noiseTimeToUse = [];
+    noiseDataToUse = [];
+
+    let firstTime = Date.parse(noiseListTimes[0]);
+
+    for (let i = 0; i < noiseListTimes.length; i++){
+        let time = Date.parse(noiseListTimes[i])
+        let convertedTime = Math.round((time - firstTime) / 1000);
+
+        if ((noiseList[i] !== noiseList[i - 1] || noiseList[i] !== noiseList[i + 1] ||
+                (noiseDataToUse.length === 0) || (i === noiseListTimes.length - 2)||
+                noiseTimeToUse[CO2TimeToUse.length - 1] - convertedTime < -50) &&
+            !noiseTimeToUse.includes(convertedTime)) {
+
+            noiseTimeToUse.push(convertedTime)
+            noiseDataToUse.push(noiseList[i])
+        }
+    }
+
+    getStatistics(noiseList, noiseListTimes, "noise", "noise");
+
+    noiseChart();
 }
 
 /**
@@ -196,6 +228,9 @@ function getStatistics(allDataInRange, allTimeInRange, textID, dataType){
                 else if (maxData > 1000 && total / allDataInRange.length > 1000) recommendObject.innerHTML = recommendObject.innerHTML + "Average and Maximum CO2 concentration is getting too high, consider ventilating the room, maintain a concentration of less than 1000ppm.<br>"
 
                 break;
+            }
+            case "noise": {
+
             }
         }
     }
@@ -299,5 +334,28 @@ function CO2Chart() {
     });
 }
 
+function noiseChart() {
+    if (noiseChartCanvas){
+        noiseChartCanvas.destroy();
+    }
 
+    noiseChartCanvas = new Chart("noiseChart", {
+        type: "line",
+        data: {
+            labels: noiseTimeToUse,
+            datasets: [{
+                backgroundColor: "rgba(200,128,0,1)",
+                borderColor: "rgba(200,128,0,1)",
+                borderWidth: 4,
+                fill: false,
+                data: noiseDataToUse,
+                label: "Noise",
+                tension: 0
+            }]
+        },
+        options: {
+
+        }
+    });
+}
 

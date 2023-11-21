@@ -27,12 +27,14 @@ public class DatabaseDataRepository implements DataRepository{
     private List<TemperatureData> temperatureRecordList;
     private List<HumidityData> humidityRecordList;
     private List<CO2Data> CO2RecordList;
+    private List<SoundData> noiseRecordList;
     private JdbcTemplate jdbcTemplate;
 
     public DatabaseDataRepository(JdbcTemplate jdbcTemplate) {
         this.temperatureRecordList = new ArrayList<>();
         this.humidityRecordList = new ArrayList<>();
         this.CO2RecordList = new ArrayList<>();
+        this.noiseRecordList = new ArrayList<>();
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -46,6 +48,7 @@ public class DatabaseDataRepository implements DataRepository{
         temperatureRecordList = new ArrayList<>();
         humidityRecordList = new ArrayList<>();
         CO2RecordList = new ArrayList<>();
+        noiseRecordList = new ArrayList<>();
 
         ZoneId userTimeZone = ZoneId.systemDefault();
         ZonedDateTime zonedEndDateTime = endDateTime.atZone(userTimeZone);
@@ -58,6 +61,7 @@ public class DatabaseDataRepository implements DataRepository{
             getTemperatures(roomID, timestampEnd, timestampStart);
             getHumidity(roomID, timestampEnd, timestampStart);
             getCO2(roomID, timestampEnd, timestampStart);
+            getNoise(roomID, timestampEnd, timestampStart);
         } catch (DataAccessException e){
             throw new DatabaseException("Can not connect to database", e);
         }
@@ -84,10 +88,19 @@ public class DatabaseDataRepository implements DataRepository{
     private void getCO2(int roomID, Timestamp timestampEnd, Timestamp timestampStart) throws DataAccessException {
         List<CO2Data> CO2 = jdbcTemplate.query("SELECT * FROM co2_entry WHERE room_id = ?" +
                         "AND timestamp BETWEEN ? AND ?",
-                (rs, rowNum) -> new CO2Data(rs.getTimestamp("timestamp"), rs.getInt("value")),
+                (rs, rowNum) -> new CO2Data(rs.getTimestamp("timestamp"), (int) (rs.getInt("value") * 24.4379277)),
                 roomID, timestampEnd, timestampStart);
 
         CO2RecordList.addAll(CO2);
+    }
+
+    private void getNoise(int roomID, Timestamp timestampEnd, Timestamp timestampStart) throws DataAccessException {
+        List<SoundData> noise = jdbcTemplate.query("SELECT * FROM noise_entry WHERE room_id = ?" +
+                        "AND timestamp BETWEEN ? AND ?",
+                (rs, rowNum) -> new SoundData(rs.getTimestamp("timestamp"), rs.getInt("value")),
+                roomID, timestampEnd, timestampStart);
+
+        noiseRecordList.addAll(noise);
     }
 
     @Override
@@ -113,11 +126,15 @@ public class DatabaseDataRepository implements DataRepository{
             List<CO2Data> lastCO2 = jdbcTemplate.query("SELECT * FROM co2_entry WHERE room_id = ? ORDER BY timestamp DESC LIMIT 1",
                     (rs, rowNum) -> new CO2Data(rs.getTimestamp("timestamp"), rs.getInt("value")), roomID);
 
+            List<SoundData> lastNoise = jdbcTemplate.query("SELECT * FROM noise_entry WHERE room_id = ? ORDER BY timestamp DESC LIMIT 1",
+                    (rs, rowNum) -> new SoundData(rs.getTimestamp("timestamp"), rs.getInt("value")), roomID);
+
             Timestamp lastTime = Timestamp.valueOf("1970-01-01 01:00:00");
 
             if (!lastTemp.isEmpty()) if (lastTime.compareTo(lastTemp.get(0).getTimestamp()) < 0) lastTime = lastTemp.get(0).getTimestamp();
             if (!lastHumid.isEmpty()) if (lastTime.compareTo(lastHumid.get(0).getTimestamp()) < 0) lastTime = lastHumid.get(0).getTimestamp();
             if (!lastCO2.isEmpty()) if (lastTime.compareTo(lastCO2.get(0).getTimestamp()) < 0) lastTime = lastCO2.get(0).getTimestamp();
+            if (!lastNoise.isEmpty()) if (lastTime.compareTo(lastNoise.get(0).getTimestamp()) < 0) lastTime = lastNoise.get(0).getTimestamp();
 
             return  lastTime.toLocalDateTime();
         } catch (DataAccessException e ){
@@ -138,5 +155,10 @@ public class DatabaseDataRepository implements DataRepository{
     @Override
     public List<CO2Data> getCO2RecordList() {
         return CO2RecordList;
+    }
+
+    @Override
+    public List<SoundData> getNoiseRecordList() {
+        return noiseRecordList;
     }
 }

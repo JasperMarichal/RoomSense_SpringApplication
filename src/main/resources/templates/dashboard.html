@@ -11,11 +11,13 @@
     <script th:inline="javascript">
         /*<![CDATA[*/
         let tempList = /*[[${tempList}]]*/ 'Sebastian';
-        let tempList_rawTimes = /*[[${tempList_rawTimes}]]*/ 'Sebastian';
+        let tempListTimes = /*[[${tempListTimes}]]*/ 'Sebastian';
         let humidList = /*[[${humidList}]]*/ 'Sebastian';
-        let humidList_rawTimes = /*[[${humidList_rawTimes}]]*/ 'Sebastian';
+        let humidListTimes = /*[[${humidListTimes}]]*/ 'Sebastian';
         let CO2List = /*[[${CO2List}]]*/ 'Sebastian';
-        let CO2List_rawTimes = /*[[${CO2List_rawTimes}]]*/ 'Sebastian';
+        let CO2ListTimes = /*[[${CO2ListTimes}]]*/ 'Sebastian';
+        let noiseList = /*[[${noiseList}]]*/ 'Sebastian'
+        let noiseListTimes = /*[[${noiseListTimes}]]*/ 'Sebastian'
         /*]]>*/
     </script>
 </head>
@@ -85,6 +87,29 @@
                         <p id="CO2Warn" class="text-danger"></p>
                         <p id="CO2Recommend"></p>
                         <p id="CO2Stats">No Data Available</p>
+                    </div>
+
+                    <div class="col-lg-6 col-md-12 col-sm-12 text-center" th:if="${noiseList != null}">
+                        <h2>Noise Data</h2>
+                        <canvas id="noiseChart" class="mx-auto"></canvas>
+                        <p id="noiseWarn" class="text-danger"></p>
+                        <p id="noiseRecommend"></p>
+                        <p id="noiseStats">No Data Available</p>
+
+                        <div th:if="${soundSpikes != null}">
+                            <table class="table table-responsive table-striped">
+                                <tr class="table-dark">
+                                    <th>Number of Measurements</th>
+                                    <th>Duration (ms)</th>
+                                    <th>Peak Amplitude</th>
+                                </tr>
+                                <tr class="content" th:each="spike : ${soundSpikes}">
+                                    <td th:text="${spike.getNumberMeasurements()}"></td>
+                                    <td th:text="${spike.getDuration()}"></td>
+                                    <td th:text="${spike.getPeakAmplitude()}"></td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>

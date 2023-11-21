@@ -1,12 +1,10 @@
 package be.kdg.integration3.presentation;
 
-import be.kdg.integration3.domain.CO2Data;
-import be.kdg.integration3.domain.HumidityData;
-import be.kdg.integration3.domain.Room;
-import be.kdg.integration3.domain.TemperatureData;
+import be.kdg.integration3.domain.*;
 import be.kdg.integration3.presentation.viewmodel.DashboardViewModel;
 import be.kdg.integration3.service.DashboardService;
 import be.kdg.integration3.util.exception.DatabaseException;
+import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
@@ -104,17 +102,22 @@ public class DashboardController {
 
             if (!service.getTemperatureList().isEmpty()) {
                 model.addAttribute("tempList", service.getTemperatureList().stream().map(TemperatureData::getValue).toList());
-                model.addAttribute("tempList_rawTimes", service.getTemperatureList().stream().map(TemperatureData::getTimestamp).toList());
+                model.addAttribute("tempListTimes", service.getTemperatureList().stream().map(TemperatureData::getTimestamp).toList());
             }
 
             if (!service.getHumidityList().isEmpty()) {
                 model.addAttribute("humidList", service.getHumidityList().stream().map(HumidityData::getValue).toList());
-                model.addAttribute("humidList_rawTimes", service.getHumidityList().stream().map(HumidityData::getTimestamp).toList());
+                model.addAttribute("humidListTimes", service.getHumidityList().stream().map(HumidityData::getTimestamp).toList());
             }
 
             if (!service.getCO2List().isEmpty()) {
                 model.addAttribute("CO2List", service.getCO2List().stream().map(CO2Data::getValue).toList());
-                model.addAttribute("CO2List_rawTimes", service.getCO2List().stream().map(CO2Data::getTimestamp).toList());
+                model.addAttribute("CO2ListTimes", service.getCO2List().stream().map(CO2Data::getTimestamp).toList());
+            }
+
+            if (!service.getNoiseList().isEmpty()) {
+                model.addAttribute("noiseList", service.getNoiseList().stream().map(SoundData::getValue).toList());
+                model.addAttribute("noiseListTimes", service.getNoiseList().stream().map(SoundData::getTimestamp).toList());
             }
 
             if (service.getTemperatureList().isEmpty() && service.getHumidityList().isEmpty() && service.getCO2List().isEmpty()) {

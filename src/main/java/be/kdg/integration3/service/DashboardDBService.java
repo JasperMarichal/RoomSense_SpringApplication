@@ -1,9 +1,6 @@
 package be.kdg.integration3.service;
 
-import be.kdg.integration3.domain.CO2Data;
-import be.kdg.integration3.domain.HumidityData;
-import be.kdg.integration3.domain.Room;
-import be.kdg.integration3.domain.TemperatureData;
+import be.kdg.integration3.domain.*;
 import be.kdg.integration3.repository.DataRepository;
 import be.kdg.integration3.util.exception.DatabaseException;
 import org.springframework.context.annotation.Profile;
@@ -56,6 +53,11 @@ public class DashboardDBService implements DashboardService{
     @Override
     public List<HumidityData> getHumidityList() {
         return repository.getHumidityRecordList();
+    }
+
+    @Override
+    public List<SoundData> getNoiseList() {
+        return repository.getNoiseRecordList();
     }
 
     /**

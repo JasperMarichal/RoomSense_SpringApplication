@@ -73,6 +73,11 @@ public class JsonDataRepository implements DataRepository {
     }
 
     @Override
+    public List<SoundData> getNoiseRecordList() {
+        return null;
+    }
+
+    @Override
     public LocalDateTime getLastReadingTime(int roomID){
         return null;
     }

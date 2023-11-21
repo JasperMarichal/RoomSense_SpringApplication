@@ -45,6 +45,11 @@ public class DashboardJSONService implements DashboardService {
     }
 
     @Override
+    public List<SoundData> getNoiseList() {
+        return repository.getNoiseRecordList();
+    }
+
+    @Override
     public LocalDateTime getLastTime(int roomID){
         return null;
     }
