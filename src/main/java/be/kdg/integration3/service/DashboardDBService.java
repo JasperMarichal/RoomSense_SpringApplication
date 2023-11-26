@@ -13,7 +13,6 @@ import java.util.List;
 @Profile("jdbcrepository")
 public class DashboardDBService implements DashboardService{
     private final DataRepository repository;
-    private int currentId = -1;
 
     public DashboardDBService(DataRepository repository) {
         this.repository = repository;

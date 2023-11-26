@@ -23,6 +23,9 @@ let humidity = false;
 let CO2 = false;
 let noise = false;
 
+let data;
+let colors;
+
 
 init()
 
@@ -78,7 +81,7 @@ function prepareTemperatureData() {
         }
     }
 
-    getStatistics(tempList, tempListTimes, "temp", "temperature")
+    getStatistics(tempList, tempListTimes, "temp", "Temperature")
 
     temperatureChart();
 }
@@ -103,7 +106,7 @@ function prepareHumidityData() {
         }
     }
 
-    getStatistics(humidList, humidListTimes, "humid", "humidity");
+    getStatistics(humidList, humidListTimes, "humid", "Humidity");
 
     humidityChart();
 }
@@ -153,7 +156,7 @@ function prepareNoiseData() {
         }
     }
 
-    getStatistics(noiseList, noiseListTimes, "noise", "noise");
+    getStatistics(noiseList, noiseListTimes, "noise", "Noise");
 
     noiseChart();
 }
@@ -173,7 +176,7 @@ function getStatistics(allDataInRange, allTimeInRange, textID, dataType){
     const recommendObject = document.getElementById(textID + "Recommend");
 
     let total = 0;
-    let minData = 100;
+    let minData = 10000;
     let maxData = 0;
 
     allDataInRange.forEach(data => {
@@ -185,17 +188,21 @@ function getStatistics(allDataInRange, allTimeInRange, textID, dataType){
     if (allDataInRange.length === 0){
         textObject.innerHTML = "No Data For Time Period Available";
     } else {
-        textObject.innerHTML = "Average " + dataType + ": " + Math.round(total / allDataInRange.length) +
-            "<br>" + "Minimum " + dataType + ": " + minData +
-            "<br>" + "Maximum " + dataType + ": " + maxData + "<br><br>" +
+        textObject.innerHTML = "🟦 Minimum " + dataType + ": " + minData +
+            "<br>" + "🟩 Average " + dataType + ": " + Math.round(total / allDataInRange.length) +
+            "<br>" + "🟥 Maximum " + dataType + ": " + maxData + "<br><br>" +
             "First reading time: " + getDateTimeString(allTimeInRange, 0) +
             "<br>" + "Last reading time: " + getDateTimeString(allTimeInRange, allTimeInRange.length - 1);
 
         warnObject.innerHTML = "";
         recommendObject.innerHTML = "";
 
+        if (textID === "temp" || textID === "humid" || textID === "CO2") {
+            minMaxAverageGraph(minData, maxData, Math.round(total / allDataInRange.length), textID, dataType);
+        }
+
         switch (dataType){
-            case "temperature": {
+            case "Temperature": {
                 if (maxData > 30) warnObject.innerHTML = warnObject.innerHTML + "<br>Maximum temperature is too high consider cooling the room!<br>"
                 if (minData < 20) warnObject.innerHTML = warnObject.innerHTML + "<br>Minimum temperature is too low consider heating the room!<br>"
                 if (total / allDataInRange.length > 30) warnObject.innerHTML = warnObject.innerHTML + "<br>Average temperature is too high consider cooling the room!<br>"
@@ -207,7 +214,7 @@ function getStatistics(allDataInRange, allTimeInRange, textID, dataType){
 
                 break;
             }
-            case "humidity": {
+            case "Humidity": {
                 if (maxData > 70) warnObject.innerHTML = warnObject.innerHTML + "<br>Maximum humidity is too high consider using a dehumidifier!<br>"
                 if (minData < 30) warnObject.innerHTML = warnObject.innerHTML + "<br>Minimum humidity is too low consider using a humidifier!<br>"
                 if (total / allDataInRange.length > 70) warnObject.innerHTML = warnObject.innerHTML + "<br>Average humidity is too high consider using a dehumidifier!<br>"
@@ -223,9 +230,9 @@ function getStatistics(allDataInRange, allTimeInRange, textID, dataType){
                 if (maxData > 5000) warnObject.innerHTML = warnObject.innerHTML + "Maximum CO2 concentration is too high, ventilate the room, do not maintain this concentration for over 8 hours, there is a risk of serious health issues!<br>"
                 if (total / allDataInRange.length > 5000) warnObject.innerHTML = warnObject.innerHTML + "Average CO2 concentration is too high, ventilate the room, do not maintain this concentration for over 8 hours, there is a risk of serious health issues!<br>"
 
-                if (maxData > 1000 && !(total / allDataInRange.length > 1000)) recommendObject.innerHTML = recommendObject.innerHTML + "Maximum CO2 concentration is getting too high, consider ventilating the room, maintain a concentration of less than 1000ppm.<br>"
-                else if (total / allDataInRange.length > 1000 && !(maxData > 1000)) recommendObject.innerHTML = recommendObject.innerHTML + "Average CO2 concentration is getting too high, consider ventilating the room, maintain a concentration of less than 1000ppm.<br>"
-                else if (maxData > 1000 && total / allDataInRange.length > 1000) recommendObject.innerHTML = recommendObject.innerHTML + "Average and Maximum CO2 concentration is getting too high, consider ventilating the room, maintain a concentration of less than 1000ppm.<br>"
+                if (maxData > 1500 && !(total / allDataInRange.length > 1500)) recommendObject.innerHTML = recommendObject.innerHTML + "Maximum CO2 concentration is getting too high, consider ventilating the room, maintain a concentration of less than 1500ppm.<br>"
+                else if (total / allDataInRange.length > 1500 && !(maxData > 1500)) recommendObject.innerHTML = recommendObject.innerHTML + "Average CO2 concentration is getting too high, consider ventilating the room, maintain a concentration of less than 1500ppm.<br>"
+                else if (maxData > 1500 && total / allDataInRange.length > 1500) recommendObject.innerHTML = recommendObject.innerHTML + "Average and Maximum CO2 concentration is getting too high, consider ventilating the room, maintain a concentration of less than 1500ppm.<br>"
 
                 break;
             }
@@ -235,6 +242,163 @@ function getStatistics(allDataInRange, allTimeInRange, textID, dataType){
         }
     }
 }
+
+function minMaxAverageGraph(minValue, maxValue, averageValue, textID, dataType){
+    let absoluteMin;
+    let minRecommend;
+    let maxRecommend;
+    let absoluteMax;
+
+    switch (textID){
+        case "temp": {
+            absoluteMin = 0;
+            absoluteMax = 40;
+
+            minRecommend = 20;
+            maxRecommend = 30;
+            break;
+        }
+        case "humid": {
+            absoluteMin = 20/1.8;
+            absoluteMax = 90/1.8;
+
+            minRecommend = 30/1.8;
+            maxRecommend = 70/1.8;
+
+            minValue = minValue/1.8;
+            maxValue = maxValue/1.8;
+            averageValue = averageValue/1.8;
+            break;
+        }
+        case "CO2": {
+            absoluteMin = 350/150;
+            absoluteMax = 8000/150;
+
+            minRecommend = 400/150;
+            maxRecommend = 4000/150;
+
+            minValue = minValue/150;
+            maxValue = maxValue/150;
+            averageValue = averageValue/150;
+            break;
+        }
+    }
+
+    let minMaxAverage = [minValue, maxValue, averageValue];
+    if (minValue === maxValue && minValue === averageValue){
+        minMaxAverage = [minValue];
+    } else if (minValue === averageValue && minValue !== maxValue){
+        minMaxAverage = [averageValue, maxValue];
+    } else if (maxValue === averageValue && maxValue !== minValue){
+        minMaxAverage = [minValue, averageValue];
+    }
+    minMaxAverage.push(minRecommend); minMaxAverage.push(maxRecommend); minMaxAverage.push(absoluteMax);
+    minMaxAverage.sort(function(a, b) {return a - b});
+
+    minMaxAverage = minMaxAverage.filter(function(item, pos) {
+        return minMaxAverage.indexOf(item) === pos;
+    })
+
+    data = [];
+    colors = [];
+    let rawData = [];
+
+    let outOfRecommendedColor = "silver"
+
+    minMaxAverage.forEach(value => {
+        if (value < minRecommend && value > absoluteMin){
+            data.push(value - absoluteMin - 1);
+            data.push(1);
+            colors.push(outOfRecommendedColor);
+            valueColors(value, minValue, averageValue, maxValue);
+            rawData.push(value);
+        } else if (value === minRecommend || value === maxRecommend || value === absoluteMax){
+            let valueToAdd = value;
+            if (data.length > 0){
+                valueToAdd -= rawData[rawData.length - 1];
+            }
+            if (value === minValue || value === averageValue || value === maxValue) {
+                if (value === minRecommend) data.push(valueToAdd-absoluteMin-1);
+                else data.push(valueToAdd - 1);
+                data.push(1);
+                if (value === minRecommend || value === absoluteMax) colors.push(outOfRecommendedColor);
+                else if (value === maxRecommend) colors.push("white");
+
+                valueColors(value, minValue, averageValue, maxValue);
+            } else {
+                if (value === minRecommend) data.push(valueToAdd-absoluteMin);
+                else data.push(valueToAdd);
+                if (value === minRecommend || value === absoluteMax) colors.push(outOfRecommendedColor);
+                else if (value === maxRecommend) colors.push("white");
+            }
+            rawData.push(value);
+        } else if (value > minRecommend && value < maxRecommend){
+            data.push(value-rawData[rawData.length - 1]-1);
+            data.push(1);
+            colors.push("white");
+            valueColors(value, minValue, averageValue, maxValue);
+            rawData.push(value);
+        } else if (value > maxRecommend && value < absoluteMax){
+            data.push(value-maxRecommend-1);
+            data.push(1);
+            colors.push(outOfRecommendedColor);
+            valueColors(value, minValue, averageValue, maxValue);
+            rawData.push(value);
+        } else {
+            console.log(dataType + " " + value + " " + rawData.length)
+            console.log(CO2List);
+            data.push(value);
+            colors = ["black"];
+        }
+    })
+
+    showGaugeGraph(textID, absoluteMin, absoluteMax, dataType);
+}
+
+function valueColors(value, minValue, averageValue, maxValue){
+    if (value === minValue){
+        colors.push("blue");
+    } else if (value === averageValue){
+        colors.push("green");
+    } else if (value === maxValue){
+        colors.push("red");
+    } else {
+        colors.push("orangered");
+    }
+}
+
+function showGaugeGraph(textID, absoluteMin, absoluteMax, dataType){
+    let chartName = textID + "ValuesDisplay"
+    new Chart(chartName, {
+        data: {
+            datasets: [
+                {
+                    type: "doughnut",
+                    data: data,
+                    minValue: absoluteMin,
+                    maxValue: absoluteMax,
+                    backgroundColor: colors,
+                    borderWidth: 2,
+                    borderColor: "darkgray"
+                },
+            ]
+        },
+        options: {
+            cutoutPercentage: 70,
+            rotation: Math.PI,
+            circumference: Math.PI,
+            tooltips: {enabled: false},
+            plugins : {
+                legend: false,
+            },
+            title: {
+                display: true,
+                text: "Min/Max/Average" + " " + dataType,
+            },
+        }
+    })
+}
+
 
 /**
  * Based on a given time returns the formatted version of that time to be in dd/MM/yyyy hh:mm:ss format
@@ -273,7 +437,24 @@ function temperatureChart() {
             }]
         },
         options: {
-
+            plugins : {legend: false},
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        callback: function(value) {if (value % 1 === 0) {return value;}}
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: "Temperature (°C)"
+                    }
+                }],
+                xAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: "Time (s)"
+                    }
+                }]
+            }
         }
     });
 }
@@ -301,7 +482,24 @@ function humidityChart() {
             }]
         },
         options: {
-
+            plugins : {legend: false},
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        callback: function(value) {if (value % 1 === 0) {return value;}}
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: "Humidity (%)"
+                    }
+                }],
+                xAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: "Time (s)"
+                    }
+                }]
+            }
         }
     });
 }
@@ -329,7 +527,24 @@ function CO2Chart() {
             }]
         },
         options: {
-
+            plugins : {legend: false},
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        callback: function(value) {if (value % 1 === 0) {return value;}}
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: "CO2 Concentration (ppm)"
+                    }
+                }],
+                xAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: "Time (s)"
+                    }
+                }]
+            }
         }
     });
 }
@@ -354,7 +569,24 @@ function noiseChart() {
             }]
         },
         options: {
-
+            plugins : {legend: false},
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        callback: function(value) {if (value % 1 === 0) {return value;}}
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: "Noise"
+                    }
+                }],
+                xAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: "Time (s)"
+                    }
+                }]
+            }
         }
     });
 }

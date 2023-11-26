@@ -64,37 +64,52 @@
 
                 <h1 th:if="chooseRoom" th:text="${chooseRoom}" class="text-center"></h1>
 
-                <div class="m-2 row">
-                    <div class="col-lg-6 col-md-12 col-sm-12 text-center" th:if="${tempList != null}">
-                        <h2>Temperature Data</h2>
-                        <canvas id="tempChart" class="mx-auto"></canvas>
+                <div class="m-2 row border border-dark-subtle border-3 rounded-5 bg-secondary-subtle" th:if="${tempList != null}">
+                    <div class="col-lg-8 col-md-12 col-sm-12 text-center">
+                        <h2 class="mt-2">Temperature Data</h2>
+                        <canvas id="tempChart" class="mx-auto graph"></canvas>
                         <p id="tempWarn" class="text-danger"></p>
                         <p id="tempRecommend"></p>
+                    </div>
+
+                    <div class="col-lg-4 col-md-12 col-sm-12 text-center align-self-center">
+                        <canvas id="tempValuesDisplay" class="mx-auto statDisplay"></canvas>
                         <p id="tempStats">No Data Available</p>
                     </div>
+                </div>
 
-                    <div class="col-lg-6 col-md-12 col-sm-12 text-center" th:if="${humidList != null}">
-                        <h2>Humidity Data</h2>
-                        <canvas id="humidChart" class="mx-auto"></canvas>
+                <div class="m-2 row border border-dark-subtle border-3 rounded-5 bg-secondary-subtle" th:if="${humidList != null}">
+                    <div class="col-lg-8 col-md-12 col-sm-12 text-center" >
+                        <h2 class="mt-2">Humidity Data</h2>
+                        <canvas id="humidChart" class="mx-auto graph"></canvas>
                         <p id="humidWarn" class="text-danger"></p>
                         <p id="humidRecommend"></p>
+                    </div>
+                    <div class="col-lg-4 col-md-12 col-sm-12 text-center align-self-center">
+                        <canvas id="humidValuesDisplay" class="mx-auto statDisplay"></canvas>
                         <p id="humidStats">No Data Available</p>
                     </div>
+                </div>
 
-                    <div class="col-lg-6 col-md-12 col-sm-12 text-center" th:if="${CO2List != null}">
-                        <h2>CO2 Data</h2>
-                        <canvas id="CO2Chart" class="mx-auto"></canvas>
+                <div class="m-2 row border border-dark-subtle border-3 rounded-5 bg-secondary-subtle" th:if="${CO2List != null}">
+                    <div class="col-lg-8 col-md-12 col-sm-12 text-center">
+                        <h2 class="mt-2">CO2 Data</h2>
+                        <canvas id="CO2Chart" class="mx-auto graph"></canvas>
                         <p id="CO2Warn" class="text-danger"></p>
                         <p id="CO2Recommend"></p>
+                    </div>
+                    <div class="col-lg-4 col-md-12 col-sm-12 text-center align-self-center">
+                        <canvas id="CO2ValuesDisplay" class="mx-auto statDisplay"></canvas>
                         <p id="CO2Stats">No Data Available</p>
                     </div>
+                </div>
 
-                    <div class="col-lg-6 col-md-12 col-sm-12 text-center" th:if="${noiseList != null}">
-                        <h2>Noise Data</h2>
-                        <canvas id="noiseChart" class="mx-auto"></canvas>
+                <div class="m-2 row border border-dark-subtle border-3 rounded-5 bg-secondary-subtle" th:if="${noiseList != null}">
+                    <div class="col-lg-8 col-md-12 col-sm-12 text-center">
+                        <h2 class="mt-2">Noise Data</h2>
+                        <canvas id="noiseChart" class="mx-auto graph"></canvas>
                         <p id="noiseWarn" class="text-danger"></p>
                         <p id="noiseRecommend"></p>
-                        <p id="noiseStats">No Data Available</p>
 
                         <div th:if="${soundSpikes != null}">
                             <table class="table table-responsive table-striped">
@@ -110,6 +125,10 @@
                                 </tr>
                             </table>
                         </div>
+                    </div>
+                    <div class="col-lg-4 col-md-12 col-sm-12 text-center align-self-center">
+                        <canvas id="noiseValuesDisplay" class="mx-auto statDisplay"></canvas>
+                        <p id="noiseStats">No Data Available</p>
                     </div>
                 </div>
             </div>
