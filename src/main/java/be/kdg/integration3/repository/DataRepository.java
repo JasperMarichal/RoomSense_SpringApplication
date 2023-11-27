@@ -12,4 +12,5 @@ public interface DataRepository {
     List<HumidityData> getHumidityRecordList();
     List<CO2Data> getCO2RecordList();
     LocalDateTime getLastReadingTime(int roomID);
+    void addRoom(Room room);
 }

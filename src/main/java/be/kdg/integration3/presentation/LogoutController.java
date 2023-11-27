@@ -1,5 +1,6 @@
 package be.kdg.integration3.presentation;
 
+import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -13,8 +14,12 @@ public class LogoutController {
     private final Logger logger = LoggerFactory.getLogger(LogoutController.class);
 
     @GetMapping
-    public String getLogoutView(Model model) {
+    public String getLogoutView(Model model, HttpSession session) {
+        session.removeAttribute("userEmail");
+        session.setAttribute("loggedIn", false);
         logger.info("Request for logout view!");
         return "redirect:/login";
     }
+
+
 }

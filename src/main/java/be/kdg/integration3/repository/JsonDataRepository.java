@@ -77,6 +77,11 @@ public class JsonDataRepository implements DataRepository {
         return null;
     }
 
+    @Override
+    public void addRoom(Room room) {
+
+    }
+
     private void findFiles(String name) {
         File root = new File("..\\JSONSaves\\");
         FilenameFilter filesFilter = (directory, filename) -> filename.startsWith(name);

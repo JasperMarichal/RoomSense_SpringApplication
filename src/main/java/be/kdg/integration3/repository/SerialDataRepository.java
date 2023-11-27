@@ -68,6 +68,10 @@ public class SerialDataRepository implements DataRepository {
         return null;
     }
 
+    @Override
+    public void addRoom(Room room) {
+    }
+
     private int parseSerial(char[] newSerialData) {
         int newDataCount = 0;
         for(char c : newSerialData) {

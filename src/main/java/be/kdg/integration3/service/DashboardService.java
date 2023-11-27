@@ -18,4 +18,6 @@ public interface DashboardService {
     List<CO2Data> getCO2List();
 
     LocalDateTime getLastTime(int roomID);
+
+    void addRoom(Room room);
 }
