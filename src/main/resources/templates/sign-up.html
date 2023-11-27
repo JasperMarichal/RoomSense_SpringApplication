@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+        <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+        <script defer th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
+        <script defer th:src="@{/dashboardScript.js}"></script>
+        <title>Sign Up</title>
+        <script th:inline="javascript">
+    </script>
+</head>
+<body>
+<div th:insert="~{fragment/navbar-not-logged-in::navbar-not-logged-in}">navbar</div>
+<section class="vh-100">
+    <div class="container-fluid h-custom">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-sm-7 px-0 d-none d-sm-block">
+                <form method="post" th:object="${signupviewmodel}" novalidate>
+                    <div class="form-outline mb-4">
+                        <label for="inputName" class="form-label" th:field="*{signupviewmodel.username}">Username</label>
+                        <div>
+                            <input type="text" class="form-control" id="inputName" aria-describedby="username" name="username" required>
+                        </div>
+                            <label for="inputEmail" class="form-label" th:field="*{signupvviewmodel.email}">Email</label>
+                            <div>
+                                <input type="email" class="form-control" id="inputEmail" aria-describedby="email" name="email" required>
+                            </div>
+                        <label for="inputPassword" class="form-label" th:field="*{signupviewmodel.password}">Password</label>
+                        <div>
+                            <input type="password" class="form-control" id="inputPassword" aria-describedby="password" name="password" required>
+                        </div>
+                        <label for="inputCase" class="form-label" th:field="*{signupviewmodel.useCase}">Use Case</label>
+                        <div>
+                            <select id="inputCase" name="useCase" required th:each="${case : ${useCase}}">
+                                <option  th:value="${useCase}" th:text="${useCase}"></option>
+                            </select>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</section>
+</form>
+</body>
+</html>
