@@ -68,7 +68,7 @@ public class SoundSpike {
     public double getDuration() {
         long endTimeMillis = endTime.toInstant().toEpochMilli();
         long startTimeMillis = startTime.toInstant().toEpochMilli();
-        return (endTimeMillis - startTimeMillis) / 1000.0;
+        return (endTimeMillis - startTimeMillis);
     }
 
     @Override

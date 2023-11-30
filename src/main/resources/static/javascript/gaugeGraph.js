@@ -1,6 +1,15 @@
 let data;
 let colors;
 
+/**
+ * This method is responsible for getting everything setup for the gauge chart including getting the colours in place
+ * to display the minimum, maximum and average values, it then calls a method to show the gauge chart.
+ * @param minValue The minimum value to display on the chart
+ * @param maxValue The maximum value to display on the chart
+ * @param averageValue The average value to display on the chart
+ * @param textID The ID that identifies what kind of data we are dealing with
+ * @param dataType The datatype to use in the chart to display the kind of data
+ */
 export function minMaxAverageGraph(minValue, maxValue, averageValue, textID, dataType){
     let absoluteMin;
     let minRecommend;
