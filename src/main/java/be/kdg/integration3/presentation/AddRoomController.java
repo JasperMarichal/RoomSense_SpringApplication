@@ -36,8 +36,6 @@ public class AddRoomController {
         logger.info(String.format("Processing room name: %s, width: %f, length: %f, height: %f",
                 addRoomViewModel.getRoomName(), addRoomViewModel.getWidth(), addRoomViewModel.getLength(), addRoomViewModel.getHeight()));
 
-
-
         if (errors.hasErrors()) {
             errors.getAllErrors().forEach(error -> logger.error(error.toString()));
             return "/add-room";
