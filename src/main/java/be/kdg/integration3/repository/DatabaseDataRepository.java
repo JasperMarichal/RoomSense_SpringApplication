@@ -6,17 +6,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
 import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.net.SocketTimeoutException;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +22,7 @@ public class DatabaseDataRepository implements DataRepository{
     private List<HumidityData> humidityRecordList;
     private List<CO2Data> CO2RecordList;
     private List<SoundData> noiseRecordList;
+    private List<SoundSpike> spikeRecordList;
     private JdbcTemplate jdbcTemplate;
 
     public DatabaseDataRepository(JdbcTemplate jdbcTemplate) {
@@ -35,6 +30,7 @@ public class DatabaseDataRepository implements DataRepository{
         this.humidityRecordList = new ArrayList<>();
         this.CO2RecordList = new ArrayList<>();
         this.noiseRecordList = new ArrayList<>();
+        this.spikeRecordList = new ArrayList<>();
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -49,6 +45,7 @@ public class DatabaseDataRepository implements DataRepository{
         humidityRecordList = new ArrayList<>();
         CO2RecordList = new ArrayList<>();
         noiseRecordList = new ArrayList<>();
+        spikeRecordList = new ArrayList<>();
 
         ZoneId userTimeZone = ZoneId.systemDefault();
         ZonedDateTime zonedEndDateTime = endDateTime.atZone(userTimeZone);
@@ -62,6 +59,7 @@ public class DatabaseDataRepository implements DataRepository{
             getHumidity(roomID, timestampEnd, timestampStart);
             getCO2(roomID, timestampEnd, timestampStart);
             getNoise(roomID, timestampEnd, timestampStart);
+            getSpikes(roomID, timestampEnd, timestampStart);
         } catch (DataAccessException e){
             throw new DatabaseException("Can not connect to database", e);
         }
@@ -96,11 +94,43 @@ public class DatabaseDataRepository implements DataRepository{
 
     private void getNoise(int roomID, Timestamp timestampEnd, Timestamp timestampStart) throws DataAccessException {
         List<SoundData> noise = jdbcTemplate.query("SELECT * FROM noise_entry WHERE room_id = ?" +
-                        "AND timestamp BETWEEN ? AND ?",
+                        "AND timestamp BETWEEN ? AND ? ORDER BY timestamp",
                 (rs, rowNum) -> new SoundData(rs.getTimestamp("timestamp"), rs.getInt("value")),
                 roomID, timestampEnd, timestampStart);
 
         noiseRecordList.addAll(noise);
+    }
+
+    private void getSpikes(int roomID, Timestamp timestampEnd, Timestamp timestampStart) throws DataAccessException {
+        logger.debug("Getting spikes");
+
+        List<SoundSpike> spikes = jdbcTemplate.query("SELECT * FROM sound_spike WHERE room_id = ?" +
+                        "AND start_entry BETWEEN ? AND ?",
+                (rs, rowNum) -> new SoundSpike(rs.getInt("spike_id"), roomID,
+                        rs.getTimestamp("start_entry"),
+                        rs.getTimestamp("end_entry")),
+                roomID, timestampEnd, timestampStart);
+
+        spikes.forEach(spike -> {
+            int maxAmplitude = jdbcTemplate.query("SELECT MAX(value) FROM raw_sound_entry WHERE timestamp BETWEEN ? AND ?",
+                    (rs, rowNum) -> rs.getInt(1), spike.getStartTime(), spike.getEndTime()).get(0);
+            spike.setPeakAmplitude(maxAmplitude);
+            int numberMeasurements = jdbcTemplate.query("SELECT COUNT(value) FROM raw_sound_entry WHERE timestamp BETWEEN ? AND ?",
+                      (rs, rowNum) -> rs.getInt(1), spike.getStartTime(), spike.getEndTime()).get(0);
+            spike.setNumberMeasurements(numberMeasurements);
+        });
+
+
+        spikeRecordList.addAll(spikes);
+    }
+
+    @Override
+    public List<SoundData> getSpikeData(int roomId, int spikeId){
+        List<SoundData> spikeData = jdbcTemplate.query("SELECT * FROM raw_sound_entry WHERE timestamp " +
+                        "BETWEEN (SELECT start_entry FROM sound_spike WHERE spike_id = ? AND room_id = ?) " +
+                        "AND (SELECT end_entry FROM sound_spike WHERE spike_id = ? AND room_id = ?)",
+                (rs, rowNum) -> new SoundData(rs.getTimestamp("timestamp"), rs.getInt("value")), spikeId, roomId, spikeId, roomId);
+        return spikeData;
     }
 
     @Override
@@ -160,5 +190,10 @@ public class DatabaseDataRepository implements DataRepository{
     @Override
     public List<SoundData> getNoiseRecordList() {
         return noiseRecordList;
+    }
+
+    @Override
+    public List<SoundSpike> getSpikeRecordList() {
+        return spikeRecordList;
     }
 }

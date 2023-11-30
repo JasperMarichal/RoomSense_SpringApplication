@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+    <script defer th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
+    <script defer type="module" th:src="@{/spikeGraph.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/dashboardStyle.css}">
+    <title th:text="'Spike ' + ${spikeId}"></title>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        let spikeList = /*[[${spikeList}]]*/ 'Sebastian';
+        let spikeListTimes = /*[[${spikeListTimes}]]*/ 'Sebastian';
+        /*]]>*/
+    </script>
+</head>
+<body class="bg-dark-subtle">
+    <div th:if="${session.loggedIn}">
+        <div th:insert="~{fragment/navbar-logged-in::navbar-logged-in}">div</div>
+    </div>
+    <div th:unless="${session.loggedIn}">
+        <div th:insert="~{fragment/navbar-not-logged-in::navbar-not-logged-in}">div</div>
+    </div>
+
+    <div class="m-2 row">
+        <div class="col-lg-8 col-md-12 col-sm-12 text-center">
+            <h2 class="mt-2" th:text="'Data For Spike ' + ${spikeId}">Spike Data</h2>
+            <canvas id="spikeChart" class="mx-auto graph"></canvas>
+        </div>
+
+        <div class="col-lg-4 col-md-12 col-sm-12 text-center align-self-center">
+            <canvas id="spikeValuesDisplay" class="mx-auto statDisplay"></canvas>
+            <p id="spikeStats">No Data Available</p>
+        </div>
+    </div>
+
+    <div class="mx-auto text-center">
+        <form method="post" ><button class="btn btn-primary">Return to Dashboard</button></form>
+    </div>
+
+    <div th:insert="~{fragment/footer::footercopy}">footer</div>
+</body>
+</html>

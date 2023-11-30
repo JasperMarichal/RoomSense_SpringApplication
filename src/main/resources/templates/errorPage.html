@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+    <script defer th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
+    <title>Title</title>
+</head>
+<body class="bg-secondary-subtle">
+    <div th:if="${session.loggedIn}">
+        <div th:insert="~{fragment/navbar-logged-in::navbar-logged-in}">div</div>
+    </div>
+    <div th:unless="${session.loggedIn}">
+        <div th:insert="~{fragment/navbar-not-logged-in::navbar-not-logged-in}">div</div>
+    </div>
+
+    <h2 class="text-center">Oops, something went wrong with your request</h2>
+
+</body>
+</html>

@@ -4,9 +4,7 @@ import be.kdg.integration3.domain.*;
 import be.kdg.integration3.presentation.viewmodel.DashboardViewModel;
 import be.kdg.integration3.service.DashboardService;
 import be.kdg.integration3.util.exception.DatabaseException;
-import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -14,20 +12,16 @@ import org.springframework.web.bind.annotation.*;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 @RequestMapping("/dashboard")
 public class DashboardController {
     private final DashboardService service;
-    private JdbcTemplate jdbcTemplate;
 
-    //TODO: Make this linked to user that is logged in
-    private final String account = "roman.gordon@student.kdg.be";
-
-    public DashboardController(DashboardService service, JdbcTemplate jdbcTemplate) {
+    public DashboardController(DashboardService service) {
         this.service = service;
-        this.jdbcTemplate = jdbcTemplate;
     }
 
     /**
@@ -37,6 +31,7 @@ public class DashboardController {
      */
     @GetMapping
     public String getDashboardView(Model model, HttpSession session) {
+        if (session.getAttribute("userEmail") == null) return "redirect:/login";
 
         model.addAttribute("chooseRoom", "Please choose a room to show data for.");
 
@@ -48,7 +43,7 @@ public class DashboardController {
 
         model.addAttribute("dashboardViewModel", viewModelFromSession);
 
-        addRoomsToModel(model);
+        addRoomsToModel(model, session);
 
         return "dashboard";
     }
@@ -74,6 +69,8 @@ public class DashboardController {
      */
     @GetMapping("/{roomId}")
     public String searchForRoom(Model model, @PathVariable int roomId, HttpSession session){
+        if (session.getAttribute("userEmail") == null) return "redirect:/login";
+
         DashboardViewModel viewModelFromSession = (DashboardViewModel) session.getAttribute("dashboardViewModel");
         if (viewModelFromSession == null){
             viewModelFromSession = new DashboardViewModel();
@@ -84,49 +81,62 @@ public class DashboardController {
 
         model.addAttribute("dashboardViewModel", viewModelFromSession);
 
-        LocalDateTime endDateTime;
-        LocalDateTime startDateTime;
+        List<Room> userRooms = service.getUserRooms(String.valueOf(session.getAttribute("userEmail")));
 
-        try {
-            if (viewModelFromSession.getDateTimeStart() != null) {
-                startDateTime = viewModelFromSession.getDateTimeStart();
-            } else {
-                startDateTime = service.getLastTime(viewModelFromSession.getRoomId());
+        if (userRooms.stream().anyMatch(room -> room.getId() == roomId)) {
+            LocalDateTime endDateTime;
+            LocalDateTime startDateTime;
+
+            try {
+                if (viewModelFromSession.getDateTimeStart() != null) {
+                    startDateTime = viewModelFromSession.getDateTimeStart();
+                } else {
+                    startDateTime = service.getLastTime(viewModelFromSession.getRoomId());
+                }
+
+                long startDateTimeMillis = startDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+                long endDateTimeMillis = startDateTimeMillis - (viewModelFromSession.getTimePeriod() * 60000L);
+                endDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(endDateTimeMillis), ZoneId.systemDefault());
+
+                System.out.println(startDateTime + "-" + endDateTime);
+
+                service.getData(viewModelFromSession.getRoomId(), startDateTime, endDateTime);
+
+                if (!service.getTemperatureList().isEmpty()) {
+                    model.addAttribute("tempList", service.getTemperatureList().stream().map(TemperatureData::getValue).toList());
+                    model.addAttribute("tempListTimes", service.getTemperatureList().stream().map(TemperatureData::getTimestamp).toList());
+                }
+
+                if (!service.getHumidityList().isEmpty()) {
+                    model.addAttribute("humidList", service.getHumidityList().stream().map(HumidityData::getValue).toList());
+                    model.addAttribute("humidListTimes", service.getHumidityList().stream().map(HumidityData::getTimestamp).toList());
+                }
+
+                if (!service.getCO2List().isEmpty()) {
+                    model.addAttribute("CO2List", service.getCO2List().stream().map(CO2Data::getValue).toList());
+                    model.addAttribute("CO2ListTimes", service.getCO2List().stream().map(CO2Data::getTimestamp).toList());
+                }
+
+                if (!service.getNoiseList().isEmpty()) {
+                    model.addAttribute("noiseList", service.getNoiseList().stream().map(SoundData::getValue).toList());
+                    model.addAttribute("noiseListTimes", service.getNoiseList().stream().map(SoundData::getTimestamp).toList());
+                }
+
+                if (!service.getSpikeList().isEmpty()){
+                    model.addAttribute("soundSpikes", service.getSpikeList());
+                }
+
+                if (service.getTemperatureList().isEmpty() && service.getHumidityList().isEmpty() && service.getCO2List().isEmpty()
+                        && service.getNoiseList().isEmpty() && service.getSpikeList().isEmpty()) {
+                    model.addAttribute("chooseRoom", "There is no data available for your room of choice");
+                }
+
+                addRoomsToModel(model, session);
+            } catch (DatabaseException e) {
+                model.addAttribute("databaseError", e.getMessage());
             }
-
-            long startDateTimeMillis = startDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-            long endDateTimeMillis = startDateTimeMillis - (viewModelFromSession.getTimePeriod() * 60000L);
-            endDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(endDateTimeMillis), ZoneId.systemDefault());
-
-            service.getData(viewModelFromSession.getRoomId(), startDateTime, endDateTime);
-
-            if (!service.getTemperatureList().isEmpty()) {
-                model.addAttribute("tempList", service.getTemperatureList().stream().map(TemperatureData::getValue).toList());
-                model.addAttribute("tempListTimes", service.getTemperatureList().stream().map(TemperatureData::getTimestamp).toList());
-            }
-
-            if (!service.getHumidityList().isEmpty()) {
-                model.addAttribute("humidList", service.getHumidityList().stream().map(HumidityData::getValue).toList());
-                model.addAttribute("humidListTimes", service.getHumidityList().stream().map(HumidityData::getTimestamp).toList());
-            }
-
-            if (!service.getCO2List().isEmpty()) {
-                model.addAttribute("CO2List", service.getCO2List().stream().map(CO2Data::getValue).toList());
-                model.addAttribute("CO2ListTimes", service.getCO2List().stream().map(CO2Data::getTimestamp).toList());
-            }
-
-            if (!service.getNoiseList().isEmpty()) {
-                model.addAttribute("noiseList", service.getNoiseList().stream().map(SoundData::getValue).toList());
-                model.addAttribute("noiseListTimes", service.getNoiseList().stream().map(SoundData::getTimestamp).toList());
-            }
-
-            if (service.getTemperatureList().isEmpty() && service.getHumidityList().isEmpty() && service.getCO2List().isEmpty()) {
-                model.addAttribute("chooseRoom", "There is no data available for your room of choice");
-            }
-
-            addRoomsToModel(model);
-        } catch (DatabaseException e){
-            model.addAttribute("databaseError", e.getMessage());
+        } else {
+            return "redirect:/dashboard";
         }
 
         return "dashboard";
@@ -151,10 +161,40 @@ public class DashboardController {
      * Get all the rooms owned by the user and adds them to the model
      * @param model The model for the view
      */
-    private void addRoomsToModel(Model model){
-        List<Room> rooms = service.getUserRooms(account);
+    private void addRoomsToModel(Model model, HttpSession session){
+        String account = (String) session.getAttribute("userEmail");
+        List<Room> rooms;
+        if (account == null){
+            rooms = new ArrayList<>();
+        } else {
+            rooms = service.getUserRooms(account);
+        }
 
         model.addAttribute("userRooms", rooms);
+    }
+
+    @GetMapping("/{roomId}/{spikeId}")
+    public String getSpikePage(@PathVariable int roomId, @PathVariable int spikeId, @ModelAttribute("dashboardViewModel") DashboardViewModel dashboardViewModel, Model model, HttpSession session){
+        if (session.getAttribute("userEmail") == null) return "redirect:/login";
+
+        model.addAttribute("roomId", roomId);
+        model.addAttribute("spikeId", spikeId);
+
+        List<SoundData> spikeData = service.getSpikeData(roomId, spikeId);
+
+        if (!spikeData.isEmpty()) {
+            model.addAttribute("spikeList", spikeData.stream().map(SoundData::getValue).toList());
+            model.addAttribute("spikeListTimes", spikeData.stream().map(SoundData::getTimestamp).toList());
+        } else {
+            return "redirect:/dashboard/" + roomId;
+        }
+
+        return "spikePage";
+    }
+
+    @PostMapping("/{roomId}/{spikeId}")
+    public String spikeToDashboard(@PathVariable int roomId, @PathVariable int spikeId, @ModelAttribute("dashboardViewModel") DashboardViewModel dashboardViewModel, Model model, HttpSession session){
+        return "redirect:/dashboard/" + roomId;
     }
 
 }

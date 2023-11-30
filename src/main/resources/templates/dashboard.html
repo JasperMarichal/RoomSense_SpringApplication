@@ -5,7 +5,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
     <script defer th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
-    <script defer th:src="@{/dashboardScript.js}"></script>
+    <script defer type="module" th:src="@{/dashboardScript.js}"></script>
     <link rel="stylesheet" th:href="@{/css/dashboardStyle.css}">
     <title>Dashboard</title>
     <script th:inline="javascript">
@@ -22,7 +22,13 @@
     </script>
 </head>
 <body class="bg-dark-subtle">
-<div th:insert="~{fragment/navbar-logged-in::navbar-logged-in}">navbar</div>
+    <div th:if="${session.loggedIn}">
+        <div th:insert="~{fragment/navbar-logged-in::navbar-logged-in}">div</div>
+    </div>
+    <div th:unless="${session.loggedIn}">
+        <div th:insert="~{fragment/navbar-not-logged-in::navbar-not-logged-in}">div</div>
+    </div>
+
     <div class="container-fluid d-flex justify-content-center">
         <div class="col-12">
             <div th:if="${databaseError != null}">
@@ -111,14 +117,15 @@
                         <p id="noiseWarn" class="text-danger"></p>
                         <p id="noiseRecommend"></p>
 
-                        <div th:if="${soundSpikes != null}">
+                        <h5>Sound Spikes</h5>
+                        <div th:if="${soundSpikes != null}" class="col-lg-8 col-md-12 col-sm-12 text-center align-content-center mx-auto">
                             <table class="table table-responsive table-striped">
                                 <tr class="table-dark">
-                                    <th>Number of Measurements</th>
-                                    <th>Duration (ms)</th>
-                                    <th>Peak Amplitude</th>
+                                    <th class="col-3">Number of Measurements</th>
+                                    <th class="col-3">Duration (ms)</th>
+                                    <th class="col-3">Peak Amplitude</th>
                                 </tr>
-                                <tr class="content" th:each="spike : ${soundSpikes}">
+                                <tr class="content" th:each="spike : ${soundSpikes}" th:attr="onclick='window.location.href=\'/dashboard/' + ${spike.getRoomId()} + '/' + ${spike.getSpikeId()} + '\''">
                                     <td th:text="${spike.getNumberMeasurements()}"></td>
                                     <td th:text="${spike.getDuration()}"></td>
                                     <td th:text="${spike.getPeakAmplitude()}"></td>

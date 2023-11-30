@@ -2,7 +2,6 @@ package be.kdg.integration3.service;
 
 import be.kdg.integration3.domain.*;
 import be.kdg.integration3.repository.DataRepository;
-import be.kdg.integration3.util.exception.DatabaseException;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
@@ -58,6 +57,12 @@ public class DashboardDBService implements DashboardService{
     public List<SoundData> getNoiseList() {
         return repository.getNoiseRecordList();
     }
+
+    @Override
+    public List<SoundSpike> getSpikeList() {return  repository.getSpikeRecordList();}
+
+    @Override
+    public List<SoundData> getSpikeData(int roomId, int spikeId) {return repository.getSpikeData(roomId, spikeId);}
 
     /**
      * Gets the list of all CO2 for the room in the database, runs getData method to retrieve data then filters to get CO2Data

@@ -59,12 +59,22 @@ public class SerialDataRepository implements DataRepository {
     }
 
     @Override
+    public List<SoundData> getSpikeData(int roomId, int spikeId) {
+        return null;
+    }
+
+    @Override
     public List<Room> getUserRooms(String userAccount) {
         return null;
     }
 
     @Override
     public LocalDateTime getLastReadingTime(int roomID){
+        return null;
+    }
+
+    @Override
+    public List<SoundSpike> getSpikeRecordList() {
         return null;
     }
 
