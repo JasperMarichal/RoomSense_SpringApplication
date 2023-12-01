@@ -51,7 +51,7 @@ export function minMaxAverageGraph(minValue, maxValue, averageValue, textID, dat
         } case "noise": {
             absoluteMin = 0;
             absoluteMax = 1023/25;
-            minRecommend = 1;
+            minRecommend = 1/25;
             maxRecommend = 1022/25;
 
             minValue = minValue/25;
@@ -61,7 +61,7 @@ export function minMaxAverageGraph(minValue, maxValue, averageValue, textID, dat
         } case "spike": {
             absoluteMin = 0;
             absoluteMax = 1023/25;
-            minRecommend = 1;
+            minRecommend = 1/25;
             maxRecommend = 1022/25;
 
             minValue = minValue/25;
