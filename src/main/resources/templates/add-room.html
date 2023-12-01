@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
     <script defer th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
     <title>Add room</title>
@@ -29,19 +29,25 @@
             <div class="row d-flex justify-content-center">
                 <div class="col-lg-8">
                     <h2 class="fw-bold mb-5">Add new room</h2>
-                    <form method="post" th:object="${addroomviewmodel}" th:if="${session.loggedIn}">
-                        <!-- 2 column grid layout with text inputs for the first and last names -->
+                    <form method="post" th:object="${addroomviewmodel}" th:if="${session.loggedIn}" novalidate>
+                        <div th:if="${addRoomError}" class="alert alert-danger">
+                            <p th:text="${addRoomError}"></p>
+                        </div>
                         <div class="row">
                             <div class="col-md-6 mb-4">
                                 <div class="form-outline">
-                                    <input type="text" id="roomName" class="form-control" value=""/>
+                                    <input type="text" id="roomName" class="form-control" th:field="*{roomName}"/>
                                     <label class="form-label" th:for="roomName">Room name</label>
+                                    <span th:if="${#fields.hasErrors('roomName')}" th:errors="*{roomName}"
+                                          class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-6 mb-4">
                                 <div class="form-outline">
-                                    <input type="number" id="width" class="form-control" value=""/>
+                                    <input type="text" id="width" class="form-control" th:field="*{width}"/>
                                     <label class="form-label" th:for="width">Width</label>
+                                    <span th:if="${#fields.hasErrors('width')}" th:errors="*{width}"
+                                          class="text-danger"></span>
                                 </div>
                             </div>
                         </div>
@@ -49,14 +55,20 @@
                         <div class="row">
                             <div class="col-md-6 mb-4">
                                 <div class="form-outline">
-                                    <input type="number" id="length" class="form-control" value=""/>
+                                    <input type="text" id="length" class="form-control" th:field="*{length}"/>
                                     <label class="form-label" th:for="length">Length</label>
+                                    <span th:if="${#fields.hasErrors('length')}" th:errors="*{length}"
+                                          class="text-danger"></span>
+
                                 </div>
                             </div>
                             <div class="col-md-6 mb-4">
                                 <div class="form-outline">
-                                    <input type="number" id="height" class="form-control" value=""/>
+                                    <input type="text" id="height" class="form-control" th:field="*{height}"/>
                                     <label class="form-label" th:for="height">Height</label>
+                                    <span th:if="${#fields.hasErrors('height')}" th:errors="*{height}"
+                                          class="text-danger"></span>
+
                                 </div>
                             </div>
                         </div>

@@ -3,26 +3,26 @@ package be.kdg.integration3.presentation.viewmodel;
 import jakarta.validation.constraints.*;
 
 public class AddRoomViewModel {
-    @NotBlank
+    @NotBlank(message = "Room name cannot be blank")
     @Size(min = 2, max = 30, message = "Room name must be between 2 and 30 characters.")
     private String roomName;
 
-    @NotNull
-    @Min(value = 1, message = "width must be more than 1 meter.")
-    private double width;
+    @NotNull(message = "Width must not be null")
+    @Min(value = 1, message = "Width must be more than or equal to 1 meter.")
+    private Double width;
 
-    @NotNull
-    @Min(value = 1, message = "length must be more than 1 meter.")
-    private double length;
+    @NotNull(message = "Length must not be null")
+    @Min(value = 1, message = "Length must be more than or equal to 1 meter.")
+    private Double length;
 
-    @NotNull
-    @Min(value = 1, message = "height must be more than 1 meter.")
-    private double height;
+    @NotNull(message = "Height must not be null")
+    @Min(value = 1, message = "Height must be more than or equal to 1 meter.")
+    private Double height;
 
     public AddRoomViewModel() {
     }
 
-    public AddRoomViewModel(String roomName, double width, double length, double height) {
+    public AddRoomViewModel(String roomName, Double width, Double length, Double height) {
         this.roomName = roomName;
         this.width = width;
         this.length = length;
@@ -37,27 +37,27 @@ public class AddRoomViewModel {
         this.roomName = roomName;
     }
 
-    public double getWidth() {
+    public Double getWidth() {
         return width;
     }
 
-    public void setWidth(double width) {
+    public void setWidth(Double width) {
         this.width = width;
     }
 
-    public double getLength() {
+    public Double getLength() {
         return length;
     }
 
-    public void setLength(double length) {
+    public void setLength(Double length) {
         this.length = length;
     }
 
-    public double getHeight() {
+    public Double getHeight() {
         return height;
     }
 
-    public void setHeight(double height) {
+    public void setHeight(Double height) {
         this.height = height;
     }
 

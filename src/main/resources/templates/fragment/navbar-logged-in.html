@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <link rel="stylesheet" href="/css/styles.css">
     <title></title>
 </head>
 
@@ -30,12 +31,11 @@
                 <!--        change to /dashboard later-->
                 <a class="nav-link" href="/log-out">Log out</a>
             </li>
-
             <!--      add other pages below-->
         </ul>
-        <div class="navbar-text">
-            <span th:if="${session.loggedIn}" th:text="${session.userEmail}"></span>
-        </div>
+<!--        TODO: move it to the right-->
+        <span class="navbar-text ms-auto" th:if="${session.loggedIn}" th:text="${session.userEmail}"></span>
+
     </div>
 </nav>
 </body>

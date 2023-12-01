@@ -28,16 +28,17 @@ public class AddRoomController {
     public String getAddRoomView(Model model) {
         model.addAttribute("addroomviewmodel", new AddRoomViewModel());
         logger.info("Request for add room view!");
-        return "/add-room";
+        return "add-room";
     }
 
     @PostMapping
-    public String addRoom(@Valid @ModelAttribute("addroomviewmodel")AddRoomViewModel addRoomViewModel, Model model, BindingResult errors) {
+    public String addRoom(@Valid @ModelAttribute("addroomviewmodel") AddRoomViewModel addRoomViewModel, Model model, BindingResult errors) {
         logger.info(String.format("Processing room name: %s, width: %f, length: %f, height: %f",
                 addRoomViewModel.getRoomName(), addRoomViewModel.getWidth(), addRoomViewModel.getLength(), addRoomViewModel.getHeight()));
 
         if (errors.hasErrors()) {
             errors.getAllErrors().forEach(error -> logger.error(error.toString()));
+            model.addAttribute("addRoomError", "Incorrect values.");
             return "/add-room";
         }
 
@@ -47,5 +48,4 @@ public class AddRoomController {
 
         return "redirect:/dashboard";
     }
-
 }
