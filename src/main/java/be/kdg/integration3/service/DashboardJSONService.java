@@ -40,8 +40,23 @@ public class DashboardJSONService implements DashboardService {
     }
 
     @Override
+    public List<SoundSpike> getSpikeList() {
+        return repository.getSpikeRecordList();
+    }
+
+    @Override
+    public List<SoundData> getSpikeData(int roomId, int spikeId) {
+        return repository.getSpikeData(roomId, spikeId);
+    }
+
+    @Override
     public List<CO2Data> getCO2List() {
         return repository.getCO2RecordList();
+    }
+
+    @Override
+    public List<SoundData> getNoiseList() {
+        return repository.getNoiseRecordList();
     }
 
     @Override

@@ -30,4 +30,12 @@ public class SoundData implements RawDataRecord{
     public int getValue() {
         return analogAmplitude;
     }
+
+    @Override
+    public String toString() {
+        return "SoundData{" +
+                "timestamp=" + timestamp +
+                ", analogAmplitude=" + analogAmplitude +
+                '}';
+    }
 }

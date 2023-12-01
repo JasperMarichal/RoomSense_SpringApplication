@@ -1,10 +1,15 @@
 package be.kdg.integration3.presentation.viewmodel;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import jakarta.validation.constraints.NotNull;
+
 import java.time.LocalDateTime;
 
 public class DashboardViewModel {
+    @NotNull
     private int roomId;
     private LocalDateTime dateTimeStart;
+    @NotNull
     private int timePeriod;
 
     public DashboardViewModel(int roomId, LocalDateTime dateTimeStart, int timePeriod) {

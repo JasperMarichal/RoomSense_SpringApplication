@@ -1,5 +1,4 @@
-const date = document.getElementById("dateTime");
-const timePeriod = document.getElementById("timePeriod");
+import {minMaxAverageGraph, getDateTimeString} from "./gaugeGraph.js";
 
 let tempTimeToUse = [];
 let tempDataToUse = [];
@@ -10,13 +9,18 @@ let humidDataToUse = [];
 let CO2TimeToUse = [];
 let CO2DataToUse = [];
 
+let noiseTimeToUse = [];
+let noiseDataToUse = [];
+
 let tempChartCanvas;
 let humidChartCanvas;
 let CO2ChartCanvas;
+let noiseChartCanvas;
 
 let temperature = false;
 let humidity = false;
 let CO2 = false;
+let noise = false;
 
 
 init()
@@ -29,11 +33,9 @@ function init() {
     temperature = tempList != null;
     humidity = humidList != null;
     CO2 = CO2List != null;
+    noise = noiseList != null;
 
     getData();
-
-    // date.addEventListener("change", getData)
-    // timePeriod.addEventListener("change", getData)
 }
 
 /**
@@ -48,6 +50,7 @@ function getData() {
     if(temperature) prepareTemperatureData();
     if(humidity) prepareHumidityData();
     if(CO2) prepareCO2Data();
+    if(noise) prepareNoiseData();
 
 }
 
@@ -55,14 +58,14 @@ function prepareTemperatureData() {
     tempTimeToUse = [];
     tempDataToUse = [];
 
-    let firstTime = Date.parse(tempList_rawTimes[0]);
+    let firstTime = Date.parse(tempListTimes[0]);
 
-    for (let i = 0; i < tempList_rawTimes.length; i++){
-        let time = Date.parse(tempList_rawTimes[i]);
+    for (let i = 0; i < tempListTimes.length; i++){
+        let time = Date.parse(tempListTimes[i]);
         let convertedTime = Math.round((time - firstTime) / 1000);
 
         if ((tempList[i] !== tempList[i - 1] || tempList[i] !== tempList[i + 1] ||
-                (tempDataToUse.length === 0) || (i === tempList_rawTimes.length - 2) ||
+                (tempDataToUse.length === 0) || (i === tempListTimes.length - 2) ||
                 tempTimeToUse[tempTimeToUse.length - 1] - convertedTime < -50) &&
             !tempTimeToUse.includes(convertedTime)) {
 
@@ -71,7 +74,7 @@ function prepareTemperatureData() {
         }
     }
 
-    getStatistics(tempList, tempList_rawTimes, "temp", "temperature")
+    getStatistics(tempList, tempListTimes, "temp", "Temperature")
 
     temperatureChart();
 }
@@ -80,14 +83,14 @@ function prepareHumidityData() {
     humidTimeToUse = [];
     humidDataToUse = [];
 
-    let firstTime = Date.parse(humidList_rawTimes[0]);
+    let firstTime = Date.parse(humidListTimes[0]);
 
-    for (let i = 0; i < humidList_rawTimes.length; i++){
-        let time = Date.parse(humidList_rawTimes[i]);
+    for (let i = 0; i < humidListTimes.length; i++){
+        let time = Date.parse(humidListTimes[i]);
         let convertedTime = Math.round((time - firstTime) / 1000);
 
         if ((humidList[i] !== humidList[i - 1] || humidList[i] !== humidList[i + 1] ||
-                (humidDataToUse.length === 0) || (i === humidList_rawTimes.length - 2) ||
+                (humidDataToUse.length === 0) || (i === humidListTimes.length - 2) ||
                 humidTimeToUse[humidTimeToUse.length - 1] - convertedTime < -50) &&
             !humidTimeToUse.includes(convertedTime)) {
 
@@ -96,7 +99,7 @@ function prepareHumidityData() {
         }
     }
 
-    getStatistics(humidList, humidList_rawTimes, "humid", "humidity");
+    getStatistics(humidList, humidListTimes, "humid", "Humidity");
 
     humidityChart();
 }
@@ -105,14 +108,14 @@ function prepareCO2Data() {
     CO2TimeToUse = [];
     CO2DataToUse = [];
 
-    let firstTime = Date.parse(CO2List_rawTimes[0]);
+    let firstTime = Date.parse(CO2ListTimes[0]);
 
-    for (let i = 0; i < CO2List_rawTimes.length; i++){
-        let time = Date.parse(CO2List_rawTimes[i])
+    for (let i = 0; i < CO2ListTimes.length; i++){
+        let time = Date.parse(CO2ListTimes[i])
         let convertedTime = Math.round((time - firstTime) / 1000);
 
         if ((CO2List[i] !== CO2List[i - 1] || CO2List[i] !== CO2List[i + 1] ||
-                (CO2DataToUse.length === 0) || (i === CO2List_rawTimes.length - 2)||
+                (CO2DataToUse.length === 0) || (i === CO2ListTimes.length - 2)||
                 CO2TimeToUse[CO2TimeToUse.length - 1] - convertedTime < -50) &&
             !CO2TimeToUse.includes(convertedTime)) {
 
@@ -121,9 +124,34 @@ function prepareCO2Data() {
         }
     }
 
-    getStatistics(CO2List, CO2List_rawTimes, "CO2", "CO2");
+    getStatistics(CO2List, CO2ListTimes, "CO2", "CO2");
 
     CO2Chart();
+}
+
+function prepareNoiseData() {
+    noiseTimeToUse = [];
+    noiseDataToUse = [];
+
+    let firstTime = Date.parse(noiseListTimes[0]);
+
+    for (let i = 0; i < noiseListTimes.length; i++){
+        let time = Date.parse(noiseListTimes[i])
+        let convertedTime = Math.round((time - firstTime) / 1000);
+
+        if ((noiseList[i] !== noiseList[i - 1] || noiseList[i] !== noiseList[i + 1] ||
+                (noiseDataToUse.length === 0) || (i === noiseListTimes.length - 2)||
+                noiseTimeToUse[CO2TimeToUse.length - 1] - convertedTime < -50) &&
+            !noiseTimeToUse.includes(convertedTime)) {
+
+            noiseTimeToUse.push(convertedTime)
+            noiseDataToUse.push(noiseList[i])
+        }
+    }
+
+    getStatistics(noiseList, noiseListTimes, "noise", "Noise");
+
+    noiseChart();
 }
 
 /**
@@ -141,7 +169,7 @@ function getStatistics(allDataInRange, allTimeInRange, textID, dataType){
     const recommendObject = document.getElementById(textID + "Recommend");
 
     let total = 0;
-    let minData = 100;
+    let minData = 10000;
     let maxData = 0;
 
     allDataInRange.forEach(data => {
@@ -153,17 +181,19 @@ function getStatistics(allDataInRange, allTimeInRange, textID, dataType){
     if (allDataInRange.length === 0){
         textObject.innerHTML = "No Data For Time Period Available";
     } else {
-        textObject.innerHTML = "Average " + dataType + ": " + Math.round(total / allDataInRange.length) +
-            "<br>" + "Minimum " + dataType + ": " + minData +
-            "<br>" + "Maximum " + dataType + ": " + maxData + "<br><br>" +
+        textObject.innerHTML = "🟦 Minimum " + dataType + ": " + minData +
+            "<br>" + "🟩 Average " + dataType + ": " + Math.round(total / allDataInRange.length) +
+            "<br>" + "🟥 Maximum " + dataType + ": " + maxData + "<br><br>" +
             "First reading time: " + getDateTimeString(allTimeInRange, 0) +
             "<br>" + "Last reading time: " + getDateTimeString(allTimeInRange, allTimeInRange.length - 1);
 
         warnObject.innerHTML = "";
         recommendObject.innerHTML = "";
 
+        minMaxAverageGraph(minData, maxData, Math.round(total / allDataInRange.length), textID, dataType);
+
         switch (dataType){
-            case "temperature": {
+            case "Temperature": {
                 if (maxData > 30) warnObject.innerHTML = warnObject.innerHTML + "<br>Maximum temperature is too high consider cooling the room!<br>"
                 if (minData < 20) warnObject.innerHTML = warnObject.innerHTML + "<br>Minimum temperature is too low consider heating the room!<br>"
                 if (total / allDataInRange.length > 30) warnObject.innerHTML = warnObject.innerHTML + "<br>Average temperature is too high consider cooling the room!<br>"
@@ -175,7 +205,7 @@ function getStatistics(allDataInRange, allTimeInRange, textID, dataType){
 
                 break;
             }
-            case "humidity": {
+            case "Humidity": {
                 if (maxData > 70) warnObject.innerHTML = warnObject.innerHTML + "<br>Maximum humidity is too high consider using a dehumidifier!<br>"
                 if (minData < 30) warnObject.innerHTML = warnObject.innerHTML + "<br>Minimum humidity is too low consider using a humidifier!<br>"
                 if (total / allDataInRange.length > 70) warnObject.innerHTML = warnObject.innerHTML + "<br>Average humidity is too high consider using a dehumidifier!<br>"
@@ -191,27 +221,17 @@ function getStatistics(allDataInRange, allTimeInRange, textID, dataType){
                 if (maxData > 5000) warnObject.innerHTML = warnObject.innerHTML + "Maximum CO2 concentration is too high, ventilate the room, do not maintain this concentration for over 8 hours, there is a risk of serious health issues!<br>"
                 if (total / allDataInRange.length > 5000) warnObject.innerHTML = warnObject.innerHTML + "Average CO2 concentration is too high, ventilate the room, do not maintain this concentration for over 8 hours, there is a risk of serious health issues!<br>"
 
-                if (maxData > 1000 && !(total / allDataInRange.length > 1000)) recommendObject.innerHTML = recommendObject.innerHTML + "Maximum CO2 concentration is getting too high, consider ventilating the room, maintain a concentration of less than 1000ppm.<br>"
-                else if (total / allDataInRange.length > 1000 && !(maxData > 1000)) recommendObject.innerHTML = recommendObject.innerHTML + "Average CO2 concentration is getting too high, consider ventilating the room, maintain a concentration of less than 1000ppm.<br>"
-                else if (maxData > 1000 && total / allDataInRange.length > 1000) recommendObject.innerHTML = recommendObject.innerHTML + "Average and Maximum CO2 concentration is getting too high, consider ventilating the room, maintain a concentration of less than 1000ppm.<br>"
+                if (maxData > 1500 && !(total / allDataInRange.length > 1500)) recommendObject.innerHTML = recommendObject.innerHTML + "Maximum CO2 concentration is getting too high, consider ventilating the room, maintain a concentration of less than 1500ppm.<br>"
+                else if (total / allDataInRange.length > 1500 && !(maxData > 1500)) recommendObject.innerHTML = recommendObject.innerHTML + "Average CO2 concentration is getting too high, consider ventilating the room, maintain a concentration of less than 1500ppm.<br>"
+                else if (maxData > 1500 && total / allDataInRange.length > 1500) recommendObject.innerHTML = recommendObject.innerHTML + "Average and Maximum CO2 concentration is getting too high, consider ventilating the room, maintain a concentration of less than 1500ppm.<br>"
 
                 break;
             }
+            case "noise": {
+
+            }
         }
     }
-}
-
-/**
- * Based on a given time returns the formatted version of that time to be in dd/MM/yyyy hh:mm:ss format
- *
- * @param timeArray The array of times
- * @param position The specific time to use
- * @returns {string} The formatted date time
- */
-function getDateTimeString(timeArray, position) {
-    let date = new Date(timeArray[position])
-    return ("00" + date.getDate()).slice(-2) + "/" + ("00" + (date.getMonth() + 1)).slice(-2) + "/" + date.getFullYear() + " " +
-        ("00" + date.getHours()).slice(-2) + ":" + ("00" + date.getMinutes()).slice(-2) + ":" + ("00" + date.getSeconds()).slice(-2)
 }
 
 
@@ -238,7 +258,24 @@ function temperatureChart() {
             }]
         },
         options: {
-
+            plugins : {legend: false},
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        callback: function(value) {if (value % 1 === 0) {return value;}}
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: "Temperature (°C)"
+                    }
+                }],
+                xAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: "Time (s)"
+                    }
+                }]
+            }
         }
     });
 }
@@ -266,7 +303,24 @@ function humidityChart() {
             }]
         },
         options: {
-
+            plugins : {legend: false},
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        callback: function(value) {if (value % 1 === 0) {return value;}}
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: "Humidity (%)"
+                    }
+                }],
+                xAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: "Time (s)"
+                    }
+                }]
+            }
         }
     });
 }
@@ -294,10 +348,66 @@ function CO2Chart() {
             }]
         },
         options: {
-
+            plugins : {legend: false},
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        callback: function(value) {if (value % 1 === 0) {return value;}}
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: "CO2 Concentration (ppm)"
+                    }
+                }],
+                xAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: "Time (s)"
+                    }
+                }]
+            }
         }
     });
 }
 
+function noiseChart() {
+    if (noiseChartCanvas){
+        noiseChartCanvas.destroy();
+    }
 
-
+    noiseChartCanvas = new Chart("noiseChart", {
+        type: "line",
+        data: {
+            labels: noiseTimeToUse,
+            datasets: [{
+                backgroundColor: "rgba(200,128,0,1)",
+                borderColor: "rgba(200,128,0,1)",
+                borderWidth: 4,
+                fill: false,
+                data: noiseDataToUse,
+                label: "Noise",
+                tension: 0
+            }]
+        },
+        options: {
+            plugins : {legend: false},
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        callback: function(value) {if (value % 1 === 0) {return value;}}
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: "Noise"
+                    }
+                }],
+                xAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: "Time (s)"
+                    }
+                }]
+            }
+        }
+    });
+}
