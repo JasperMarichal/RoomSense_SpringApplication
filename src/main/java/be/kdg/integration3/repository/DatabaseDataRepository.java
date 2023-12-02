@@ -1,9 +1,6 @@
 package be.kdg.integration3.repository;
 
-import be.kdg.integration3.domain.CO2Data;
-import be.kdg.integration3.domain.HumidityData;
-import be.kdg.integration3.domain.Room;
-import be.kdg.integration3.domain.TemperatureData;
+import be.kdg.integration3.domain.*;
 import be.kdg.integration3.util.exception.DatabaseException;
 import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
