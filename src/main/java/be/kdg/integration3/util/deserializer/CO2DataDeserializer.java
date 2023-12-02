@@ -1,4 +1,4 @@
-package be.kdg.integration3.util.deserializers;
+package be.kdg.integration3.util.deserializer;
 
 import be.kdg.integration3.domain.CO2Data;
 import com.google.gson.*;

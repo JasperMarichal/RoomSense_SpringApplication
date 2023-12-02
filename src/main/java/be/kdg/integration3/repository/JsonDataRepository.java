@@ -1,21 +1,27 @@
 package be.kdg.integration3.repository;
 
+import be.kdg.integration3.SpringProjectApplication;
 import be.kdg.integration3.domain.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Repository;
 
 import java.io.*;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 @Repository
+@Profile("jsonrepository")
 public class JsonDataRepository implements DataRepository {
+    private boolean development = SpringProjectApplication.development;
+
     private final Logger logger = LoggerFactory.getLogger(JsonDataRepository.class);
 
     List<File> temperatureFiles = new ArrayList<>();
@@ -25,12 +31,15 @@ public class JsonDataRepository implements DataRepository {
 
     private final List<RawDataRecord> recordList;
 
-    public JsonDataRepository() {
+    private JdbcTemplate jdbcTemplate;
+
+    public JsonDataRepository(JdbcTemplate jdbcTemplate) {
         this.recordList = new ArrayList<>();
+        this.jdbcTemplate = jdbcTemplate;
     }
 
-    @Scheduled(fixedDelay = 30000)
-    public void read(){
+    @Scheduled(fixedDelay = 3000000)
+    public void read(int roomID, LocalDateTime startDateTime, LocalDateTime endDateTime){
         findFiles("temperature");
         findFiles("humidity");
         findFiles("sound");
@@ -39,6 +48,49 @@ public class JsonDataRepository implements DataRepository {
         readAllFiles();
 
 //        System.out.println(getRecordList().toString());
+    }
+
+    @Override
+    public List<SoundData> getSpikeData(int roomId, int spikeId) {
+        return null;
+    }
+
+    @Override
+    public List<Room> getUserRooms(String userAccount) {
+        return null;
+    }
+
+    @Override
+    public List<TemperatureData> getTemperatureRecordList() {
+        return recordList.stream().filter(record -> record instanceof TemperatureData).map(rawDataRecord -> (TemperatureData) rawDataRecord).toList();
+    }
+
+    @Override
+    public List<HumidityData> getHumidityRecordList() {
+        return recordList.stream().filter(record -> record instanceof HumidityData).map(rawDataRecord -> (HumidityData) rawDataRecord).toList();
+    }
+
+    @Override
+    public List<CO2Data> getCO2RecordList() {
+        return recordList.stream().filter(record -> record instanceof CO2Data).map(rawDataRecord -> (CO2Data) rawDataRecord).toList();
+    }
+
+    @Override
+    public List<SoundData> getNoiseRecordList() {
+        return null;
+    }
+
+    @Override
+    public LocalDateTime getLastReadingTime(int roomID){
+        return null;
+    }
+
+    @Override
+    public void addRoom(Room room) {}
+
+    @Override
+    public List<SoundSpike> getSpikeRecordList() {
+        return null;
     }
 
     private void findFiles(String name) {
@@ -71,10 +123,12 @@ public class JsonDataRepository implements DataRepository {
                     logger.error("Something went wrong reading temperature!");
                 }
 
-                if (file.delete()) {
-                    logger.debug("File " + file.getName() + " has been successfully processed and deleted.");
-                } else {
-                    logger.warn("File " + file.getName() + " could not be deleted.");
+                if (!development) {
+                    if (file.delete()) {
+                        logger.debug("File " + file.getName() + " has been successfully processed and deleted.");
+                    } else {
+                        logger.warn("File " + file.getName() + " could not be deleted.");
+                    }
                 }
             });
         }
@@ -91,10 +145,12 @@ public class JsonDataRepository implements DataRepository {
                     logger.error("Something went wrong reading humidity!");
                 }
 
-                if (file.delete()) {
-                    logger.debug("File " + file.getName() + " has been successfully processed and deleted.");
-                } else {
-                    logger.warn("File " + file.getName() + " could not be deleted.");
+                if (!development) {
+                    if (file.delete()) {
+                        logger.debug("File " + file.getName() + " has been successfully processed and deleted.");
+                    } else {
+                        logger.warn("File " + file.getName() + " could not be deleted.");
+                    }
                 }
             });
         }
@@ -110,10 +166,12 @@ public class JsonDataRepository implements DataRepository {
                     logger.error("Something went wrong reading sound data!");
                 }
 
-                if (file.delete()) {
-                    logger.debug("File " + file.getName() + " has been successfully processed and deleted.");
-                } else {
-                    logger.warn("File " + file.getName() + " could not be deleted.");
+                if (!development) {
+                    if (file.delete()) {
+                        logger.debug("File " + file.getName() + " has been successfully processed and deleted.");
+                    } else {
+                        logger.warn("File " + file.getName() + " could not be deleted.");
+                    }
                 }
             });
         }
@@ -130,16 +188,14 @@ public class JsonDataRepository implements DataRepository {
                     logger.error("Something went wrong reading CO2!");
                 }
 
-                if (file.delete()) {
-                    logger.debug("File " + file.getName() + " has been successfully processed and deleted.");
-                } else {
-                    logger.warn("File " + file.getName() + " could not be deleted.");
+                if (!development) {
+                    if (file.delete()) {
+                        logger.debug("File " + file.getName() + " has been successfully processed and deleted.");
+                    } else {
+                        logger.warn("File " + file.getName() + " could not be deleted.");
+                    }
                 }
             });
         }
-    }
-
-    public List<RawDataRecord> getRecordList() {
-        return recordList;
     }
 }

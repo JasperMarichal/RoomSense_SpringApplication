@@ -1,4 +1,4 @@
-package be.kdg.integration3.util.deserializers;
+package be.kdg.integration3.util.deserializer;
 
 import be.kdg.integration3.domain.TemperatureData;
 import com.google.gson.*;

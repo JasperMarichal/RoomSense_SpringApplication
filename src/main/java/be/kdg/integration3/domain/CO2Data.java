@@ -1,7 +1,6 @@
 package be.kdg.integration3.domain;
 
-import be.kdg.integration3.util.deserializers.CO2DataDeserializer;
-import be.kdg.integration3.util.deserializers.TemperatureDataDeserializer;
+import be.kdg.integration3.util.deserializer.CO2DataDeserializer;
 import com.google.gson.annotations.JsonAdapter;
 
 import java.sql.Timestamp;

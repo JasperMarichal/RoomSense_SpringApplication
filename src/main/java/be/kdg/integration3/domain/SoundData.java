@@ -1,7 +1,6 @@
 package be.kdg.integration3.domain;
 
-import be.kdg.integration3.util.deserializers.SoundDataDeserializer;
-import be.kdg.integration3.util.deserializers.TemperatureDataDeserializer;
+import be.kdg.integration3.util.deserializer.SoundDataDeserializer;
 import com.google.gson.annotations.JsonAdapter;
 
 import java.sql.Timestamp;
@@ -30,5 +29,13 @@ public class SoundData implements RawDataRecord{
     @Override
     public int getValue() {
         return analogAmplitude;
+    }
+
+    @Override
+    public String toString() {
+        return "SoundData{" +
+                "timestamp=" + timestamp +
+                ", analogAmplitude=" + analogAmplitude +
+                '}';
     }
 }

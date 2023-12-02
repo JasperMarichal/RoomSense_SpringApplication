@@ -1,0 +1,10 @@
+.graph {
+    width: 100%;
+    max-width: 800px;
+}
+
+.statDisplay {
+    /*width: 30%;*/
+    max-height: 207px;
+    max-width: 415px;
+}
