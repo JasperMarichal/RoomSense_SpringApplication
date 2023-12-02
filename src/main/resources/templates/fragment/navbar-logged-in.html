@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <link rel="stylesheet" href="/css/styles.css">
     <title></title>
 </head>
 
@@ -11,6 +12,8 @@
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
+
+
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
@@ -22,14 +25,17 @@
             </li>
             <li class="nav-item active">
                 <!--        change to /dashboard later-->
+                <a class="nav-link" href="/add-room">Add room</a>
+            </li>
+            <li class="nav-item active">
+                <!--        change to /dashboard later-->
                 <a class="nav-link" href="/log-out">Log out</a>
             </li>
-
             <!--      add other pages below-->
         </ul>
-        <div class="navbar-text">
-            <span th:if="${session.loggedIn}" th:text="${session.userEmail}"></span>
-        </div>
+<!--        TODO: move it to the right-->
+        <span class="navbar-text ms-auto" th:if="${session.loggedIn}" th:text="${session.userEmail}"></span>
+
     </div>
 </nav>
 </body>

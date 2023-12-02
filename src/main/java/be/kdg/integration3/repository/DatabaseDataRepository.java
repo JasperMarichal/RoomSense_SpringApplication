@@ -1,7 +1,11 @@
 package be.kdg.integration3.repository;
 
-import be.kdg.integration3.domain.*;
+import be.kdg.integration3.domain.CO2Data;
+import be.kdg.integration3.domain.HumidityData;
+import be.kdg.integration3.domain.Room;
+import be.kdg.integration3.domain.TemperatureData;
 import be.kdg.integration3.util.exception.DatabaseException;
+import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
@@ -9,6 +13,8 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.*;
 import java.util.ArrayList;
@@ -16,7 +22,7 @@ import java.util.List;
 
 @Repository
 @Profile("jdbcrepository")
-public class DatabaseDataRepository implements DataRepository{
+public class DatabaseDataRepository implements DataRepository {
     private final Logger logger = LoggerFactory.getLogger(JsonDataRepository.class);
     private List<TemperatureData> temperatureRecordList;
     private List<HumidityData> humidityRecordList;
@@ -24,14 +30,16 @@ public class DatabaseDataRepository implements DataRepository{
     private List<SoundData> noiseRecordList;
     private List<SoundSpike> spikeRecordList;
     private JdbcTemplate jdbcTemplate;
+    private HttpSession session;
 
-    public DatabaseDataRepository(JdbcTemplate jdbcTemplate) {
+    public DatabaseDataRepository(JdbcTemplate jdbcTemplate, HttpSession session) {
         this.temperatureRecordList = new ArrayList<>();
         this.humidityRecordList = new ArrayList<>();
         this.CO2RecordList = new ArrayList<>();
         this.noiseRecordList = new ArrayList<>();
         this.spikeRecordList = new ArrayList<>();
         this.jdbcTemplate = jdbcTemplate;
+        this.session = session;
     }
 
     /**
@@ -190,7 +198,7 @@ public class DatabaseDataRepository implements DataRepository{
             return jdbcTemplate.query("SELECT * FROM room WHERE account = ?",
                     (rs, rowNum) -> new Room(rs.getInt("room_id"), rs.getString("room_name"),
                             rs.getDouble("length"), rs.getDouble("width"), rs.getDouble("height")), userAccount);
-        } catch (DataAccessException e ){
+        } catch (DataAccessException e) {
             throw new DatabaseException("Can not connect to database", e);
         }
     }
@@ -201,7 +209,7 @@ public class DatabaseDataRepository implements DataRepository{
      * @return Returns the localDateTime of the last reading
      */
     @Override
-    public LocalDateTime getLastReadingTime(int roomID){
+    public LocalDateTime getLastReadingTime(int roomID) {
         try {
             List<TemperatureData> lastTemp = jdbcTemplate.query("SELECT * FROM temperature_entry WHERE room_id = ? ORDER BY timestamp DESC LIMIT 1",
                     (rs, rowNum) -> new TemperatureData(rs.getTimestamp("timestamp"), rs.getInt("value")), roomID);
@@ -222,10 +230,18 @@ public class DatabaseDataRepository implements DataRepository{
             if (!lastCO2.isEmpty()) if (lastTime.compareTo(lastCO2.get(0).getTimestamp()) < 0) lastTime = lastCO2.get(0).getTimestamp();
             if (!lastNoise.isEmpty()) if (lastTime.compareTo(lastNoise.get(0).getTimestamp()) < 0) lastTime = lastNoise.get(0).getTimestamp();
 
-            return  lastTime.toLocalDateTime();
-        } catch (DataAccessException e ){
+            return lastTime.toLocalDateTime();
+        } catch (DataAccessException e) {
             throw new DatabaseException("Can not connect to database", e);
         }
+    }
+
+    @Override
+    public void addRoom(Room room) {
+        jdbcTemplate.update("INSERT INTO room (room_name, account, width, length, height) " +
+                "VALUES (?, ?, ?, ?, ?)",
+                room.getName(), session.getAttribute("userEmail"),
+                room.getWidth(), room.getLength(), room.getHeight());
     }
 
     @Override

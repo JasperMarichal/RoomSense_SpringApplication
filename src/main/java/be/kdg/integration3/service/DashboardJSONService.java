@@ -63,4 +63,9 @@ public class DashboardJSONService implements DashboardService {
     public LocalDateTime getLastTime(int roomID){
         return null;
     }
+
+    @Override
+    public void addRoom(Room room) {
+
+    }
 }

@@ -15,6 +15,13 @@ public class Room {
         this.height = height;
     }
 
+    public Room(String name, double length, double width, double height) {
+        this.name = name;
+        this.length = length;
+        this.width = width;
+        this.height = height;
+    }
+
     public int getId() {
         return id;
     }

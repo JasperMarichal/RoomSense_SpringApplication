@@ -31,7 +31,6 @@ public class LoginController {
         return "/login";
     }
 
-    // get rid of jdbcTemplate and use Connection, use try with resources
     @PostMapping
     public String logIn(@Valid @ModelAttribute("loginviewmodel") LoginViewModel loginViewModel, BindingResult errors, Model model, HttpSession httpSession) {
         logger.info(String.format("Processing email: %s and password: %s", loginViewModel.getEmail(), loginViewModel.getPassword()));

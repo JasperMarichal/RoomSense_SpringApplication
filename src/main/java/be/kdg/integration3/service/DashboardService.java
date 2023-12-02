@@ -22,4 +22,6 @@ public interface DashboardService {
     List<SoundData> getNoiseList();
 
     LocalDateTime getLastTime(int roomID);
+
+    void addRoom(Room room);
 }

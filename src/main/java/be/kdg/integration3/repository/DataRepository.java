@@ -16,6 +16,6 @@ public interface DataRepository {
     List<CO2Data> getCO2RecordList();
     List<SoundData> getNoiseRecordList();
     LocalDateTime getLastReadingTime(int roomID);
-
+    void addRoom(Room room);
     List<SoundSpike> getSpikeRecordList();
 }

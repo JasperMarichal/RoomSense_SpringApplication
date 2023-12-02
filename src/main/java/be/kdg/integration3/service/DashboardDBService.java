@@ -48,6 +48,11 @@ public class DashboardDBService implements DashboardService{
         return repository.getLastReadingTime(roomID);
     }
 
+    @Override
+    public void addRoom(Room room) {
+
+    }
+
     /**
      * Gets the list of all temperatures currently loaded in the database
      * @return Returns all the temperatures for that room
