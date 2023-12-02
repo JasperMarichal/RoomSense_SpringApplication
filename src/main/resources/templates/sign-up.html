@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+        <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+        <script defer th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
+        <script defer th:src="@{/dashboardScript.js}"></script>
+        <title>Sign Up</title>
+        <script th:inline="javascript">
+    </script>
+</head>
+<body class="bg-dark-subtle">
+<span class="border border-dark align-items-center">
+    <div class="text-center container-fluid h-custom card p-3 bg-light w-50 border border-dark-subtle border-3 rounded-5 bg-secondary-subtle">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-sm-7 px-0 d-none d-sm-block">
+                <form method="post" th:object="${signupviewmodel}" novalidate>
+                    <div class="form-outline mb-4">
+                        <h4>Sign Up</h4>
+                        <div>
+                            <label th:for="username" class="form-label">Username</label>
+                            <input type="text" class="form-control" th:field="*{username}" required>
+                            <p class="text-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></p>
+                        </div>
+                        <div>
+                            <label th:for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" th:field="*{email}" required>
+                            <p class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
+                            <p class="text-danger" th:if="${userTaken != null}">Email already taken!</p>
+                        </div>
+                        <div>
+                            <label th:for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" th:field="*{password}" required>
+                            <p class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
+                        </div>
+                        <div class="row my-2 m-0">
+                            <label th:for="useCase" class="form-label">Use Case</label>
+                            <select id="inputCase" name="useCase" th:field="*{useCase}" required  style="background-color: white; border-radius: 7px; border-style: none">
+                                <option th:each="case : ${useCases}" th:value="${case}" th:text="${case}"></option>
+                            </select>
+                            <p class="text-danger" th:if="${#fields.hasErrors('useCase')}" th:errors="*{useCase}"></p>
+                        </div>
+                        <div class="text-center mt-6 pt-4">
+                        <button type="submit" class="btn btn-primary">Sign Up</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+</span>
+</div>
+</body>
+</html>
