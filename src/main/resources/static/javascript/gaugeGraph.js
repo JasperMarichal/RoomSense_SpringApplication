@@ -2,8 +2,21 @@ let data;
 let colors;
 
 /**
- * This method is responsible for getting everything setup for the gauge chart including getting the colours in place
+ * Summary:
+ * This function is responsible for getting everything setup for the gauge chart including getting the colours in place
  * to display the minimum, maximum and average values, it then calls a method to show the gauge chart.
+ *
+ * Detailed:
+ * The function first identifies what the absolute min and max values are (the limits of what our sensors can detect)
+ * as well as the minimum and maximum recommended values, these are set using a switch for textID.
+ * The function then adds absolute min, absolute max, minimum recommended, maximum recommended alongside the
+ * min/max/average values provided in the function call to an array, it then removed the duplicates in any of those
+ * values.
+ * Finally, it loops over that array and based on the values compared to the minRecommend and maxRecommend values
+ * it adds the appropriate colors for the values to the colors array and the corresponding data to the data array.
+ *
+ * It then calls the method to show the chart.
+ *
  * @param minValue The minimum value to display on the chart
  * @param maxValue The maximum value to display on the chart
  * @param averageValue The average value to display on the chart
@@ -94,12 +107,21 @@ export function minMaxAverageGraph(minValue, maxValue, averageValue, textID, dat
 
     minMaxAverage.forEach(value => {
         if (value < minRecommend && value > absoluteMin){
+            /**
+             * If value is below minRecommend add data - 1 and a corresponding out of recommended color to the data and color arrays
+             * Then push 1 to the data and call method to determine if the value was the min, average or max and add the appropriate color
+             */
             data.push(value - absoluteMin - 1);
             data.push(1);
             colors.push(outOfRecommendedColor);
             valueColors(value, minValue, averageValue, maxValue);
             rawData.push(value);
         } else if (value === minRecommend || value === maxRecommend || value === absoluteMax){
+            /**
+             * If the value is equal to minRecommend or maxRecommend or absoluteMax, if it is, check if it is the first data entry
+             * if it is not the first data entry subtract the rawData value of the previous entry,
+             * if the uncalibrated value is also equal to the min or average or max act appropriately
+             */
             let valueToAdd = value;
             if (data.length > 0){
                 valueToAdd -= rawData[rawData.length - 1];
@@ -120,18 +142,28 @@ export function minMaxAverageGraph(minValue, maxValue, averageValue, textID, dat
             }
             rawData.push(value);
         } else if (value > minRecommend && value < maxRecommend){
+            /**
+             * If the value is between minRecommend and maxRecommend it is within the recommended range and therefore
+             * gets surrounded by white space instead of gray, as usual push the calibrated value - 1 then 1 to data and
+             * then push white and the color depending on if it is min, max or average value
+             */
             data.push(value-rawData[rawData.length - 1]-1);
             data.push(1);
             colors.push("white");
             valueColors(value, minValue, averageValue, maxValue);
             rawData.push(value);
         } else if (value > maxRecommend && value < absoluteMax){
+            /**
+             * If the value is larger than maxRecommend it is once again out of the recommended range and has the
+             * appropriate colors pushed
+             */
             data.push(value-maxRecommend-1);
             data.push(1);
             colors.push(outOfRecommendedColor);
             valueColors(value, minValue, averageValue, maxValue);
             rawData.push(value);
         } else {
+            // For all other data it is erroneous and therefore push the appropriate value
             data.push(value);
             colors = ["black"];
         }
@@ -140,6 +172,14 @@ export function minMaxAverageGraph(minValue, maxValue, averageValue, textID, dat
     showGaugeGraph(textID, absoluteMin, absoluteMax, dataType);
 }
 
+/**
+ * This function works out if the value is equal to min, average or max values and pushes the appropriate color to
+ * the colors array.
+ * @param value The value to compare to
+ * @param minValue The minimum value
+ * @param averageValue The average value
+ * @param maxValue The maximum value
+ */
 function valueColors(value, minValue, averageValue, maxValue){
     if (value === minValue){
         colors.push("blue");
@@ -152,6 +192,13 @@ function valueColors(value, minValue, averageValue, maxValue){
     }
 }
 
+/**
+ * Show the gauge chart which is a modified version of a doughnut chart with the appropriate values
+ * @param textID The identifier for the datatype
+ * @param absoluteMin The absolute minimum value to display
+ * @param absoluteMax The absolute maximum value to display
+ * @param dataType The data type name to use in chart title
+ */
 function showGaugeGraph(textID, absoluteMin, absoluteMax, dataType){
     let chartName = textID + "ValuesDisplay"
     new Chart(chartName, {

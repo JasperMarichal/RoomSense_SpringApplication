@@ -27,7 +27,7 @@ init()
 
 /**
  * Checks if data is available for a datatype and adjusts variables as needed
- * Adds event listeners to check for changes to start date or time period to show data for
+ * Calls method to show data on those graphs
  */
 function init() {
     temperature = tempList != null;
@@ -54,6 +54,11 @@ function getData() {
 
 }
 
+/**
+ * Prepares the temperature data to get statistics and show on the graphs,
+ * this method converts timestamps into seconds since the first reading
+ * and then pushes non-duplicate data-points into arrays, then calls a method to display the statistics
+ */
 function prepareTemperatureData() {
     tempTimeToUse = [];
     tempDataToUse = [];
@@ -79,6 +84,11 @@ function prepareTemperatureData() {
     temperatureChart();
 }
 
+/**
+ * Prepares the humidity data to get statistics and show on the graphs,
+ * this method converts timestamps into seconds since the first reading
+ * and then pushes non-duplicate data-points into arrays, then calls a method to display the statistics
+ */
 function prepareHumidityData() {
     humidTimeToUse = [];
     humidDataToUse = [];
@@ -104,6 +114,11 @@ function prepareHumidityData() {
     humidityChart();
 }
 
+/**
+ * Prepares the CO2 data to get statistics and show on the graphs,
+ * this method converts timestamps into seconds since the first reading
+ * and then pushes non-duplicate data-points into arrays, then calls a method to display the statistics
+ */
 function prepareCO2Data() {
     CO2TimeToUse = [];
     CO2DataToUse = [];
@@ -129,6 +144,11 @@ function prepareCO2Data() {
     CO2Chart();
 }
 
+/**
+ * Prepares the noise data to get statistics and show on the graphs,
+ * this method converts timestamps into seconds since the first reading
+ * and then pushes non-duplicate data-points into arrays, then calls a method to display the statistics
+ */
 function prepareNoiseData() {
     noiseTimeToUse = [];
     noiseDataToUse = [];
@@ -157,6 +177,15 @@ function prepareNoiseData() {
 /**
  * Based on all the data and time for the dataType this method gets the maximum, minimum and average values and
  * provides recommendations and warnings based on those.
+ *
+ * For temperature a recommendation is provided when temperature is above 24 degrees and a
+ * warning when it is below 20 or above 30 degrees
+ *
+ * For humidity a recommendation is provided when humidity is above 60% and a warning when it is below 30% or above 70%
+ *
+ * For CO2 a recommendation is provided when ppm is above 1500 and a warning when it is above 5000
+ *
+ * This method also calls a method from gaugeChart.js to displaying the gauge graph for the min/max/average values
  *
  * @param allDataInRange All the data within the given time period available to be used
  * @param allTimeInRange All the time within the given time period available to be used
@@ -226,9 +255,6 @@ function getStatistics(allDataInRange, allTimeInRange, textID, dataType){
                 else if (maxData > 1500 && total / allDataInRange.length > 1500) recommendObject.innerHTML = recommendObject.innerHTML + "Average and Maximum CO2 concentration is getting too high, consider ventilating the room, maintain a concentration of less than 1500ppm.<br>"
 
                 break;
-            }
-            case "noise": {
-
             }
         }
     }
@@ -370,6 +396,9 @@ function CO2Chart() {
     });
 }
 
+/**
+ * Displays the filtered data on the noise graph.
+ */
 function noiseChart() {
     if (noiseChartCanvas){
         noiseChartCanvas.destroy();

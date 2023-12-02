@@ -11,6 +11,10 @@ function init() {
     prepareSpikeData();
 }
 
+/**
+ * Prepares the data to display on the spike chart, converts the time to be seconds since first measurement,
+ * then calls the method to show the statistics and the chart itself.
+ */
 function prepareSpikeData() {
     spikeTimeToUse = [];
     spikeDataToUse = [];
@@ -21,15 +25,8 @@ function prepareSpikeData() {
         let time = Date.parse(spikeListTimes[i]);
         let convertedTime = Math.round((time - firstTime) / 1000);
 
-        // console.log(convertedTime);
-        // console.log(spikeTimeToUse);
-        // console.log(spikeDataToUse);
-
-        // if (!spikeTimeToUse.includes(convertedTime)) {
-
-            spikeTimeToUse.push(convertedTime);
-            spikeDataToUse.push(spikeList[i]);
-        // }
+        spikeTimeToUse.push(convertedTime);
+        spikeDataToUse.push(spikeList[i]);
     }
 
     getStatistics(spikeList, spikeListTimes, "spike", "Amplitude")
@@ -37,6 +34,14 @@ function prepareSpikeData() {
     spikeChart();
 }
 
+/**
+ * get the min, max and average values for the spike and provides text based on them as well as calls the method from
+ * gaugeChart.js to show the gauge chart.
+ * @param allDataInRange All the data to calculate from
+ * @param allTimeInRange All the times to calculate from
+ * @param textID Identifier for the field names
+ * @param dataType Text value of identifier to display on graph and in text
+ */
 function getStatistics(allDataInRange, allTimeInRange, textID, dataType){
     const textObject = document.getElementById(textID + "Stats");
 
@@ -63,6 +68,9 @@ function getStatistics(allDataInRange, allTimeInRange, textID, dataType){
     }
 }
 
+/**
+ * Show chart for spike based on processed data.
+ */
 function spikeChart() {
     if (spikeChartCanvas){
         spikeChartCanvas.destroy();
