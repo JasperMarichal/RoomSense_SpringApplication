@@ -59,6 +59,11 @@ public class SerialDataRepository implements DataRepository {
     }
 
     @Override
+    public List<SoundData> getSpikeData(int roomId, int spikeId) {
+        return null;
+    }
+
+    @Override
     public List<Room> getUserRooms(String userAccount) {
         return null;
     }
@@ -69,7 +74,11 @@ public class SerialDataRepository implements DataRepository {
     }
 
     @Override
-    public void addRoom(Room room) {
+    public void addRoom(Room room) {}
+
+    @Override
+    public List<SoundSpike> getSpikeRecordList() {
+        return null;
     }
 
     private int parseSerial(char[] newSerialData) {
@@ -125,5 +134,10 @@ public class SerialDataRepository implements DataRepository {
     @Override
     public List<CO2Data> getCO2RecordList() {
         return recordList.stream().filter(record -> record instanceof CO2Data).map(rawDataRecord -> (CO2Data) rawDataRecord).toList();
+    }
+
+    @Override
+    public List<SoundData> getNoiseRecordList() {
+        return null;
     }
 }

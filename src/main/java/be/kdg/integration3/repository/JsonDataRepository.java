@@ -8,12 +8,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Repository;
 
 import java.io.*;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,6 +51,11 @@ public class JsonDataRepository implements DataRepository {
     }
 
     @Override
+    public List<SoundData> getSpikeData(int roomId, int spikeId) {
+        return null;
+    }
+
+    @Override
     public List<Room> getUserRooms(String userAccount) {
         return null;
     }
@@ -73,13 +76,21 @@ public class JsonDataRepository implements DataRepository {
     }
 
     @Override
+    public List<SoundData> getNoiseRecordList() {
+        return null;
+    }
+
+    @Override
     public LocalDateTime getLastReadingTime(int roomID){
         return null;
     }
 
     @Override
-    public void addRoom(Room room) {
+    public void addRoom(Room room) {}
 
+    @Override
+    public List<SoundSpike> getSpikeRecordList() {
+        return null;
     }
 
     private void findFiles(String name) {

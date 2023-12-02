@@ -1,6 +1,6 @@
 package be.kdg.integration3.domain;
 
-import be.kdg.integration3.util.deserializers.HumidityDataDeserializer;
+import be.kdg.integration3.util.deserializer.HumidityDataDeserializer;
 import com.google.gson.annotations.JsonAdapter;
 
 import java.sql.Timestamp;

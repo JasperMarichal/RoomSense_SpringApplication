@@ -7,10 +7,15 @@ import java.util.List;
 
 public interface DataRepository {
     void read(int roomID, LocalDateTime startDateTime, LocalDateTime endDateTime);
+
+    List<SoundData> getSpikeData(int roomId, int spikeId);
+
     List<Room> getUserRooms(String userAccount);
     List<TemperatureData> getTemperatureRecordList();
     List<HumidityData> getHumidityRecordList();
     List<CO2Data> getCO2RecordList();
+    List<SoundData> getNoiseRecordList();
     LocalDateTime getLastReadingTime(int roomID);
     void addRoom(Room room);
+    List<SoundSpike> getSpikeRecordList();
 }
