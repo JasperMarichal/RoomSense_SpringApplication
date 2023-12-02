@@ -61,6 +61,9 @@ public class JsonDataRepository implements DataRepository {
     }
 
     @Override
+    public void addRoom(Room room, String email) {}
+
+    @Override
     public List<TemperatureData> getTemperatureRecordList() {
         return recordList.stream().filter(record -> record instanceof TemperatureData).map(rawDataRecord -> (TemperatureData) rawDataRecord).toList();
     }
@@ -84,9 +87,6 @@ public class JsonDataRepository implements DataRepository {
     public LocalDateTime getLastReadingTime(int roomID){
         return null;
     }
-
-    @Override
-    public void addRoom(Room room) {}
 
     @Override
     public List<SoundSpike> getSpikeRecordList() {

@@ -23,5 +23,5 @@ public interface DashboardService {
 
     LocalDateTime getLastTime(int roomID);
 
-    void addRoom(Room room);
+    void addRoom(String roomName, double width, double length, double height, String userEmail);
 }

@@ -7,6 +7,7 @@
     <script defer th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
     <script defer type="module" th:src="@{/javascript/dashboardScript.js}"></script>
     <link rel="stylesheet" th:href="@{/css/dashboardStyle.css}">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
     <title>Dashboard</title>
     <script th:inline="javascript">
         /*<![CDATA[*/
@@ -29,118 +30,120 @@
         <div th:insert="~{fragment/navbar-not-logged-in::navbar-not-logged-in}">div</div>
     </div>
 
-    <div class="container-fluid d-flex justify-content-center">
-        <div class="col-12">
-            <div th:if="${databaseError != null}">
-                <h1 class="text-danger text-center" th:text="${databaseError}"></h1>
-            </div>
-            <div th:if="${databaseError == null}">
-                <div class="text-center mb-3">
-                    <h4 class="mt-2">Data Filtering Options</h4>
-                    <div class="m-2 row">
-                        <form method="post" id="selectRoom" class="form-inline">
-                            <div class="form-group mb-2">
-                                <label th:for="dateTimeStart">Date to view:</label>
-                                <input type="datetime-local" th:field="*{dashboardViewModel.dateTimeStart}" class="form-control-sm">
-
-                                <label th:for="timePeriod">Time period to view:</label>
-                                <select th:field="*{dashboardViewModel.timePeriod}" class="form-select-sm">
-                                    <option value=10>10m</option>
-                                    <option value=30>30m</option>
-                                    <option value=60>1h</option>
-                                    <option value=360>6h</option>
-                                    <option value=720>12h</option>
-                                    <option value=1440>24h</option>
-                                    <option value=4320>3d</option>
-                                    <option value=7200>5d</option>
-                                    <option value=10080>1w</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label th:for="roomID">Select Room to Show: </label>
-                                <select class="form-select-sm" th:field="*{dashboardViewModel.roomId}">
-                                    <option th:each="room : ${userRooms}" th:text="${room.getName()}" th:value="${room.getId()}"></option>
-                                </select>
-                                <button type="submit" class="btn btn-primary btn-sm">Search for Room</button>
-                            </div>
-                        </form>
-                    </div>
-                    <hr />
+    <main>
+        <div class="container-fluid d-flex justify-content-center">
+            <div class="col-12">
+                <div th:if="${databaseError != null}">
+                    <h1 class="text-danger text-center" th:text="${databaseError}"></h1>
                 </div>
+                <div th:if="${databaseError == null}">
+                    <div class="text-center mb-3">
+                        <h4 class="mt-2">Data Filtering Options</h4>
+                        <div class="m-2 row">
+                            <form method="post" id="selectRoom" class="form-inline">
+                                <div class="form-group mb-2">
+                                    <label th:for="dateTimeStart">Date to view:</label>
+                                    <input type="datetime-local" th:field="*{dashboardViewModel.dateTimeStart}" class="form-control-sm">
 
-                <h1 th:if="chooseRoom" th:text="${chooseRoom}" class="text-center"></h1>
-
-                <div class="m-2 row border border-dark-subtle border-3 rounded-5 bg-secondary-subtle" th:if="${tempList != null}">
-                    <div class="col-lg-8 col-md-12 col-sm-12 text-center">
-                        <h2 class="mt-2">Temperature Data</h2>
-                        <canvas id="tempChart" class="mx-auto graph"></canvas>
-                        <p id="tempWarn" class="text-danger"></p>
-                        <p id="tempRecommend"></p>
+                                    <label th:for="timePeriod">Time period to view:</label>
+                                    <select th:field="*{dashboardViewModel.timePeriod}" class="form-select-sm">
+                                        <option value=10>10m</option>
+                                        <option value=30>30m</option>
+                                        <option value=60>1h</option>
+                                        <option value=360>6h</option>
+                                        <option value=720>12h</option>
+                                        <option value=1440>24h</option>
+                                        <option value=4320>3d</option>
+                                        <option value=7200>5d</option>
+                                        <option value=10080>1w</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label th:for="roomID">Select Room to Show: </label>
+                                    <select class="form-select-sm" th:field="*{dashboardViewModel.roomId}">
+                                        <option th:each="room : ${userRooms}" th:text="${room.getName()}" th:value="${room.getId()}"></option>
+                                    </select>
+                                    <button type="submit" class="btn btn-primary btn-sm">Search for Room</button>
+                                </div>
+                            </form>
+                        </div>
+                        <hr />
                     </div>
 
-                    <div class="col-lg-4 col-md-12 col-sm-12 text-center align-self-center">
-                        <canvas id="tempValuesDisplay" class="mx-auto statDisplay"></canvas>
-                        <p id="tempStats">No Data Available</p>
-                    </div>
-                </div>
+                    <h1 th:if="chooseRoom" th:text="${chooseRoom}" class="text-center"></h1>
 
-                <div class="m-2 row border border-dark-subtle border-3 rounded-5 bg-secondary-subtle" th:if="${humidList != null}">
-                    <div class="col-lg-8 col-md-12 col-sm-12 text-center" >
-                        <h2 class="mt-2">Humidity Data</h2>
-                        <canvas id="humidChart" class="mx-auto graph"></canvas>
-                        <p id="humidWarn" class="text-danger"></p>
-                        <p id="humidRecommend"></p>
-                    </div>
-                    <div class="col-lg-4 col-md-12 col-sm-12 text-center align-self-center">
-                        <canvas id="humidValuesDisplay" class="mx-auto statDisplay"></canvas>
-                        <p id="humidStats">No Data Available</p>
-                    </div>
-                </div>
+                    <div class="m-2 row border border-dark-subtle border-3 rounded-5 bg-secondary-subtle" th:if="${tempList != null}">
+                        <div class="col-lg-8 col-md-12 col-sm-12 text-center">
+                            <h2 class="mt-2">Temperature Data</h2>
+                            <canvas id="tempChart" class="mx-auto graph"></canvas>
+                            <p id="tempWarn" class="text-danger"></p>
+                            <p id="tempRecommend"></p>
+                        </div>
 
-                <div class="m-2 row border border-dark-subtle border-3 rounded-5 bg-secondary-subtle" th:if="${CO2List != null}">
-                    <div class="col-lg-8 col-md-12 col-sm-12 text-center">
-                        <h2 class="mt-2">CO2 Data</h2>
-                        <canvas id="CO2Chart" class="mx-auto graph"></canvas>
-                        <p id="CO2Warn" class="text-danger"></p>
-                        <p id="CO2Recommend"></p>
-                    </div>
-                    <div class="col-lg-4 col-md-12 col-sm-12 text-center align-self-center">
-                        <canvas id="CO2ValuesDisplay" class="mx-auto statDisplay"></canvas>
-                        <p id="CO2Stats">No Data Available</p>
-                    </div>
-                </div>
-
-                <div class="m-2 row border border-dark-subtle border-3 rounded-5 bg-secondary-subtle" th:if="${noiseList != null}">
-                    <div class="col-lg-8 col-md-12 col-sm-12 text-center">
-                        <h2 class="mt-2">Noise Data</h2>
-                        <canvas id="noiseChart" class="mx-auto graph"></canvas>
-                        <p id="noiseWarn" class="text-danger"></p>
-                        <p id="noiseRecommend"></p>
-
-                        <h5>Sound Spikes</h5>
-                        <div th:if="${soundSpikes != null}" class="col-lg-8 col-md-12 col-sm-12 text-center align-content-center mx-auto">
-                            <table class="table table-responsive table-striped">
-                                <tr class="table-dark">
-                                    <th class="col-3">Number of Measurements</th>
-                                    <th class="col-3">Duration (ms)</th>
-                                    <th class="col-3">Peak Amplitude</th>
-                                </tr>
-                                <tr class="content" th:each="spike : ${soundSpikes}" th:attr="onclick='window.location.href=\'/dashboard/' + ${spike.getRoomId()} + '/' + ${spike.getSpikeId()} + '\''">
-                                    <td th:text="${spike.getNumberMeasurements()}"></td>
-                                    <td th:text="${spike.getDuration()}"></td>
-                                    <td th:text="${spike.getPeakAmplitude()}"></td>
-                                </tr>
-                            </table>
+                        <div class="col-lg-4 col-md-12 col-sm-12 text-center align-self-center">
+                            <canvas id="tempValuesDisplay" class="mx-auto statDisplay"></canvas>
+                            <p id="tempStats">No Data Available</p>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-md-12 col-sm-12 text-center align-self-center">
-                        <canvas id="noiseValuesDisplay" class="mx-auto statDisplay"></canvas>
-                        <p id="noiseStats">No Data Available</p>
+
+                    <div class="m-2 row border border-dark-subtle border-3 rounded-5 bg-secondary-subtle" th:if="${humidList != null}">
+                        <div class="col-lg-8 col-md-12 col-sm-12 text-center" >
+                            <h2 class="mt-2">Humidity Data</h2>
+                            <canvas id="humidChart" class="mx-auto graph"></canvas>
+                            <p id="humidWarn" class="text-danger"></p>
+                            <p id="humidRecommend"></p>
+                        </div>
+                        <div class="col-lg-4 col-md-12 col-sm-12 text-center align-self-center">
+                            <canvas id="humidValuesDisplay" class="mx-auto statDisplay"></canvas>
+                            <p id="humidStats">No Data Available</p>
+                        </div>
+                    </div>
+
+                    <div class="m-2 row border border-dark-subtle border-3 rounded-5 bg-secondary-subtle" th:if="${CO2List != null}">
+                        <div class="col-lg-8 col-md-12 col-sm-12 text-center">
+                            <h2 class="mt-2">CO2 Data</h2>
+                            <canvas id="CO2Chart" class="mx-auto graph"></canvas>
+                            <p id="CO2Warn" class="text-danger"></p>
+                            <p id="CO2Recommend"></p>
+                        </div>
+                        <div class="col-lg-4 col-md-12 col-sm-12 text-center align-self-center">
+                            <canvas id="CO2ValuesDisplay" class="mx-auto statDisplay"></canvas>
+                            <p id="CO2Stats">No Data Available</p>
+                        </div>
+                    </div>
+
+                    <div class="m-2 row border border-dark-subtle border-3 rounded-5 bg-secondary-subtle" th:if="${noiseList != null}">
+                        <div class="col-lg-8 col-md-12 col-sm-12 text-center">
+                            <h2 class="mt-2">Noise Data</h2>
+                            <canvas id="noiseChart" class="mx-auto graph"></canvas>
+                            <p id="noiseWarn" class="text-danger"></p>
+                            <p id="noiseRecommend"></p>
+
+                            <h5>Sound Spikes</h5>
+                            <div th:if="${soundSpikes != null}" class="col-lg-8 col-md-12 col-sm-12 text-center align-content-center mx-auto">
+                                <table class="table table-responsive table-striped">
+                                    <tr class="table-dark">
+                                        <th class="col-3">Number of Measurements</th>
+                                        <th class="col-3">Duration (ms)</th>
+                                        <th class="col-3">Peak Amplitude</th>
+                                    </tr>
+                                    <tr class="content" th:each="spike : ${soundSpikes}" th:attr="onclick='window.location.href=\'/dashboard/' + ${spike.getRoomId()} + '/' + ${spike.getSpikeId()} + '\''">
+                                        <td th:text="${spike.getNumberMeasurements()}"></td>
+                                        <td th:text="${spike.getDuration()}"></td>
+                                        <td th:text="${spike.getPeakAmplitude()}"></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-12 col-sm-12 text-center align-self-center">
+                            <canvas id="noiseValuesDisplay" class="mx-auto statDisplay"></canvas>
+                            <p id="noiseStats">No Data Available</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 <div th:insert="~{fragment/footer::footercopy}">footer</div>
 </body>
 

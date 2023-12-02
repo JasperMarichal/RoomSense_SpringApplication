@@ -11,11 +11,12 @@ public interface DataRepository {
     List<SoundData> getSpikeData(int roomId, int spikeId);
 
     List<Room> getUserRooms(String userAccount);
+
+    void addRoom(Room room, String email);
     List<TemperatureData> getTemperatureRecordList();
     List<HumidityData> getHumidityRecordList();
     List<CO2Data> getCO2RecordList();
     List<SoundData> getNoiseRecordList();
     LocalDateTime getLastReadingTime(int roomID);
-    void addRoom(Room room);
     List<SoundSpike> getSpikeRecordList();
 }

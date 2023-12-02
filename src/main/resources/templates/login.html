@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
     <script defer th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
     <title>Log in</title>
@@ -10,60 +10,58 @@
 <body>
 <div th:insert="~{fragment/navbar-not-logged-in::navbar-not-logged-in}">div</div>
 
-<!-- Section: Design Block -->
-<section class="text-center">
-    <!-- Background image -->
-    <div class="p-5 bg-image" style="
-        background-image: url('/images/people-working.jpg');
-        background-size: 100% 300%;
-        height: 300px;
-        "></div>
-    <!-- Background image -->
+<main>
+    <section class="text-center">
+        <!-- Background image -->
+        <div class="p-5 bg-image" style="
+            background-image: url('/images/people-working.jpg');
+            background-size: 100% 300%;
+            height: 300px;
+            "></div>
+        <!-- Background image -->
 
-    <div class="card mx-4 mx-md-5 shadow-5-strong" style="
-        margin-top: -100px;
-        background: hsla(0, 0%, 100%, 0.8);
-        backdrop-filter: blur(30px);
-        ">
-        <div class="card-body py-5 px-md-5">
+        <div class="card mx-4 mx-md-5 shadow-5-strong" style="
+            margin-top: -100px;
+            background: hsla(0, 0%, 100%, 0.8);
+            backdrop-filter: blur(30px);
+            ">
+            <div class="card-body py-5 px-md-5">
 
-            <div class="row d-flex justify-content-center">
-                <div class="col-lg-8">
-                    <h2 class="fw-bold mb-5">Log in</h2>
-                    <form method="post" th:object="${loginviewmodel}" novalidate>
-                        <div th:if="${loginError}" class="alert alert-danger">
-                            <p th:text="${loginError}"></p>
-                        </div>
-                        <!-- 2 column grid layout with text inputs for the first and last names -->
-                        <div class="row">
-                            <div class="col-md-6 mb-4">
-                                <div class="form-outline">
-                                    <input type="text" id="email" class="form-control" th:field="*{email}"/>
-                                    <label class="form-label" th:for="email">Email</label>
-                                    <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger"></span>
+                <div class="row d-flex justify-content-center">
+                    <div class="col-lg-8">
+                        <h2 class="fw-bold mb-5">Log in</h2>
+                        <form method="post" th:object="${loginviewmodel}" novalidate>
+                            <div th:if="${loginError}" class="alert alert-danger">
+                                <p th:text="${loginError}"></p>
+                            </div>
+                            <!-- 2 column grid layout with text inputs for the first and last names -->
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <div class="form-outline">
+                                        <input type="text" id="email" class="form-control" th:field="*{email}"/>
+                                        <label class="form-label" th:for="email">Email</label>
+                                        <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <div class="form-outline">
+                                        <input type="password" id="password" class="form-control" th:field="*{password}"/>
+                                        <label class="form-label" th:for="password">Password</label>
+                                        <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="text-danger"></span>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-md-6 mb-4">
-                                <div class="form-outline">
-                                    <input type="password" id="password" class="form-control" th:field="*{password}"/>
-                                    <label class="form-label" th:for="password">Password</label>
-                                    <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="text-danger"></span>
-                                </div>
-                            </div>
-                        </div>
 
-
-                        <!-- Submit button -->
-                        <button type="submit" class="btn btn-primary btn-block mb-4">
-                            Log in
-                        </button>
-                    </form>
+                            <button type="submit" class="btn btn-primary btn-block mb-4">
+                                Log in
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
-<!-- Section: Design Block -->
+    </section>
+</main>
 
 <div th:insert="~{fragment/footer::footercopy}">footer</div>
 </body>

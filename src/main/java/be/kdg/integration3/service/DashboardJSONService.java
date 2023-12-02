@@ -65,7 +65,7 @@ public class DashboardJSONService implements DashboardService {
     }
 
     @Override
-    public void addRoom(Room room) {
+    public void addRoom(String roomName, double width, double length, double height, String userEmail) {
 
     }
 }

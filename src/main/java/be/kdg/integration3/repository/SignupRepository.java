@@ -6,4 +6,6 @@ public interface SignupRepository {
     boolean isEmailTaken(String email);
 
     UserAccount addUserAccount(UserAccount userAccount);
+
+    boolean loginDetailsCorrect(String email, String password);
 }

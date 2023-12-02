@@ -49,8 +49,8 @@ public class DashboardDBService implements DashboardService{
     }
 
     @Override
-    public void addRoom(Room room) {
-
+    public void addRoom(String roomName, double width, double length, double height, String userEmail) {
+        repository.addRoom(new Room(roomName, width, length, height), userEmail);
     }
 
     /**

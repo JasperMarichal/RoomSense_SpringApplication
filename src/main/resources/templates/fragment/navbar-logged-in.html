@@ -20,21 +20,17 @@
                 <a class="nav-link" href="/about-us">About us</a>
             </li>
             <li class="nav-item active">
-                <!--        change to /dashboard later-->
                 <a class="nav-link" href="/dashboard">Dashboard</a>
             </li>
             <li class="nav-item active">
-                <!--        change to /dashboard later-->
                 <a class="nav-link" href="/add-room">Add room</a>
             </li>
             <li class="nav-item active">
-                <!--        change to /dashboard later-->
                 <a class="nav-link" href="/log-out">Log out</a>
             </li>
             <!--      add other pages below-->
         </ul>
-<!--        TODO: move it to the right-->
-        <span class="navbar-text ms-auto" th:if="${session.loggedIn}" th:text="${session.userEmail}"></span>
+        <span class="navbar-text ms-auto m-2" th:if="${session.loggedIn}" th:text="${session.userEmail}"></span>
 
     </div>
 </nav>

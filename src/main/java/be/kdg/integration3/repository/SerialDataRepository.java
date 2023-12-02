@@ -74,7 +74,7 @@ public class SerialDataRepository implements DataRepository {
     }
 
     @Override
-    public void addRoom(Room room) {}
+    public void addRoom(Room room, String email) {}
 
     @Override
     public List<SoundSpike> getSpikeRecordList() {

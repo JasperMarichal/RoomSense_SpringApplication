@@ -27,4 +27,9 @@ public class SignupDBService implements SignupService {
     public UserAccount addUserAccount(String email, String username, String passwd, UseCaseType useCase, int orgId){
         return repository.addUserAccount(new UserAccount(email, username, passwd, useCase, orgId));
     }
+
+    @Override
+    public boolean correctUserDetails(String email, String password){
+        return repository.loginDetailsCorrect(email, password);
+    }
 }

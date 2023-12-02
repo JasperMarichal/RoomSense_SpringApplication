@@ -9,4 +9,6 @@ public interface SignupService {
     UserAccount addUserAccount(String email, String username, String passwd, UseCaseType useCase);
 
     UserAccount addUserAccount(String email, String username, String passwd, UseCaseType useCase, int orgId);
+
+    boolean correctUserDetails(String email, String password);
 }

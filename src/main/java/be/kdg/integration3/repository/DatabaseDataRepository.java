@@ -2,7 +2,6 @@ package be.kdg.integration3.repository;
 
 import be.kdg.integration3.domain.*;
 import be.kdg.integration3.util.exception.DatabaseException;
-import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
@@ -10,8 +9,6 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.*;
 import java.util.ArrayList;
@@ -27,16 +24,14 @@ public class DatabaseDataRepository implements DataRepository {
     private List<SoundData> noiseRecordList;
     private List<SoundSpike> spikeRecordList;
     private JdbcTemplate jdbcTemplate;
-    private HttpSession session;
 
-    public DatabaseDataRepository(JdbcTemplate jdbcTemplate, HttpSession session) {
+    public DatabaseDataRepository(JdbcTemplate jdbcTemplate) {
         this.temperatureRecordList = new ArrayList<>();
         this.humidityRecordList = new ArrayList<>();
         this.CO2RecordList = new ArrayList<>();
         this.noiseRecordList = new ArrayList<>();
         this.spikeRecordList = new ArrayList<>();
         this.jdbcTemplate = jdbcTemplate;
-        this.session = session;
     }
 
     /**
@@ -234,11 +229,15 @@ public class DatabaseDataRepository implements DataRepository {
     }
 
     @Override
-    public void addRoom(Room room) {
-        jdbcTemplate.update("INSERT INTO room (room_name, account, width, length, height) " +
-                "VALUES (?, ?, ?, ?, ?)",
-                room.getName(), session.getAttribute("userEmail"),
-                room.getWidth(), room.getLength(), room.getHeight());
+    public void addRoom(Room room, String email) {
+        try {
+            jdbcTemplate.update("INSERT INTO room (room_name, account, width, length, height) " +
+                            "VALUES (?, ?, ?, ?, ?)",
+                    room.getName(), email,
+                    room.getWidth(), room.getLength(), room.getHeight());
+        } catch (DataAccessException e){
+            throw new DatabaseException("Can not connect to database", e);
+        }
     }
 
     @Override

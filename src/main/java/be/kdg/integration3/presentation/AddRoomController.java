@@ -1,8 +1,9 @@
 package be.kdg.integration3.presentation;
 
-import be.kdg.integration3.domain.Room;
 import be.kdg.integration3.presentation.viewmodel.AddRoomViewModel;
-import be.kdg.integration3.repository.DataRepository;
+import be.kdg.integration3.service.DashboardService;
+import be.kdg.integration3.util.exception.DatabaseException;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,21 +19,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/add-room")
 public class AddRoomController {
     private final Logger logger = LoggerFactory.getLogger(AddRoomController.class);
-    private DataRepository dataRepository;
+    private DashboardService dashboardService;
 
-    public AddRoomController(DataRepository dataRepository) {
-        this.dataRepository = dataRepository;
+    public AddRoomController(DashboardService dashboardService) {
+        this.dashboardService = dashboardService;
     }
 
     @GetMapping
-    public String getAddRoomView(Model model) {
+    public String getAddRoomView(Model model, HttpSession session) {
+        if (session.getAttribute("userEmail") == null) return "redirect:/login";
         model.addAttribute("addroomviewmodel", new AddRoomViewModel());
         logger.info("Request for add room view!");
         return "add-room";
     }
 
     @PostMapping
-    public String addRoom(@Valid @ModelAttribute("addroomviewmodel") AddRoomViewModel addRoomViewModel, BindingResult errors, Model model) {
+    public String addRoom(@Valid @ModelAttribute("addroomviewmodel") AddRoomViewModel addRoomViewModel, BindingResult errors, Model model, HttpSession session) {
         logger.info(String.format("Processing room name: %s, width: %s, length: %s, height: %s",
                 addRoomViewModel.getRoomName(), addRoomViewModel.getWidth(), addRoomViewModel.getLength(), addRoomViewModel.getHeight()));
 
@@ -42,9 +44,11 @@ public class AddRoomController {
             return "/add-room";
         }
 
-        System.out.println(addRoomViewModel);
-
-        dataRepository.addRoom(new Room(addRoomViewModel.getRoomName(), Double.parseDouble(addRoomViewModel.getWidth()), Double.parseDouble(addRoomViewModel.getLength()), Double.parseDouble(addRoomViewModel.getHeight())));
+        try {
+            dashboardService.addRoom(addRoomViewModel.getRoomName(), addRoomViewModel.getWidth(), addRoomViewModel.getHeight(), addRoomViewModel.getHeight(), (String) session.getAttribute("userEmail"));
+        } catch (DatabaseException e){
+            return "errorPage";
+        }
 
         return "redirect:/dashboard";
     }

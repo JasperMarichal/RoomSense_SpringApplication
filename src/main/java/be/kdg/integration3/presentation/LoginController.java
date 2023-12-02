@@ -1,12 +1,11 @@
 package be.kdg.integration3.presentation;
 
 import be.kdg.integration3.presentation.viewmodel.LoginViewModel;
+import be.kdg.integration3.service.SignupService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,14 +14,15 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.Optional;
-
 @Controller
 @RequestMapping("/login")
 public class LoginController {
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
     private final Logger logger = LoggerFactory.getLogger(LoginController.class);
+    private SignupService service;
+
+    public LoginController(SignupService service) {
+        this.service = service;
+    }
 
     @GetMapping
     public String getLoginView(Model model) {
@@ -38,15 +38,12 @@ public class LoginController {
             errors.getAllErrors().forEach(error -> logger.error(error.toString()));
             return "/login";
         }
-        String query = "SELECT COUNT(*) FROM user_account WHERE email = ? AND passwd = ?";
-        Optional<Integer> count = Optional.ofNullable(jdbcTemplate.queryForObject(query, Integer.class, loginViewModel.getEmail(), loginViewModel.getPassword()));
 
-        if (count.orElse(0) == 1) {
+        if (service.correctUserDetails(loginViewModel.getEmail(), loginViewModel.getPassword())) {
             logger.info("login successful");
             httpSession.setAttribute("loggedIn", true);
             httpSession.setAttribute("userEmail", loginViewModel.getEmail());
 
-            // later direct to another page
             return "redirect:/dashboard";
         } else {
             logger.info("login unsuccessful");
