@@ -2,6 +2,7 @@ package be.kdg.integration3.presentation;
 
 import be.kdg.integration3.presentation.viewmodel.LoginViewModel;
 import be.kdg.integration3.service.SignupService;
+import be.kdg.integration3.util.exception.DatabaseException;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -38,17 +39,21 @@ public class LoginController {
             errors.getAllErrors().forEach(error -> logger.error(error.toString()));
             return "/login";
         }
+        try {
+            if (service.correctUserDetails(loginViewModel.getEmail(), loginViewModel.getPassword())) {
+                logger.info("login successful");
+                httpSession.setAttribute("loggedIn", true);
+                httpSession.setAttribute("userEmail", loginViewModel.getEmail());
 
-        if (service.correctUserDetails(loginViewModel.getEmail(), loginViewModel.getPassword())) {
-            logger.info("login successful");
-            httpSession.setAttribute("loggedIn", true);
-            httpSession.setAttribute("userEmail", loginViewModel.getEmail());
-
-            return "redirect:/dashboard";
-        } else {
-            logger.info("login unsuccessful");
-            model.addAttribute("loginError", "User not found.");
-            return "/login";
+                return "redirect:/dashboard";
+            } else {
+                logger.info("login unsuccessful");
+                model.addAttribute("loginError", "User not found.");
+                return "/login";
+            }
+        } catch (DatabaseException e){
+            logger.debug("Could not connect to the database");
+            return "errorPage";
         }
     }
 }
