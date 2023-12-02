@@ -25,8 +25,10 @@ public class DashboardController {
     }
 
     /**
-     * Shows the dashboard view before any room, time or date has been selected
+     * Shows the dashboard view before any room, time or date has been selected, if you are not logged in,
+     * automatically redirects to /login
      * @param model The mode for the view
+     * @param session The HTTP session to retrieve dashboardViewModel and userEmail from
      * @return Returns the dashboard view
      */
     @GetMapping
@@ -48,6 +50,12 @@ public class DashboardController {
         return "dashboard";
     }
 
+    /**
+     * Redirects the user to the room they selected based on the viewModel
+     * @param dashboardViewModel The dashboardViewModel that contains the user inputted data
+     * @param session The HTTP session to retrieve dashboardViewModel from
+     * @return redirect to the appropriate page
+     */
     @PostMapping
     public String redirectRoomPage(@ModelAttribute("dashboardViewModel") DashboardViewModel dashboardViewModel, HttpSession session){
         DashboardViewModel viewModelFromSession = (DashboardViewModel) session.getAttribute("dashboardViewModel");
@@ -63,6 +71,8 @@ public class DashboardController {
 
     /**
      * Uses the roomId from the path is order to display the data for the right room, requests data from service and sends it to model
+     * If the user does not own the room returns dashboard
+     *
      * @param model The model for the view
      * @param roomId The roomId to look for from the path
      * @return Returns the dashboard page with the data
@@ -142,6 +152,13 @@ public class DashboardController {
         return "dashboard";
     }
 
+    /**
+     * Redirects to appropriate room based on the viewModel
+     * @param room The roomId from the URL
+     * @param dashboardViewModel The dashboardViewModel that contains the user inputted data
+     * @param session The HTTP session to retrieve dashboardViewModel from
+     * @return redirect to the appropriate page
+     */
     @PostMapping("/{room}")
     public String redirectToRoomPage(@PathVariable int room, @ModelAttribute("dashboardViewModel") DashboardViewModel dashboardViewModel, HttpSession session){
         DashboardViewModel viewModelFromSession = (DashboardViewModel) session.getAttribute("dashboardViewModel");
@@ -173,6 +190,18 @@ public class DashboardController {
         model.addAttribute("userRooms", rooms);
     }
 
+    /**
+     * Gets information of the selected spike to show on the chart, if the user is not logged in, redirects to login,
+     * if the user does not own the room redirects to dashboard
+     * if the spike does not exist redirects to the room page
+     *
+     * @param roomId the ID of the room to look for
+     * @param spikeId The ID of the spike to look for
+     * @param dashboardViewModel The dashboardViewModel that contains the user inputted data
+     * @param model The mode for the view
+     * @param session The HTTP session to retrieve dashboardViewModel and userEmail from
+     * @return Returns the dashboard view
+     */
     @GetMapping("/{roomId}/{spikeId}")
     public String getSpikePage(@PathVariable int roomId, @PathVariable int spikeId, @ModelAttribute("dashboardViewModel") DashboardViewModel dashboardViewModel, Model model, HttpSession session){
         if (session.getAttribute("userEmail") == null) return "redirect:/login";
@@ -180,13 +209,19 @@ public class DashboardController {
         model.addAttribute("roomId", roomId);
         model.addAttribute("spikeId", spikeId);
 
-        List<SoundData> spikeData = service.getSpikeData(roomId, spikeId);
+        List<Room> userRooms = service.getUserRooms(String.valueOf(session.getAttribute("userEmail")));
 
-        if (!spikeData.isEmpty()) {
-            model.addAttribute("spikeList", spikeData.stream().map(SoundData::getValue).toList());
-            model.addAttribute("spikeListTimes", spikeData.stream().map(SoundData::getTimestamp).toList());
+        if (userRooms.stream().anyMatch(room -> room.getId() == roomId)) {
+            List<SoundData> spikeData = service.getSpikeData(roomId, spikeId);
+
+            if (!spikeData.isEmpty()) {
+                model.addAttribute("spikeList", spikeData.stream().map(SoundData::getValue).toList());
+                model.addAttribute("spikeListTimes", spikeData.stream().map(SoundData::getTimestamp).toList());
+            } else {
+                return "redirect:/dashboard/" + roomId;
+            }
         } else {
-            return "redirect:/dashboard/" + roomId;
+            return "redirect:/dashboard";
         }
 
         return "spikePage";
