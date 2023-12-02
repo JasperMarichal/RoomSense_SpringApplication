@@ -32,8 +32,8 @@ public class AddRoomController {
     }
 
     @PostMapping
-    public String addRoom(@Valid @ModelAttribute("addroomviewmodel") AddRoomViewModel addRoomViewModel, Model model, BindingResult errors) {
-        logger.info(String.format("Processing room name: %s, width: %f, length: %f, height: %f",
+    public String addRoom(@Valid @ModelAttribute("addroomviewmodel") AddRoomViewModel addRoomViewModel, BindingResult errors, Model model) {
+        logger.info(String.format("Processing room name: %s, width: %s, length: %s, height: %s",
                 addRoomViewModel.getRoomName(), addRoomViewModel.getWidth(), addRoomViewModel.getLength(), addRoomViewModel.getHeight()));
 
         if (errors.hasErrors()) {
@@ -44,7 +44,7 @@ public class AddRoomController {
 
         System.out.println(addRoomViewModel);
 
-        dataRepository.addRoom(new Room(addRoomViewModel.getRoomName(), addRoomViewModel.getWidth(), addRoomViewModel.getLength(), addRoomViewModel.getHeight()));
+        dataRepository.addRoom(new Room(addRoomViewModel.getRoomName(), Double.parseDouble(addRoomViewModel.getWidth()), Double.parseDouble(addRoomViewModel.getLength()), Double.parseDouble(addRoomViewModel.getHeight())));
 
         return "redirect:/dashboard";
     }

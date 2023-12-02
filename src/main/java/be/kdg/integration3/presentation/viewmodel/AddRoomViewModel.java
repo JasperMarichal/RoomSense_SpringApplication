@@ -8,21 +8,24 @@ public class AddRoomViewModel {
     private String roomName;
 
     @NotNull(message = "Width must not be null")
+    @Pattern(regexp = "\\d+(.\\d)?", message = "value must be a number")
     @Min(value = 1, message = "Width must be more than or equal to 1 meter.")
-    private Double width;
+    private String width;
 
     @NotNull(message = "Length must not be null")
+    @Pattern(regexp = "\\d+(.\\d)?", message = "value must be a number")
     @Min(value = 1, message = "Length must be more than or equal to 1 meter.")
-    private Double length;
+    private String length;
 
     @NotNull(message = "Height must not be null")
+    @Pattern(regexp = "\\d+(.\\d)?", message = "value must be a number")
     @Min(value = 1, message = "Height must be more than or equal to 1 meter.")
-    private Double height;
+    private String height;
 
     public AddRoomViewModel() {
     }
 
-    public AddRoomViewModel(String roomName, Double width, Double length, Double height) {
+    public AddRoomViewModel(String roomName, String width, String length, String height) {
         this.roomName = roomName;
         this.width = width;
         this.length = length;
@@ -37,27 +40,27 @@ public class AddRoomViewModel {
         this.roomName = roomName;
     }
 
-    public Double getWidth() {
+    public String getWidth() {
         return width;
     }
 
-    public void setWidth(Double width) {
+    public void setWidth(String width) {
         this.width = width;
     }
 
-    public Double getLength() {
+    public String getLength() {
         return length;
     }
 
-    public void setLength(Double length) {
+    public void setLength(String length) {
         this.length = length;
     }
 
-    public Double getHeight() {
+    public String getHeight() {
         return height;
     }
 
-    public void setHeight(Double height) {
+    public void setHeight(String height) {
         this.height = height;
     }
 
