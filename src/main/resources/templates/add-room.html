@@ -7,7 +7,7 @@
     <script defer th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
     <title>Add room</title>
 </head>
-<body>
+<body class="bg-dark-subtle">
 <div th:if="${session.loggedIn}">
     <div th:insert="~{fragment/navbar-logged-in::navbar-logged-in}">div</div>
 </div>
@@ -64,4 +64,3 @@
 <div th:insert="~{fragment/footer::footercopy}">footer</div>
 </body>
 </html>
-

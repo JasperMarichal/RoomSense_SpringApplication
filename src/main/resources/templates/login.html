@@ -2,12 +2,12 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" th:href="@{css/styles.css}">
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
     <script defer th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
     <title>Log in</title>
 </head>
-<body>
+<body id="login-page">
 <div th:insert="~{fragment/navbar-not-logged-in::navbar-not-logged-in}">div</div>
 
 <main>
@@ -46,4 +46,3 @@
 <div th:insert="~{fragment/footer::footercopy}">footer</div>
 </body>
 </html>
-
