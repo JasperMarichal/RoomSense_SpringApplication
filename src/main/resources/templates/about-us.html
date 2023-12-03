@@ -2,19 +2,148 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
     <script defer th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
-    <title>Login</title>
+    <title>About Us</title>
 </head>
-<body>
-<div th:if="${session.loggedIn}">
-        <div th:insert="~{fragment/navbar-logged-in::navbar-logged-in}">div</div>
-</div>
-<div th:unless="${session.loggedIn}">
-    <div th:insert="~{fragment/navbar-not-logged-in::navbar-not-logged-in}">div</div>
-</div>
+<body class="bg-dark-subtle">
+    <div th:if="${session.loggedIn}">
+            <div th:insert="~{fragment/navbar-logged-in::navbar-logged-in}">div</div>
+    </div>
+    <div th:unless="${session.loggedIn}">
+        <div th:insert="~{fragment/navbar-not-logged-in::navbar-not-logged-in}">div</div>
+    </div>
 
-<div th:insert="~{fragment/footer::footercopy}">footer</div>
+    <main>
+        <div class="container-fluid d-flex justify-content-center text-center">
+            <div class="col-12">
+                <h1 class="mt-2">About us</h1>
+                <!-- General info mission vision -->
+                <div class="row">
+                    <div class="col-6">
+                        <div class="card bg-secondary-subtle border border-dark-subtle border-3 rounded-5 h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">Mission</h5>
+                                <p class="card-text">Our mission is to make students and employees more efficient
+                                    and focused by making their workspaces more comfortable.
+                                    While improving the overall health and happiness of the workforce.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="card bg-secondary-subtle border border-dark-subtle border-3 rounded-5 h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">Vision</h5>
+                                <p class="card-text">Our vision is to boost productivity and
+                                    health worldwide by maximising the potential of work- and living-environments.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Team introduction -->
+                    <div class="col-12 mt-2">
+                        <div class="card bg-secondary-subtle border border-dark-subtle border-3 rounded-5 h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">Team introduction</h5>
+                                <p class="card-text">We are a team of five ambitious students.
+                                    All passionate about new technologies to improve our environment.
+                                    During our school career we worked on various projects,
+                                    RoomSense was our biggest project. We are committed to create a device that
+                                    can help us optimise the usage of classrooms and offices alike.
+                                    We have the luck to have two powerful shapers in our team.
+                                    The idea came into their heads and together
+                                    with the fantastic implementers we implemented the idea into a real product.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr />
+
+                <h1 class="mt-2">Individual introduction</h1>
+                <div class="row">
+                    <div class="col-6 mb-2">
+                        <div class="card bg-secondary-subtle border border-dark-subtle border-3 rounded-5 h-100">
+                            <div class="col-4 align-self-center mt-1">
+                                <img th:src="@{/images/romanprofile.jpg}" class="card-img-top" alt="Profile picture">
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">Roman Gordon</h5>
+                                <p class="card-text">I am passionate about bringing project visions to life to the best of my abilities with the help of an excellent team working alongside me. I am committed to learning more about the fields I work in and creating products that improve the world overall and give us all a better place to live in.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 mb-2">
+                        <div class="card bg-secondary-subtle border border-dark-subtle border-3 rounded-5 h-100">
+                            <div class="col-4 align-self-center mt-1">
+                                <img th:src="@{/images/abelprofile.jpg}" class="card-img-top" alt="Profile picture">
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">Abel Turlej</h5>
+                                <p class="card-text">I am an inexhaustible mine of ideas. To me, imagination has no boundaries. Thanks to education in IT, I can use it to create innovative products both for private and corporate use. I’m an artistic person, fit both for technical and creative tasks.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 mb-2">
+                        <div class="card bg-secondary-subtle border border-dark-subtle border-3 rounded-5 h-100">
+                            <div class="col-4 align-self-center mt-1">
+                                <img th:src="@{/images/annaprofile.jpg}" class="card-img-top" alt="Profile picture">
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">Anna Vorozhtsova</h5>
+                                <p class="card-text">I am drawn to working on exciting and innovative projects, not only for the opportunity they present to challenge and advance my professional skills but also because of the potential to positively impact the lives of others through cutting-edge technological solutions.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 mb-2">
+                        <div class="card bg-secondary-subtle border border-dark-subtle border-3 rounded-5 h-100">
+                            <div class="col-4 align-self-center mt-1">
+                                <img th:src="@{/images/boldiprofile.jpg}" class="card-img-top" alt="Profile picture">
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">Boldizsar Olajos</h5>
+                                <p class="card-text">I have been a problem-solver for as long as I have known, I always enjoyed working on difficult but interesting projects and I have a passion for learning new things and developing new and innovative ideas that improve people's lives.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 mb-2">
+                        <div class="card bg-secondary-subtle border border-dark-subtle border-3 rounded-5 h-100">
+                            <div class="col-4 align-self-center mt-1">
+                                <img th:src="@{/images/jasperprofile.jpg}" class="card-img-top" alt="Profile picture">
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">Jasper Marichal</h5>
+                                <p class="card-text">Myself in three words: Committed, Result-oriented, leadership. As group leader of the scouts, I have the pleasure to manage the finances of various events. Here I learned to work together as a team and lead them towards a common goal. I was lucky to put the theoretical information of school into practice during a data engineering internship. This proves my commitment to grow and keep learning in the constantly changing world.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr />
+                <div class="col-12">
+                    <!-- Carousel for documentation, the manual -->
+                    <h1>Device Documentation</h1>
+                    <div id="carouselExample" class="carousel slide">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <iframe th:src="@{/pdfs/Vision Document - Team 3 Integration 3.docx.pdf}" class="w-75 vh-100"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+
+    <div th:insert="~{fragment/footer::footercopy}">footer</div>
 </body>
 </html>
