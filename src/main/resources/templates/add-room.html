@@ -7,7 +7,7 @@
     <script defer th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
     <title>Add room</title>
 </head>
-<body>
+<body class="bg-dark-subtle">
 <div th:if="${session.loggedIn}">
     <div th:insert="~{fragment/navbar-logged-in::navbar-logged-in}">div</div>
 </div>
@@ -16,80 +16,51 @@
 </div>
 
 <main>
-    <section class="text-center">
-        <!-- Background image -->
-        <div class="p-5 bg-image" style="
-            background-image: url('https://mdbootstrap.com/img/new/textures/full/171.jpg');
-            height: 300px;
-            "></div>
-        <!-- Background image -->
-
-        <div class="card mx-4 mx-md-5 shadow-5-strong" style="
-            margin-top: -100px;
-            background: hsla(0, 0%, 100%, 0.8);
-            backdrop-filter: blur(30px);
-            ">
-            <div class="card-body py-5 px-md-5">
-
-                <div class="row d-flex justify-content-center">
-                    <div class="col-lg-8">
-                        <h2 class="fw-bold mb-5">Add new room</h2>
-                        <form method="post" th:object="${addroomviewmodel}" th:if="${session.loggedIn}" novalidate>
-                            <div th:if="${addRoomError}" class="alert alert-danger">
-                                <p th:text="${addRoomError}"></p>
+    <div class="align-items-center mt-3">
+        <div class="text-center container-fluid h-custom card p-3 bg-light w-50 border border-dark-subtle border-3 rounded-5 bg-secondary-subtle">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-sm-7 px-0 d-none d-sm-block">
+                    <form method="post" th:object="${addroomviewmodel}" th:if="${session.loggedIn}" novalidate>
+                        <div th:if="${addRoomError}" class="alert alert-danger">
+                            <p th:text="${addRoomError}"></p>
+                        </div>
+                        <div class="form-outline mb-4">
+                            <h4>Add room</h4>
+                            <div>
+                                <label th:for="roomName" class="form-label">Room name</label>
+                                <input type="text" class="form-control" id="roomName" th:field="*{roomName}">
+                                <span th:if="${#fields.hasErrors('roomName')}" th:errors="*{roomName}"
+                                      class="text-danger"></span>
                             </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-4">
-                                    <div class="form-outline">
-                                        <input type="text" id="roomName" class="form-control" th:field="*{roomName}"/>
-                                        <label class="form-label" th:for="roomName">Room name</label>
-                                        <span th:if="${#fields.hasErrors('roomName')}" th:errors="*{roomName}"
-                                              class="text-danger"></span>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 mb-4">
-                                    <div class="form-outline">
-                                        <input type="text" id="width" class="form-control" th:field="*{width}"/>
-                                        <label class="form-label" th:for="width">Width</label>
-                                        <span th:if="${#fields.hasErrors('width')}" th:errors="*{width}"
-                                              class="text-danger"></span>
-                                    </div>
-                                </div>
+                            <div>
+                                <label th:for="width" class="form-label">Width</label>
+                                <input type="text" class="form-control" id="width" th:field="*{width}">
+                                <span th:if="${#fields.hasErrors('width')}" th:errors="*{width}"
+                                      class="text-danger"></span>
                             </div>
-
-                            <div class="row">
-                                <div class="col-md-6 mb-4">
-                                    <div class="form-outline">
-                                        <input type="text" id="length" class="form-control" th:field="*{length}"/>
-                                        <label class="form-label" th:for="length">Length</label>
-                                        <span th:if="${#fields.hasErrors('length')}" th:errors="*{length}"
-                                              class="text-danger"></span>
-
-                                    </div>
-                                </div>
-                                <div class="col-md-6 mb-4">
-                                    <div class="form-outline">
-                                        <input type="text" id="height" class="form-control" th:field="*{height}"/>
-                                        <label class="form-label" th:for="height">Height</label>
-                                        <span th:if="${#fields.hasErrors('height')}" th:errors="*{height}"
-                                              class="text-danger"></span>
-
-                                    </div>
-                                </div>
+                            <div>
+                                <label th:for="length" class="form-label">Length</label>
+                                <input type="text" class="form-control" id="length" th:field="*{length}">
+                                <span th:if="${#fields.hasErrors('length')}" th:errors="*{length}"
+                                      class="text-danger"></span>
                             </div>
-
-                            <button type="submit" class="btn btn-primary btn-block mb-4">
-                                Add room
-                            </button>
-                        </form>
-                    </div>
+                            <div>
+                                <label th:for="height" class="form-label">Height</label>
+                                <input type="text" class="form-control" id="height" th:field="*{height}">
+                                <span th:if="${#fields.hasErrors('height')}" th:errors="*{height}"
+                                      class="text-danger"></span>
+                            </div>
+                            <div class="text-center mt-6 pt-4">
+                                <button type="submit" class="btn btn-primary">Add room</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
 </main>
 
 <div th:insert="~{fragment/footer::footercopy}">footer</div>
 </body>
 </html>
-
