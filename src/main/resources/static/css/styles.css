@@ -4,8 +4,8 @@ main {
 
 
 
-#login-page {
-    background-image: url("static/images/people-working.jpg"); /* Replace with the path to your image */
+.login-page {
+    background-image: url("/images/people-working.jpg"); /* Replace with the path to your image */
     background-size: cover; /* Ensures the image covers the entire background */
     background-position: center; /* Centers the image */
     background-repeat: no-repeat;
