@@ -288,7 +288,10 @@ function temperatureChart() {
             scales: {
                 yAxes: [{
                     ticks: {
-                        callback: function(value) {if (value % 1 === 0) {return value;}}
+                        callback: function(value) {if (value % 1 === 0) {return value;}},
+                        stepSize: 2.5,
+                        suggestedMin: 10,
+                        suggestedMax: 40,
                     },
                     scaleLabel: {
                         display: true,
@@ -333,7 +336,10 @@ function humidityChart() {
             scales: {
                 yAxes: [{
                     ticks: {
-                        callback: function(value) {if (value % 1 === 0) {return value;}}
+                        callback: function(value) {if (value % 1 === 0) {return value;}},
+                        stepSize: 5,
+                        suggestedMin: 20,
+                        suggestedMax: 80,
                     },
                     scaleLabel: {
                         display: true,
@@ -378,7 +384,10 @@ function CO2Chart() {
             scales: {
                 yAxes: [{
                     ticks: {
-                        callback: function(value) {if (value % 1 === 0) {return value;}}
+                        callback: function(value) {if (value % 1 === 0) {return value;}},
+                        stepSize: 250,
+                        suggestedMin: 500,
+                        suggestedMax: 5000,
                     },
                     scaleLabel: {
                         display: true,
@@ -423,7 +432,10 @@ function noiseChart() {
             scales: {
                 yAxes: [{
                     ticks: {
-                        callback: function(value) {if (value % 1 === 0) {return value;}}
+                        callback: function(value) {if (value % 1 === 0) {return value;}},
+                        stepSize: 50,
+                        suggestedMin: 0,
+                        suggestedMax: 512,
                     },
                     scaleLabel: {
                         display: true,
