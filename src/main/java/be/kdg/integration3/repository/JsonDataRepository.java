@@ -39,7 +39,7 @@ public class JsonDataRepository implements DataRepository {
     }
 
     @Scheduled(fixedDelay = 3000000)
-    public void read(int roomID, LocalDateTime startDateTime, LocalDateTime endDateTime){
+    public void read(int roomID, LocalDateTime startDateTime, LocalDateTime endDateTime, boolean readSpikes){
         findFiles("temperature");
         findFiles("humidity");
         findFiles("sound");

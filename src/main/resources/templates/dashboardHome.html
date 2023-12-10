@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+    <script defer th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
+    <script defer type="module" th:src="@{/javascript/dashboardHome.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <title>Dashboard Homepage</title>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        let roomOverview = /*[[${roomOverview}]]*/ 'Sebastian';
+        /*]]>*/
+    </script>
+</head>
+<body class="bg-dark-subtle">
+<div th:if="${session.loggedIn}">
+    <div th:insert="~{fragment/navbar-logged-in::navbar-logged-in}">div</div>
+</div>
+<div th:unless="${session.loggedIn}">
+    <div th:insert="~{fragment/navbar-not-logged-in::navbar-not-logged-in}">div</div>
+</div>
+
+<main>
+    <div class="container-fluid d-flex justify-content-center">
+        <div class="col-12">
+            <div th:if="${databaseError != null}">
+                <h1 class="text-danger text-center" th:text="${databaseError}"></h1>
+            </div>
+            <div th:if="${databaseError == null}">
+                <div class="text-center mb-3">
+                    <h4 class="mt-2">Data Filtering Options</h4>
+                    <div class="m-2 row">
+                        <form method="post" id="selectRoom" class="form-inline">
+                            <div class="form-group mb-2">
+                                <label th:for="dateTimeStart">Date to view:</label>
+                                <input type="datetime-local" th:field="*{dashboardViewModel.dateTimeStart}" class="form-control-sm">
+
+                                <label th:for="timePeriod">Time period to view:</label>
+                                <select th:field="*{dashboardViewModel.timePeriod}" class="form-select-sm">
+                                    <option value=10>10m</option>
+                                    <option value=30>30m</option>
+                                    <option value=60>1h</option>
+                                    <option value=360>6h</option>
+                                    <option value=720>12h</option>
+                                    <option value=1440>24h</option>
+                                    <option value=4320>3d</option>
+                                    <option value=7200>5d</option>
+                                    <option value=10080>1w</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label th:for="roomID">Select Room to Show: </label>
+                                <select class="form-select-sm" th:field="*{dashboardViewModel.roomId}">
+                                    <option th:each="room : ${userRooms}" th:text="${room.getName()}" th:value="${room.getId()}"></option>
+                                </select>
+                                <button type="submit" class="btn btn-primary btn-sm">Search for Room</button>
+                            </div>
+                        </form>
+                    </div>
+                    <hr />
+                    <h5>Overview for the last 30 minutes of data for every room</h5>
+                </div>
+            </div>
+            <div th:each="room : ${roomOverview}">
+                <div class="align-items-center">
+                    <div class="m-2 row border border-dark-subtle border-3 rounded-5 bg-secondary-subtle text-center card col-8 mx-auto" th:if="${room != null}">
+                        <div class="m-2 row card-body">
+                            <div class="col-6">
+                                <h4 th:text="'Data for ' +  ${room[0].get(1)}"></h4>
+                                <p th:id="'roomAvg' + ${room[0].get(0)}"></p>
+                            </div>
+                            <div class="col-6">
+                                <h4>Recommendation/Warnings</h4>
+                                <p th:id="'roomRec' + ${room[0].get(0)}"></p>
+                                <h5 th:id="'roomWarn' + ${room[0].get(0)}" class="text-danger"></h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div th:insert="~{fragment/footer::footercopy}">footer</div>
+
+</body>
+</html>

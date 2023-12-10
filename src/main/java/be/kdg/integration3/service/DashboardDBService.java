@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-@Profile("jdbcrepository")
 public class DashboardDBService implements DashboardService{
     private final DataRepository repository;
 
@@ -24,8 +23,8 @@ public class DashboardDBService implements DashboardService{
      * @param endTime the time of last entry to search for
      */
     @Override
-    public void getData(int roomID, LocalDateTime startTime, LocalDateTime endTime){
-            repository.read(roomID, startTime, endTime);
+    public void getData(int roomID, LocalDateTime startTime, LocalDateTime endTime, boolean readSpikes){
+            repository.read(roomID, startTime, endTime, readSpikes);
     }
 
     /**

@@ -41,7 +41,7 @@ public class DatabaseDataRepository implements DataRepository {
      * @param endDateTime the end time
      */
     @Override
-    public void read(int roomID, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+    public void read(int roomID, LocalDateTime startDateTime, LocalDateTime endDateTime, boolean readSpikes) {
         temperatureRecordList = new ArrayList<>();
         humidityRecordList = new ArrayList<>();
         CO2RecordList = new ArrayList<>();
@@ -60,7 +60,7 @@ public class DatabaseDataRepository implements DataRepository {
             getHumidity(roomID, timestampEnd, timestampStart);
             getCO2(roomID, timestampEnd, timestampStart);
             getNoise(roomID, timestampEnd, timestampStart);
-            getSpikes(roomID, timestampEnd, timestampStart);
+            if (readSpikes) getSpikes(roomID, timestampEnd, timestampStart);
         } catch (DataAccessException e){
             throw new DatabaseException("Can not connect to database", e);
         }

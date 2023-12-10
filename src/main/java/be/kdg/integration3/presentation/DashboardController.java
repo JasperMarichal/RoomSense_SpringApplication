@@ -13,6 +13,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -45,9 +46,37 @@ public class DashboardController {
 
         model.addAttribute("dashboardViewModel", viewModelFromSession);
 
-        addRoomsToModel(model, session);
+        List<Room> rooms = addRoomsToModel(model, session);
 
-        return "dashboard";
+        List<List[]> allUserRoomData = new ArrayList<>();
+
+        rooms.forEach(room -> {
+            LocalDateTime startDateTime = service.getLastTime(room.getId());
+            LocalDateTime endDateTime = startDateTime.minusMinutes(30);
+            service.getData(room.getId(), startDateTime, endDateTime, false);
+
+            List[] roomData = new List[5];
+
+            roomData[0] = new ArrayList<>(List.of(room.getId(), room.getName()));
+
+            if (!service.getTemperatureList().isEmpty()) roomData[1] = service.getTemperatureList().stream().map(TemperatureData::getValue).toList();
+            else roomData[1] = new ArrayList<>();
+
+            if (!service.getHumidityList().isEmpty()) roomData[2] = service.getHumidityList().stream().map(HumidityData::getValue).toList();
+            else roomData[2] = new ArrayList<>();
+
+            if (!service.getCO2List().isEmpty()) roomData[3] = service.getCO2List().stream().map(CO2Data::getValue).toList();
+            else roomData[3] = new ArrayList<>();
+
+            if (!service.getNoiseList().isEmpty()) roomData[4] = service.getNoiseList().stream().map(SoundData::getValue).toList();
+            else roomData[4] = new ArrayList<>();
+
+            allUserRoomData.add(roomData);
+        });
+
+        model.addAttribute("roomOverview", allUserRoomData);
+
+        return "dashboardHome";
     }
 
     /**
@@ -110,7 +139,7 @@ public class DashboardController {
 
                 System.out.println(startDateTime + "-" + endDateTime);
 
-                service.getData(viewModelFromSession.getRoomId(), startDateTime, endDateTime);
+                service.getData(viewModelFromSession.getRoomId(), startDateTime, endDateTime, true);
 
                 if (!service.getTemperatureList().isEmpty()) {
                     model.addAttribute("tempList", service.getTemperatureList().stream().map(TemperatureData::getValue).toList());
@@ -178,7 +207,7 @@ public class DashboardController {
      * Get all the rooms owned by the user and adds them to the model
      * @param model The model for the view
      */
-    private void addRoomsToModel(Model model, HttpSession session){
+    private List<Room> addRoomsToModel(Model model, HttpSession session){
         String account = (String) session.getAttribute("userEmail");
         List<Room> rooms;
         if (account == null){
@@ -188,6 +217,7 @@ public class DashboardController {
         }
 
         model.addAttribute("userRooms", rooms);
+        return rooms;
     }
 
     /**

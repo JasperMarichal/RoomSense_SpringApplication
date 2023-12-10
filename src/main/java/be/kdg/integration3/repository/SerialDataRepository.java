@@ -41,7 +41,7 @@ public class SerialDataRepository implements DataRepository {
     }
 
     @Override
-    public void read(int roomID, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+    public void read(int roomID, LocalDateTime startDateTime, LocalDateTime endDateTime, boolean readSpikes) {
         try {
             while (port.bytesAvailable() > 0) {
                 byte[] readBuffer = new byte[port.bytesAvailable()];

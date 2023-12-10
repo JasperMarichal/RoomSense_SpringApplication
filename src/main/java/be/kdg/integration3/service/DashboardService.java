@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface DashboardService {
-    void getData(int roomID, LocalDateTime startTime, LocalDateTime endTime);
+    void getData(int roomID, LocalDateTime startTime, LocalDateTime endTime, boolean readSpikes);
 
     List<Room> getUserRooms(String userAccount);
 

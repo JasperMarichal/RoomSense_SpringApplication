@@ -9,8 +9,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
-@Profile("jsonrepository")
 public class DashboardJSONService implements DashboardService {
     private final DataRepository repository;
 
@@ -20,7 +18,7 @@ public class DashboardJSONService implements DashboardService {
 
 
     @Override
-    public void getData(int roomID, LocalDateTime startTime, LocalDateTime endTime) {
+    public void getData(int roomID, LocalDateTime startTime, LocalDateTime endTime, boolean readSpikes) {
 
     }
 
