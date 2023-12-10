@@ -47,17 +47,33 @@ function init() {
  */
 function getData() {
 
-    if(temperature) prepareTemperatureData();
-    if(humidity) prepareHumidityData();
-    if(CO2) prepareCO2Data();
-    if(noise) prepareNoiseData();
-
+    if(temperature) {
+        prepareTemperatureData();
+        getStatistics(tempList, tempListTimes, "temp", "Temperature");
+        tempChartCanvas = showChart(tempChartCanvas, "tempChart", "rgba(255,0,0,1)", tempTimeToUse, tempDataToUse, "Temperature", "(°C)", 2.5, 10, 40);
+    }
+    if(humidity) {
+        prepareHumidityData();
+        getStatistics(humidList, humidListTimes, "humid", "Humidity");
+        humidChartCanvas = showChart(humidChartCanvas, "humidChart", "rgba(0,128,255,1)", humidTimeToUse, humidDataToUse, "Humidity", "(%)", 5, 20, 80);
+    }
+    if(CO2) {
+        prepareCO2Data();
+        getStatistics(CO2List, CO2ListTimes, "CO2", "CO2");
+        CO2ChartCanvas = showChart(CO2ChartCanvas, "CO2Chart", "rgba(0,128,0,1)", CO2TimeToUse, CO2DataToUse, "CO2", "Concentration (ppm)", 250, 500, 5000);
+    }
+    if(noise) {
+        prepareNoiseData();
+        getStatistics(noiseList, noiseListTimes, "noise", "Noise");
+        noiseChartCanvas = showChart(noiseChartCanvas, "noiseChart", "rgba(200,128,0,1)", noiseTimeToUse, noiseDataToUse, "Noise", "", 50, 0, 512);
+    }
 }
+
 
 /**
  * Prepares the temperature data to get statistics and show on the graphs,
  * this method converts timestamps into seconds since the first reading
- * and then pushes non-duplicate data-points into arrays, then calls a method to display the statistics
+ * and then pushes non-duplicate data-points into arrays
  */
 function prepareTemperatureData() {
     tempTimeToUse = [];
@@ -78,16 +94,12 @@ function prepareTemperatureData() {
             tempDataToUse.push(tempList[i]);
         }
     }
-
-    getStatistics(tempList, tempListTimes, "temp", "Temperature")
-
-    temperatureChart();
 }
 
 /**
  * Prepares the humidity data to get statistics and show on the graphs,
  * this method converts timestamps into seconds since the first reading
- * and then pushes non-duplicate data-points into arrays, then calls a method to display the statistics
+ * and then pushes non-duplicate data-points into arrays
  */
 function prepareHumidityData() {
     humidTimeToUse = [];
@@ -108,16 +120,12 @@ function prepareHumidityData() {
             humidDataToUse.push(humidList[i]);
         }
     }
-
-    getStatistics(humidList, humidListTimes, "humid", "Humidity");
-
-    humidityChart();
 }
 
 /**
  * Prepares the CO2 data to get statistics and show on the graphs,
  * this method converts timestamps into seconds since the first reading
- * and then pushes non-duplicate data-points into arrays, then calls a method to display the statistics
+ * and then pushes non-duplicate data-points into arrays
  */
 function prepareCO2Data() {
     CO2TimeToUse = [];
@@ -138,16 +146,12 @@ function prepareCO2Data() {
             CO2DataToUse.push(CO2List[i])
         }
     }
-
-    getStatistics(CO2List, CO2ListTimes, "CO2", "CO2");
-
-    CO2Chart();
 }
 
 /**
  * Prepares the noise data to get statistics and show on the graphs,
  * this method converts timestamps into seconds since the first reading
- * and then pushes non-duplicate data-points into arrays, then calls a method to display the statistics
+ * and then pushes non-duplicate data-points into arrays
  */
 function prepareNoiseData() {
     noiseTimeToUse = [];
@@ -168,10 +172,6 @@ function prepareNoiseData() {
             noiseDataToUse.push(noiseList[i])
         }
     }
-
-    getStatistics(noiseList, noiseListTimes, "noise", "Noise");
-
-    noiseChart();
 }
 
 /**
@@ -260,26 +260,22 @@ function getStatistics(allDataInRange, allTimeInRange, textID, dataType){
     }
 }
 
-
-/**
- * Displays the filtered data on the temperature graph.
- */
-function temperatureChart() {
-    if (tempChartCanvas){
-        tempChartCanvas.destroy();
+function showChart(chartCanvas, chartID, lineColor, labels, data, datasetLabel, yUnits, stepSize, minValue, maxValue) {
+    if (chartCanvas){
+        chartCanvas.destroy();
     }
 
-    tempChartCanvas = new Chart("tempChart", {
+    return new Chart(chartID, {
         type: "line",
         data: {
-            labels: tempTimeToUse,
+            labels: labels,
             datasets: [{
-                backgroundColor: "rgba(255,0,0,1)",
-                borderColor: "rgba(255,0,0,1)",
+                backgroundColor: lineColor,
+                borderColor: lineColor,
                 borderWidth: 4,
                 fill: false,
-                data: tempDataToUse,
-                label: "Temperature",
+                data: data,
+                label: datasetLabel,
                 tension: 0
             }]
         },
@@ -289,157 +285,13 @@ function temperatureChart() {
                 yAxes: [{
                     ticks: {
                         callback: function(value) {if (value % 1 === 0) {return value;}},
-                        stepSize: 2.5,
-                        suggestedMin: 10,
-                        suggestedMax: 40,
+                        stepSize: stepSize,
+                        suggestedMin: minValue,
+                        suggestedMax: maxValue,
                     },
                     scaleLabel: {
                         display: true,
-                        labelString: "Temperature (°C)"
-                    }
-                }],
-                xAxes: [{
-                    scaleLabel: {
-                        display: true,
-                        labelString: "Time (s)"
-                    }
-                }]
-            }
-        }
-    });
-}
-
-/**
- * Displays the filtered data on the humidity graph.
- */
-function humidityChart() {
-    if (humidChartCanvas){
-        humidChartCanvas.destroy();
-    }
-
-    humidChartCanvas = new Chart("humidChart", {
-        type: "line",
-        data: {
-            labels: humidTimeToUse,
-            datasets: [{
-                backgroundColor: "rgba(0,128,255,1)",
-                borderColor: "rgba(0,128,255,1)",
-                borderWidth: 4,
-                fill: false,
-                data: humidDataToUse,
-                label: "Humidity",
-                tension: 0
-            }]
-        },
-        options: {
-            plugins : {legend: false},
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        callback: function(value) {if (value % 1 === 0) {return value;}},
-                        stepSize: 5,
-                        suggestedMin: 20,
-                        suggestedMax: 80,
-                    },
-                    scaleLabel: {
-                        display: true,
-                        labelString: "Humidity (%)"
-                    }
-                }],
-                xAxes: [{
-                    scaleLabel: {
-                        display: true,
-                        labelString: "Time (s)"
-                    }
-                }]
-            }
-        }
-    });
-}
-
-/**
- * Displays the filtered data on the CO2 graph.
- */
-function CO2Chart() {
-    if (CO2ChartCanvas){
-        CO2ChartCanvas.destroy();
-    }
-
-    CO2ChartCanvas = new Chart("CO2Chart", {
-        type: "line",
-        data: {
-            labels: CO2TimeToUse,
-            datasets: [{
-                backgroundColor: "rgba(0,128,0,1)",
-                borderColor: "rgba(0,128,0,1)",
-                borderWidth: 4,
-                fill: false,
-                data: CO2DataToUse,
-                label: "CO2",
-                tension: 0
-            }]
-        },
-        options: {
-            plugins : {legend: false},
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        callback: function(value) {if (value % 1 === 0) {return value;}},
-                        stepSize: 250,
-                        suggestedMin: 500,
-                        suggestedMax: 5000,
-                    },
-                    scaleLabel: {
-                        display: true,
-                        labelString: "CO2 Concentration (ppm)"
-                    }
-                }],
-                xAxes: [{
-                    scaleLabel: {
-                        display: true,
-                        labelString: "Time (s)"
-                    }
-                }]
-            }
-        }
-    });
-}
-
-/**
- * Displays the filtered data on the noise graph.
- */
-function noiseChart() {
-    if (noiseChartCanvas){
-        noiseChartCanvas.destroy();
-    }
-
-    noiseChartCanvas = new Chart("noiseChart", {
-        type: "line",
-        data: {
-            labels: noiseTimeToUse,
-            datasets: [{
-                backgroundColor: "rgba(200,128,0,1)",
-                borderColor: "rgba(200,128,0,1)",
-                borderWidth: 4,
-                fill: false,
-                data: noiseDataToUse,
-                label: "Noise",
-                tension: 0
-            }]
-        },
-        options: {
-            plugins : {legend: false},
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        callback: function(value) {if (value % 1 === 0) {return value;}},
-                        stepSize: 50,
-                        suggestedMin: 0,
-                        suggestedMax: 512,
-                    },
-                    scaleLabel: {
-                        display: true,
-                        labelString: "Noise"
+                        labelString: datasetLabel + " " + yUnits,
                     }
                 }],
                 xAxes: [{
