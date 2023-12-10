@@ -2,15 +2,15 @@ init();
 
 function init() {
     for (let room = 0; room < roomOverview.length; room++){
+        let parentDiv = document.getElementById("room" + roomOverview[room][0][0])
         let avgText = document.getElementById("roomAvg" + roomOverview[room][0][0]);
-        let recText = document.getElementById("roomRec" + roomOverview[room][0][0]);
         let warnText = document.getElementById("roomWarn" + roomOverview[room][0][0]);
 
-        for (let type = 1; type < 5; type++){
+        for (let type = 1; type < 4; type++){
             let variableName;
-            let warnMax;
-            let warnMin;
-            let recMax;
+            let warnMax = 0;
+            let warnMin = 0;
+            let recMax = 0;
             switch (type){
                 case 1: {
                     variableName = 'temperature';
@@ -24,7 +24,7 @@ function init() {
                 }
                 case 3: {
                     variableName = 'CO2';
-                    warnMin = 5000; recMax = 1500;
+                    warnMax = 5000; recMax = 1500;
                     break;
                 }
                 case 4: {
@@ -37,8 +37,11 @@ function init() {
                 let total = 0;
                 for (let dataPoint = 0; dataPoint < roomOverview[room][type].length; dataPoint++) total += roomOverview[room][type][dataPoint];
                 let avg = total / roomOverview[room][type].length;
-                if (avgText.innerHTML !== "") avgText.innerHTML += "<br>";
-                avgText.innerHTML += "Average " + variableName + ": " + parseFloat(avg).toFixed(2);
+                if (avg > warnMax || avg < warnMin) {
+                    if (avgText.innerHTML !== "") avgText.innerHTML += "<br>";
+                    avgText.innerHTML += "Average " + variableName + ": " + parseFloat(avg).toFixed(2)
+                    avgText.innerHTML += variableName === 'temperature' ? '°C' : variableName === 'humidity' ? '%' : 'ppm';
+                }
 
                 if (variableName !== 'noise' && avg > warnMax){
                     if (warnText.innerHTML !== "") warnText.innerHTML += "<br>";
@@ -53,13 +56,6 @@ function init() {
                     if (variableName === 'temperature') warnText.innerHTML += " consider heating the room!"
                     else if (variableName === 'humidity') warnText.innerHTML += " consider using a humidifier!"
                 }
-                if (variableName !== 'noise' && avg > recMax){
-                    if (recText.innerHTML !== "") recText.innerHTML += "<br>";
-                    recText.innerHTML += "Average " + variableName + " is getting too high"
-                    if (variableName === 'temperature') recText.innerHTML += " consider maintaining between 20°C and 24°C for an optimal work environment."
-                    else if (variableName === 'humidity') recText.innerHTML += " consider maintaining between 40% and 60% humidity for an optimal work environment."
-                    else if (variableName === 'CO2') recText.innerHTML += " consider ventilating the room, maintain a concentration of less than 1500ppm."
-                }
 
             } else {
                 if (avgText.innerHTML !== "") avgText.innerHTML += "<br>";
@@ -67,6 +63,8 @@ function init() {
             }
         }
 
-        if (recText.innerHTML === "" && warnText.innerHTML === "") recText.innerHTML = "There are no active recommendations or warnings";
+        if (warnText.innerHTML === "") {
+            parentDiv.remove();
+        }
     }
 }

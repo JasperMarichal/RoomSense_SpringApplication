@@ -59,20 +59,19 @@
                         </form>
                     </div>
                     <hr />
-                    <h5>Overview for the last 30 minutes of data for every room</h5>
+                    <h5>Warnings From the Last 30 Minutes of Data</h5>
                 </div>
             </div>
-            <div th:each="room : ${roomOverview}">
+            <div th:each="room : ${roomOverview}" th:id="'room' + ${room[0].get(0)}">
                 <div class="align-items-center">
-                    <div class="m-2 row border border-dark-subtle border-3 rounded-5 bg-secondary-subtle text-center card col-8 mx-auto" th:if="${room != null}">
+                    <div class="m-2 row border border-dark-subtle border-3 rounded-5 bg-secondary-subtle text-center card col-8 mx-auto" th:if="${room != null}" th:attr="onclick='window.location.href=\'/dashboard/' + ${room[0].get(0)} + '\''">
                         <div class="m-2 row card-body">
                             <div class="col-6">
                                 <h4 th:text="'Data for ' +  ${room[0].get(1)}"></h4>
                                 <p th:id="'roomAvg' + ${room[0].get(0)}"></p>
                             </div>
                             <div class="col-6">
-                                <h4>Recommendation/Warnings</h4>
-                                <p th:id="'roomRec' + ${room[0].get(0)}"></p>
+                                <h4>Warnings</h4>
                                 <h5 th:id="'roomWarn' + ${room[0].get(0)}" class="text-danger"></h5>
                             </div>
                         </div>
