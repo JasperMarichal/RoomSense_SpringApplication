@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
     <script defer th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
-    <script defer type="module" th:src="@{/javascript/dashboardHome.js}"></script>
     <link rel="stylesheet" th:href="@{/css/styles.css}">
     <title>Dashboard Homepage</title>
     <script th:inline="javascript">
@@ -62,20 +61,21 @@
                     <h5>Warnings From the Last 30 Minutes of Data</h5>
                 </div>
             </div>
-            <div th:each="room : ${roomOverview}" th:id="'room' + ${room[0].get(0)}">
-                <div class="align-items-center">
-                    <div class="m-2 row border border-dark-subtle border-3 rounded-5 bg-secondary-subtle text-center card col-8 mx-auto" th:if="${room != null}" th:attr="onclick='window.location.href=\'/dashboard/' + ${room[0].get(0)} + '\''">
-                        <div class="m-2 row card-body">
-                            <div class="col-6">
-                                <h4 th:text="'Data for ' +  ${room[0].get(1)}"></h4>
-                                <p th:id="'roomAvg' + ${room[0].get(0)}"></p>
-                            </div>
-                            <div class="col-6">
-                                <h4>Warnings</h4>
-                                <h5 th:id="'roomWarn' + ${room[0].get(0)}" class="text-danger"></h5>
-                            </div>
-                        </div>
-                    </div>
+
+            <div class="align-items-center">
+                <div class="m-2 row border border-dark-subtle border-3 rounded-5 bg-secondary-subtle text-center card col-8 mx-auto justify-content-center">
+                    <table class="mt-2 mb-2">
+                        <tr class="">
+                            <th>Room Name</th>
+                            <th>Warning</th>
+                            <th>Statistic</th>
+                        </tr>
+                        <tr th:each="warning : ${roomOverview}" th:attr="onclick='window.location.href=\'/dashboard/' + ${warning[3]} + '\''">
+                            <td th:text="${warning[2]}"></td>
+                            <td th:utext="'<b>' + ${warning[1]} + '</b>'" class="text-danger"></td>
+                            <td th:text="${warning[0]}"></td>
+                        </tr>
+                    </table>
                 </div>
             </div>
         </div>

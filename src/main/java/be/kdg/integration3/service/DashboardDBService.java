@@ -52,6 +52,24 @@ public class DashboardDBService implements DashboardService{
         repository.addRoom(new Room(roomName, width, length, height), userEmail);
     }
 
+    @Override
+    public double getAverageTemperature() {
+        double totalTemp = repository.getTemperatureRecordList().stream().mapToInt(TemperatureData::getValue).sum();
+        return totalTemp / repository.getTemperatureRecordList().size();
+    }
+
+    @Override
+    public double getAverageHumidity() {
+        double totalHumidity = repository.getHumidityRecordList().stream().mapToInt(HumidityData::getValue).sum();
+        return totalHumidity / repository.getHumidityRecordList().size();
+    }
+
+    @Override
+    public double getAverageCO2() {
+        double totalCO2 = repository.getCO2RecordList().stream().mapToInt(CO2Data::getValue).sum();
+        return totalCO2 / repository.getCO2RecordList().size();
+    }
+
     /**
      * Gets the list of all temperatures currently loaded in the database
      * @return Returns all the temperatures for that room

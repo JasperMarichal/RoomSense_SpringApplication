@@ -48,33 +48,40 @@ public class DashboardController {
 
         List<Room> rooms = addRoomsToModel(model, session);
 
-        List<List[]> allUserRoomData = new ArrayList<>();
+        List<String[]> allUserRoomWarnings = new ArrayList<>();
 
         rooms.forEach(room -> {
             LocalDateTime startDateTime = service.getLastTime(room.getId());
             LocalDateTime endDateTime = startDateTime.minusMinutes(30);
             service.getData(room.getId(), startDateTime, endDateTime, false);
 
-            List[] roomData = new List[5];
-
-            roomData[0] = new ArrayList<>(List.of(room.getId(), room.getName()));
-
-            if (!service.getTemperatureList().isEmpty()) roomData[1] = service.getTemperatureList().stream().map(TemperatureData::getValue).toList();
-            else roomData[1] = new ArrayList<>();
-
-            if (!service.getHumidityList().isEmpty()) roomData[2] = service.getHumidityList().stream().map(HumidityData::getValue).toList();
-            else roomData[2] = new ArrayList<>();
-
-            if (!service.getCO2List().isEmpty()) roomData[3] = service.getCO2List().stream().map(CO2Data::getValue).toList();
-            else roomData[3] = new ArrayList<>();
-
-            if (!service.getNoiseList().isEmpty()) roomData[4] = service.getNoiseList().stream().map(SoundData::getValue).toList();
-            else roomData[4] = new ArrayList<>();
-
-            allUserRoomData.add(roomData);
+            if (service.getAverageTemperature() >= 30 || service.getAverageTemperature() <= 20){
+                String[] warning = new String[4];
+                warning[0] = String.format("%.2f °C", service.getAverageTemperature());
+                warning[1] = String.format("The average temperature is too %s, consider %s the room", service.getAverageTemperature() >= 30 ? "high" : "low", service.getAverageTemperature() >= 30 ? "cooling" : "heating");
+                warning[2] = room.getName();
+                warning[3] = String.valueOf(room.getId());
+                allUserRoomWarnings.add(warning);
+            }
+            if (service.getAverageHumidity() >= 70 || service.getAverageHumidity() <= 30){
+                String[] warning = new String[4];
+                warning[0] = String.format("%.2f %%", service.getAverageHumidity());
+                warning[1] = String.format("The average humidity is too %s, consider using a %s", service.getAverageHumidity() >= 70 ? "high" : "low", service.getAverageHumidity() >= 70 ? "dehumidifier" : "humidifier");
+                warning[2] = room.getName();
+                warning[3] = String.valueOf(room.getId());
+                allUserRoomWarnings.add(warning);
+            }
+            if (service.getAverageCO2() >= 5000){
+                String[] warning = new String[4];
+                warning[0] = String.format("%.2f ppm", service.getAverageCO2());
+                warning[1] = "The average CO2 is too high ventilate the room, do not maintain this concentration for over 8 hours, there is a risk of serious health issues!";
+                warning[2] = room.getName();
+                warning[3] = String.valueOf(room.getId());
+                allUserRoomWarnings.add(warning);
+            }
         });
 
-        model.addAttribute("roomOverview", allUserRoomData);
+        model.addAttribute("roomOverview", allUserRoomWarnings);
 
         return "dashboardHome";
     }

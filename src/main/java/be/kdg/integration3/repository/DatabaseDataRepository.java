@@ -141,7 +141,7 @@ public class DatabaseDataRepository implements DataRepository {
         logger.debug("Getting spikes");
 
         List<SoundSpike> spikes = jdbcTemplate.query("SELECT * FROM sound_spike WHERE room_id = ?" +
-                        "AND start_entry BETWEEN ? AND ?",
+                        "AND start_entry BETWEEN ? AND ? ORDER BY start_entry DESC LIMIT 10",
                 (rs, rowNum) -> new SoundSpike(rs.getInt("spike_id"), roomID,
                         rs.getTimestamp("start_entry"),
                         rs.getTimestamp("end_entry")),

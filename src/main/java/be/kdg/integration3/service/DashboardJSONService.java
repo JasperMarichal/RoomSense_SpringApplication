@@ -66,4 +66,19 @@ public class DashboardJSONService implements DashboardService {
     public void addRoom(String roomName, double width, double length, double height, String userEmail) {
 
     }
+
+    @Override
+    public double getAverageTemperature() {
+        return 0;
+    }
+
+    @Override
+    public double getAverageHumidity() {
+        return 0;
+    }
+
+    @Override
+    public double getAverageCO2() {
+        return 0;
+    }
 }
