@@ -13,6 +13,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -45,9 +46,44 @@ public class DashboardController {
 
         model.addAttribute("dashboardViewModel", viewModelFromSession);
 
-        addRoomsToModel(model, session);
+        List<Room> rooms = addRoomsToModel(model, session);
 
-        return "dashboard";
+        List<String[]> allUserRoomWarnings = new ArrayList<>();
+
+        rooms.forEach(room -> {
+            LocalDateTime startDateTime = service.getLastTime(room.getId());
+            LocalDateTime endDateTime = startDateTime.minusMinutes(30);
+            service.getData(room.getId(), startDateTime, endDateTime, false);
+
+            if (service.getAverageTemperature() >= 30 || service.getAverageTemperature() <= 20){
+                String[] warning = new String[4];
+                warning[0] = String.format("%.2f °C", service.getAverageTemperature());
+                warning[1] = String.format("The average temperature is too %s, consider %s the room", service.getAverageTemperature() >= 30 ? "high" : "low", service.getAverageTemperature() >= 30 ? "cooling" : "heating");
+                warning[2] = room.getName();
+                warning[3] = String.valueOf(room.getId());
+                allUserRoomWarnings.add(warning);
+            }
+            if (service.getAverageHumidity() >= 70 || service.getAverageHumidity() <= 30){
+                String[] warning = new String[4];
+                warning[0] = String.format("%.2f %%", service.getAverageHumidity());
+                warning[1] = String.format("The average humidity is too %s, consider using a %s", service.getAverageHumidity() >= 70 ? "high" : "low", service.getAverageHumidity() >= 70 ? "dehumidifier" : "humidifier");
+                warning[2] = room.getName();
+                warning[3] = String.valueOf(room.getId());
+                allUserRoomWarnings.add(warning);
+            }
+            if (service.getAverageCO2() >= 5000){
+                String[] warning = new String[4];
+                warning[0] = String.format("%.2f ppm", service.getAverageCO2());
+                warning[1] = "The average CO2 is too high ventilate the room, do not maintain this concentration for over 8 hours, there is a risk of serious health issues!";
+                warning[2] = room.getName();
+                warning[3] = String.valueOf(room.getId());
+                allUserRoomWarnings.add(warning);
+            }
+        });
+
+        model.addAttribute("roomOverview", allUserRoomWarnings);
+
+        return "dashboardHome";
     }
 
     /**
@@ -110,7 +146,7 @@ public class DashboardController {
 
                 System.out.println(startDateTime + "-" + endDateTime);
 
-                service.getData(viewModelFromSession.getRoomId(), startDateTime, endDateTime);
+                service.getData(viewModelFromSession.getRoomId(), startDateTime, endDateTime, true);
 
                 if (!service.getTemperatureList().isEmpty()) {
                     model.addAttribute("tempList", service.getTemperatureList().stream().map(TemperatureData::getValue).toList());
@@ -178,7 +214,7 @@ public class DashboardController {
      * Get all the rooms owned by the user and adds them to the model
      * @param model The model for the view
      */
-    private void addRoomsToModel(Model model, HttpSession session){
+    private List<Room> addRoomsToModel(Model model, HttpSession session){
         String account = (String) session.getAttribute("userEmail");
         List<Room> rooms;
         if (account == null){
@@ -188,6 +224,7 @@ public class DashboardController {
         }
 
         model.addAttribute("userRooms", rooms);
+        return rooms;
     }
 
     /**

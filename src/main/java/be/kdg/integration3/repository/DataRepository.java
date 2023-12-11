@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface DataRepository {
-    void read(int roomID, LocalDateTime startDateTime, LocalDateTime endDateTime);
+    void read(int roomID, LocalDateTime startDateTime, LocalDateTime endDateTime, boolean readSpikes);
 
     List<SoundData> getSpikeData(int roomId, int spikeId);
 

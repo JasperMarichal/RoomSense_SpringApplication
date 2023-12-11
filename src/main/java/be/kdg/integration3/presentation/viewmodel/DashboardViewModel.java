@@ -24,7 +24,7 @@ public class DashboardViewModel {
     }
 
     public DashboardViewModel() {
-        this.timePeriod = 10;
+        this.timePeriod = 30;
     }
 
     public int getRoomId() {

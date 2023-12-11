@@ -9,8 +9,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
-@Profile("jsonrepository")
 public class DashboardJSONService implements DashboardService {
     private final DataRepository repository;
 
@@ -20,7 +18,7 @@ public class DashboardJSONService implements DashboardService {
 
 
     @Override
-    public void getData(int roomID, LocalDateTime startTime, LocalDateTime endTime) {
+    public void getData(int roomID, LocalDateTime startTime, LocalDateTime endTime, boolean readSpikes) {
 
     }
 
@@ -67,5 +65,20 @@ public class DashboardJSONService implements DashboardService {
     @Override
     public void addRoom(String roomName, double width, double length, double height, String userEmail) {
 
+    }
+
+    @Override
+    public double getAverageTemperature() {
+        return 0;
+    }
+
+    @Override
+    public double getAverageHumidity() {
+        return 0;
+    }
+
+    @Override
+    public double getAverageCO2() {
+        return 0;
     }
 }

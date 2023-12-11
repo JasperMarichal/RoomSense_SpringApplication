@@ -119,7 +119,7 @@
                             <p id="noiseWarn" class="text-danger"></p>
                             <p id="noiseRecommend"></p>
 
-                            <h5>Sound Spikes</h5>
+                            <h5 th:if="${soundSpikes != null}">Sound Spikes</h5>
                             <div th:if="${soundSpikes != null}" class="col-lg-8 col-md-12 col-sm-12 text-center align-content-center mx-auto">
                                 <table class="table table-responsive table-striped">
                                     <tr class="table-dark">

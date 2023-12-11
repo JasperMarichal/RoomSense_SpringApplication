@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface DashboardService {
-    void getData(int roomID, LocalDateTime startTime, LocalDateTime endTime);
+    void getData(int roomID, LocalDateTime startTime, LocalDateTime endTime, boolean readSpikes);
 
     List<Room> getUserRooms(String userAccount);
 
@@ -24,4 +24,7 @@ public interface DashboardService {
     LocalDateTime getLastTime(int roomID);
 
     void addRoom(String roomName, double width, double length, double height, String userEmail);
+    double getAverageTemperature();
+    double getAverageHumidity();
+    double getAverageCO2();
 }

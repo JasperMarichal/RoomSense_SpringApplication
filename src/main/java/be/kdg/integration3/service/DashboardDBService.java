@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-@Profile("jdbcrepository")
 public class DashboardDBService implements DashboardService{
     private final DataRepository repository;
 
@@ -24,8 +23,8 @@ public class DashboardDBService implements DashboardService{
      * @param endTime the time of last entry to search for
      */
     @Override
-    public void getData(int roomID, LocalDateTime startTime, LocalDateTime endTime){
-            repository.read(roomID, startTime, endTime);
+    public void getData(int roomID, LocalDateTime startTime, LocalDateTime endTime, boolean readSpikes){
+            repository.read(roomID, startTime, endTime, readSpikes);
     }
 
     /**
@@ -51,6 +50,24 @@ public class DashboardDBService implements DashboardService{
     @Override
     public void addRoom(String roomName, double width, double length, double height, String userEmail) {
         repository.addRoom(new Room(roomName, width, length, height), userEmail);
+    }
+
+    @Override
+    public double getAverageTemperature() {
+        double totalTemp = repository.getTemperatureRecordList().stream().mapToInt(TemperatureData::getValue).sum();
+        return totalTemp / repository.getTemperatureRecordList().size();
+    }
+
+    @Override
+    public double getAverageHumidity() {
+        double totalHumidity = repository.getHumidityRecordList().stream().mapToInt(HumidityData::getValue).sum();
+        return totalHumidity / repository.getHumidityRecordList().size();
+    }
+
+    @Override
+    public double getAverageCO2() {
+        double totalCO2 = repository.getCO2RecordList().stream().mapToInt(CO2Data::getValue).sum();
+        return totalCO2 / repository.getCO2RecordList().size();
     }
 
     /**
