@@ -37,20 +37,20 @@ function init() {
                 let total = 0;
                 for (let dataPoint = 0; dataPoint < roomOverview[room][type].length; dataPoint++) total += roomOverview[room][type][dataPoint];
                 let avg = total / roomOverview[room][type].length;
-                if (avg > warnMax || avg < warnMin) {
+                if (avg >= warnMax || avg <= warnMin) {
                     if (avgText.innerHTML !== "") avgText.innerHTML += "<br>";
                     avgText.innerHTML += "Average " + variableName + ": " + parseFloat(avg).toFixed(2)
                     avgText.innerHTML += variableName === 'temperature' ? '°C' : variableName === 'humidity' ? '%' : 'ppm';
                 }
 
-                if (variableName !== 'noise' && avg > warnMax){
+                if (variableName !== 'noise' && avg >= warnMax){
                     if (warnText.innerHTML !== "") warnText.innerHTML += "<br>";
                     warnText.innerHTML += "Average " + variableName + " is too high"
                     if (variableName === 'temperature') warnText.innerHTML += " consider cooling the room!"
                     else if (variableName === 'humidity') warnText.innerHTML += " consider using a dehumidifier!"
                     else if (variableName === 'CO2') warnText.innerHTML += ", ventilate the room, do not maintain this concentration for over 8 hours, there is a risk of serious health issues!"
                 }
-                if (variableName !== 'CO2' && variableName !== 'noise' && avg < warnMin){
+                if (variableName !== 'CO2' && variableName !== 'noise' && avg <= warnMin){
                     if (warnText.innerHTML !== "") warnText.innerHTML += "<br>";
                     warnText.innerHTML += "Average " + variableName + " is too low"
                     if (variableName === 'temperature') warnText.innerHTML += " consider heating the room!"
