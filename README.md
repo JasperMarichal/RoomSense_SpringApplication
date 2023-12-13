@@ -70,8 +70,12 @@
 
 **Dependencies**: what libraries did you use and why
 
-    Library name: 
-    We use this library because of...
+    Library name: jSerialComm
+    We use this library to access our wifi router without external libraries and while remaining platform-independent.
+    It allows to open a few ports at the same time.
+
+    Library name: Chart.js
+    We use this library for data visualisation in form of graphs. 
 
 
 Documentation of the interface with other systems (Arduino,...)
