@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+    <script defer th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <title>Edit Room</title>
+</head>
+<body class="bg-dark-subtle">
+    <div th:if="${session.loggedIn}">
+        <div th:insert="~{fragment/navbar-logged-in::navbar-logged-in}">div</div>
+    </div>
+    <div th:unless="${session.loggedIn}">
+        <div th:insert="~{fragment/navbar-not-logged-in::navbar-not-logged-in}">div</div>
+    </div>
+
+    <main>
+        <div class="container-fluid d-flex justify-content-center">
+            <div class="col-12">
+                <div class="align-items-center mt-2">
+                    <div class="m-2 row border border-dark-subtle border-3 rounded-5 bg-secondary-subtle text-center card col-8 mx-auto justify-content-center">
+                        <form method="post" th:object="${viewModel}" novalidate>
+                            <div class="form-outline mb-4">
+                                <h4 th:text="'Edit Room: ' + ${room.getName()}" class="mt-2"></h4>
+                                <div>
+                                    <label th:for="roomName" class="form-label">Room name</label>
+                                    <input type="text" class="form-control" id="roomName" th:field="*{roomName}">
+                                    <span th:if="${#fields.hasErrors('roomName')}" th:errors="*{roomName}" class="text-danger"></span>
+                                </div>
+                                <div>
+                                    <label th:for="width" class="form-label">Width</label>
+                                    <input type="text" class="form-control" id="width" th:field="*{width}">
+                                    <span th:if="${#fields.hasErrors('width')}" th:errors="*{width}" class="text-danger"></span>
+                                </div>
+                                <div>
+                                    <label th:for="length" class="form-label">Length</label>
+                                    <input type="text" class="form-control" id="length" th:field="*{length}">
+                                    <span th:if="${#fields.hasErrors('length')}" th:errors="*{length}" class="text-danger"></span>
+                                </div>
+                                <div>
+                                    <label th:for="height" class="form-label">Height</label>
+                                    <input type="text" class="form-control" id="height" th:field="*{height}">
+                                    <span th:if="${#fields.hasErrors('height')}" th:errors="*{height}" class="text-danger"></span>
+                                </div>
+                                <div class="text-center mt-6 pt-4">
+                                    <button type="submit" class="btn btn-primary">Save</button>
+                                    <span th:if="${saveSuccess}" th:text="'Saved Successfully'" class="bg-success-subtle"></span>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <div th:insert="~{fragment/footer::footercopy}">footer</div>
+</body>
+</html>

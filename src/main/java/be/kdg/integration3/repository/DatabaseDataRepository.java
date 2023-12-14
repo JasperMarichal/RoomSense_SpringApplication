@@ -241,6 +241,17 @@ public class DatabaseDataRepository implements DataRepository {
     }
 
     @Override
+    public void updateRoom(int roomID, String roomName, double width, double length, double height, String userEmail) {
+        try {
+            logger.debug("Updating room " + roomID + "; new name = " + roomName + ", new (width, length, height) = (" + width + ", " + length + ", " + height + ")");
+            jdbcTemplate.update("UPDATE room SET room_name = ?, width = ?, length = ?, height = ? WHERE room_id = ? AND account = ?",
+                    roomName, width, length, height, roomID, userEmail);
+        } catch (DataAccessException e){
+            throw new DatabaseException("Can not connect to database", e);
+        }
+    }
+
+    @Override
     public List<TemperatureData> getTemperatureRecordList() {
         return temperatureRecordList;
     }
