@@ -4,7 +4,14 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
     <script defer th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
+    <script defer type="module" th:src="@{/javascript/roomDrawing.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/editRoom.css}">
     <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        let room = /*[[${viewModel}]]*/ 'Sebastian';
+        /*]]>*/
+    </script>
     <title>Edit Room</title>
 </head>
 <body class="bg-dark-subtle">
@@ -29,7 +36,7 @@
                                     <span th:if="${#fields.hasErrors('roomName')}" th:errors="*{roomName}" class="text-danger"></span>
                                 </div>
                                 <div>
-                                    <label th:for="width" class="form-label">Width</label>
+                                    <label th:for="width" class="form-label">Width (Longest Side)</label>
                                     <input type="text" class="form-control" id="width" th:field="*{width}">
                                     <span th:if="${#fields.hasErrors('width')}" th:errors="*{width}" class="text-danger"></span>
                                 </div>
@@ -49,6 +56,20 @@
                                 </div>
                             </div>
                         </form>
+                    </div>
+                </div>
+
+                <div class="row align-items-center justify-content-center">
+                    <div class="text-center">
+                        <h4>What your room looks like to us:</h4>
+                        <p>(Not to Scale)</p>
+                        <div th:if="${viewModel.getWidth() == 1 && viewModel.getLength() == 1 && viewModel.getHeight() == 1}">
+                            <canvas th:id="roomIllustration" class="canvasRoom" th:width="250" th:height="250"></canvas>
+                        </div>
+                        <div th:if="${viewModel.getWidth() != 1 && viewModel.getLength() != 1 && viewModel.getHeight() != 1}">
+                            <canvas th:id="roomIllustration" class="canvasRoom" th:if="${viewModel.getWidth() * 160 > viewModel.getLength() * 160}" th:width="${viewModel.getWidth() * 160}" th:height="${viewModel.getHeight() * 180}"></canvas>
+                            <canvas th:id="roomIllustration" class="canvasRoom" th:if="${viewModel.getWidth() * 160 < viewModel.getLength() * 160}" th:width="${viewModel.getLength() * 160}" th:height="${viewModel.getHeight() * 200}"></canvas>
+                        </div>
                     </div>
                 </div>
             </div>
