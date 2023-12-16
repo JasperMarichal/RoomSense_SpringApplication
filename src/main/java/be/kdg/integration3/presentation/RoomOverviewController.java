@@ -59,7 +59,15 @@ public class RoomOverviewController {
 
         if (errors.hasErrors()) {
             errors.getAllErrors().forEach(error -> logger.error(error.toString()));
-            return "roomEdit";
+            List<Room> userRooms = service.getUserRooms(String.valueOf(session.getAttribute("userEmail")));
+            Room selectedRoom = userRooms.stream().filter(room -> room.getId() == roomID).findFirst().orElse(null);
+
+            if (selectedRoom != null) {
+                model.addAttribute("room", selectedRoom);
+                return "roomEdit";
+            } else {
+                return "redirect:/rooms";
+            }
         }
         try {
             service.updateRoom(roomID, viewModel.getRoomName(), viewModel.getWidth(),
@@ -67,6 +75,6 @@ public class RoomOverviewController {
         } catch (DatabaseException e){
             return "errorPage";
         }
-        return "redirect:/rooms";
+        return "redirect:/rooms/" + roomID;
     }
 }
