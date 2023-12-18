@@ -2,7 +2,6 @@ package be.kdg.integration3.service;
 
 import be.kdg.integration3.domain.*;
 import be.kdg.integration3.repository.DataRepository;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -50,6 +49,11 @@ public class DashboardDBService implements DashboardService{
     @Override
     public void addRoom(String roomName, double width, double length, double height, String userEmail) {
         repository.addRoom(new Room(roomName, width, length, height), userEmail);
+    }
+
+    @Override
+    public void updateRoom(int roomID, String roomName, double width, double length, double height, String userEmail) {
+        repository.updateRoom(roomID, roomName, width, length, height, userEmail);
     }
 
     @Override
