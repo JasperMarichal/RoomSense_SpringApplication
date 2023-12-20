@@ -13,6 +13,7 @@ import java.sql.Timestamp;
 import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @Profile("jdbcrepository")
@@ -130,6 +131,25 @@ public class DatabaseDataRepository implements DataRepository {
         noiseRecordList.addAll(noise);
     }
 
+    public double getAverageNoise(int roomId, Timestamp from, Timestamp to) {
+        return Optional.ofNullable(jdbcTemplate.queryForObject("SELECT AVG(value) FROM noise_entry WHERE " +
+                    "room_id = ? AND timestamp BETWEEN ? AND ?",
+                Double.class, roomId, from, to)).orElse(0.0);
+    }
+
+    public RoomType getRoomType(int roomId) {
+        int AverageNoise = getAverageNoise(roomId, ); //TODO: Finish this with Timestamps all time
+        RoomType roomType;
+
+        if(AverageNoise >= 150){
+            roomType = RoomType.aula;
+        } else if (AverageNoise <= 80) {
+            roomType = RoomType.group_work;
+        } else {
+            roomType = RoomType.individual_work;
+        }
+        return roomType;
+    }
     /**
      * Retrieves the sound spikes between a certain time period from the database
      * @param roomID the room to look in
