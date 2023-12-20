@@ -2,6 +2,7 @@ package be.kdg.integration3.repository;
 
 import be.kdg.integration3.domain.*;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -19,4 +20,7 @@ public interface DataRepository {
     List<SoundData> getNoiseRecordList();
     LocalDateTime getLastReadingTime(int roomID);
     List<SoundSpike> getSpikeRecordList();
+    double getAverageCo2(int roomId, Timestamp from, Timestamp to);
+    double getAverageHumidity(int roomId, Timestamp from, Timestamp to);
+    double getAverageTemp(int roomId, Timestamp from, Timestamp to);
 }

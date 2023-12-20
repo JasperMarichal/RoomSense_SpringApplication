@@ -2,9 +2,8 @@ package be.kdg.integration3.service;
 
 import be.kdg.integration3.domain.*;
 import be.kdg.integration3.repository.DataRepository;
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,16 +68,31 @@ public class DashboardJSONService implements DashboardService {
 
     @Override
     public double getAverageTemperature() {
-        return 0;
+        throw new RuntimeException("Not implemented");
     }
 
     @Override
     public double getAverageHumidity() {
-        return 0;
+        throw new RuntimeException("Not implemented");
     }
 
     @Override
     public double getAverageCO2() {
-        return 0;
+        throw new RuntimeException("Not implemented");
+    }
+
+    @Override
+    public double getAverageCo2(int roomId, Instant from, Instant to) {
+        throw new RuntimeException("Not implemented");
+    }
+
+    @Override
+    public double getAverageTemp(int roomId, Instant from, Instant to) {
+        throw new RuntimeException("Not implemented");
+    }
+
+    @Override
+    public double getAverageHumidity(int roomId, Instant from, Instant to) {
+        throw new RuntimeException("Not implemented");
     }
 }

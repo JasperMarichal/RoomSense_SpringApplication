@@ -2,6 +2,7 @@ package be.kdg.integration3.service;
 
 import be.kdg.integration3.domain.*;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -27,4 +28,8 @@ public interface DashboardService {
     double getAverageTemperature();
     double getAverageHumidity();
     double getAverageCO2();
+
+    double getAverageCo2(int roomId, Instant from, Instant to);
+    double getAverageTemp(int roomId, Instant from, Instant to);
+    double getAverageHumidity(int roomId, Instant from, Instant to);
 }

@@ -10,10 +10,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Collections;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"be.kdg.integration3"})
 @EnableScheduling
 public class SpringProjectApplication {
-	public final static boolean development = true;
+	public static final boolean DEVELOPMENT = true;
 
 	public static void main(String[] args) {
 		var context = SpringApplication.run(SpringProjectApplication.class, args);

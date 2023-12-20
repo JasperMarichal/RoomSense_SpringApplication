@@ -11,6 +11,7 @@
     <title>Dashboard</title>
     <script th:inline="javascript">
         /*<![CDATA[*/
+        let refreshInterval = /*[[${refreshInterval}]]*/ 'undefined';
         let tempList = /*[[${tempList}]]*/ 'Sebastian';
         let tempListTimes = /*[[${tempListTimes}]]*/ 'Sebastian';
         let humidList = /*[[${humidList}]]*/ 'Sebastian';
@@ -31,6 +32,9 @@
     </div>
 
     <main>
+        <div>
+            <p id="ventilationSignal"></p>
+        </div>
         <div class="container-fluid d-flex justify-content-center">
             <div class="col-12">
                 <div th:if="${databaseError != null}">
