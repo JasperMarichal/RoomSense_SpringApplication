@@ -34,7 +34,7 @@ public class SensorController {
         }
 
         Calendar calendarFrom = Calendar.getInstance();
-        calendarFrom.add(Calendar.SECOND, -intervalSeconds);
+        calendarFrom.add(Calendar.SECOND, -(intervalSeconds * 8));
         Calendar calendarTo = Calendar.getInstance();
 
         double avgCo2 = dashboardService.getAverageCo2(roomId, calendarFrom.toInstant(), calendarTo.toInstant());
