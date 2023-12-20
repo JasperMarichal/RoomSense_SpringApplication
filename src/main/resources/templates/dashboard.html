@@ -32,9 +32,7 @@
     </div>
 
     <main>
-        <div>
-            <p id="ventilationSignal">You need to ventilate your room!</p>
-        </div>
+        <div id="liveAlertPlaceholder"></div>
         <div class="container-fluid d-flex justify-content-center">
             <div class="col-12">
                 <div th:if="${databaseError != null}">

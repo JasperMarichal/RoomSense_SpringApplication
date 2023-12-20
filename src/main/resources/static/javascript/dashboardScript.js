@@ -21,8 +21,8 @@ let temperature = false;
 let humidity = false;
 let CO2 = false;
 let noise = false;
-let ventilationAlertVisible = false;
 
+const VENTILATION_ALERT_ID = "ventilationAlertId";
 
 init()
 
@@ -314,6 +314,18 @@ function showChart(chartCanvas, chartID, lineColor, labels, data, datasetLabel, 
     });
 }
 
+const alertPlaceholder = document.getElementById('liveAlertPlaceholder')
+const appendAlert = (message, type, id) => {
+    const wrapper = document.createElement('div')
+    wrapper.innerHTML = [
+        `<div id="${id}" class="alert alert-${type} alert-dismissible" role="alert">`,
+        `   <div>${message}</div>`,
+        '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+        '</div>'
+    ].join('')
+
+    alertPlaceholder.append(wrapper)
+}
 
 /**
  * Fetches the average values of Co2, Humidity and Temperature over a specified period of time.
@@ -322,6 +334,10 @@ function showChart(chartCanvas, chartID, lineColor, labels, data, datasetLabel, 
  * Refresh is done according to the value in refreshInterval.
  */
 async function ventilationSignal() {
+    if (document.getElementById(VENTILATION_ALERT_ID)) {
+        return;
+    }
+
     let pathArray = window.location.pathname.split("/");
     let roomId = pathArray[2];
     let response = await fetch(`/api/sensors?roomId=${roomId}&intervalSeconds=${refreshInterval}`);
@@ -330,13 +346,9 @@ async function ventilationSignal() {
     }
 
     let sensorsOverview = await response.json();
-    let ventilationElement = document.getElementById("ventilationSignal");
 
-    if (ventilationElement) {
-        const showAlert = sensorsOverview.results.some(e => e.aboveThreshold);
-        if (showAlert && !ventilationAlertVisible) {
-            ventilationElement.classList.add('visible');
-            ventilationAlertVisible = true;
-        }
+    const showAlert = sensorsOverview.results.some(e => e.aboveThreshold);
+    if (showAlert) {
+        appendAlert("You need to ventilate the room!", "warning", VENTILATION_ALERT_ID);
     }
 }
