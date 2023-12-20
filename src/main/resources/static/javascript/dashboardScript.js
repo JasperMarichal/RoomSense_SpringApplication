@@ -25,6 +25,8 @@ let noise = false;
 
 init()
 
+setInterval(ventilationSignal, 60000);
+
 /**
  * Checks if data is available for a datatype and adjusts variables as needed
  * Calls method to show data on those graphs
@@ -331,7 +333,7 @@ async function ventilationSignal() {
 
     if (ventilationElement) {
         if (sensorsOverview.results.some(e => e.aboveThreshold)) {
-            ventilationElement.innerHTML = "You need to ventilate your room";
+            ventilationElement.classList.toggle('visible');
         }
     }
 }
