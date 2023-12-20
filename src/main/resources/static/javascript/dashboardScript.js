@@ -21,11 +21,12 @@ let temperature = false;
 let humidity = false;
 let CO2 = false;
 let noise = false;
+let ventilationAlertVisible = false;
 
 
 init()
 
-setInterval(ventilationSignal, 60000);
+setInterval(ventilationSignal, 15000);
 
 /**
  * Checks if data is available for a datatype and adjusts variables as needed
@@ -332,8 +333,10 @@ async function ventilationSignal() {
     let ventilationElement = document.getElementById("ventilationSignal");
 
     if (ventilationElement) {
-        if (sensorsOverview.results.some(e => e.aboveThreshold)) {
-            ventilationElement.classList.toggle('visible');
+        const showAlert = sensorsOverview.results.some(e => e.aboveThreshold);
+        if (showAlert && !ventilationAlertVisible) {
+            ventilationElement.classList.add('visible');
+            ventilationAlertVisible = true;
         }
     }
 }
