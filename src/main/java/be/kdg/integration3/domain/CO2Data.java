@@ -23,8 +23,10 @@ public class CO2Data implements RawDataRecord{
     }
 
     public static int convertAnalogToPPM(int analog) {
-        //TODO: Conversion
-        return analog;
+        // Conversion formula:
+        // ppm_per_analog_step = sensor_max_ppm / (sensor_max_voltage/analoginput_max_voltage * analoginput_steps)
+        // 10000 / (2/5 * 1023) = 24,4379276...
+        return (int) (analog * 24.4379277);
     }
 
     @Override

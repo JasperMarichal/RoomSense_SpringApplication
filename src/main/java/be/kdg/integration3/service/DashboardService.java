@@ -25,6 +25,9 @@ public interface DashboardService {
     LocalDateTime getLastTime(int roomID);
 
     void addRoom(String roomName, double width, double length, double height, String userEmail);
+
+    void updateRoom(int roomID, String roomName, double width, double length, double height, String userEmail);
+
     double getAverageTemperature();
     double getAverageHumidity();
     double getAverageCO2();

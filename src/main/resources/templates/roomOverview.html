@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+    <script defer th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <title>Your Rooms</title>
+</head>
+<body class="bg-dark-subtle">
+    <div th:if="${session.loggedIn}">
+        <div th:insert="~{fragment/navbar-logged-in::navbar-logged-in}">div</div>
+    </div>
+    <div th:unless="${session.loggedIn}">
+        <div th:insert="~{fragment/navbar-not-logged-in::navbar-not-logged-in}">div</div>
+    </div>
+
+    <main>
+        <div class="container-fluid d-flex justify-content-center">
+            <div class="col-12">
+                <div class="col-8 m-3 mx-auto">
+                    <table class="table table-responsive table-striped">
+                        <tr class="table-dark">
+                            <th class="col-4">Room Name</th>
+                            <th class="col-1">V</th>
+                            <th class="col-1">Room ID</th>
+                            <th class="col-2">Optimal Usecase</th>
+                            <th class="col-1">Width</th>
+                            <th class="col-1">Height</th>
+                            <th class="col-1">Length</th>
+                            <th class="col-1"></th>
+                        </tr>
+                        <tr th:each="room : ${rooms}">
+                            <td th:text="${room.getName()}" th:attr="onclick='window.location.href=\'/dashboard/' + ${room.getId()} + '\''"></td>
+                            <td th:id="'vent' + ${room.getId()}" th:attr="onclick='window.location.href=\'/dashboard/' + ${room.getId()} + '\''"></td>
+                            <td th:text="${room.getId()}" th:attr="onclick='window.location.href=\'/dashboard/' + ${room.getId()} + '\''"></td>
+                            <td th:attr="onclick='window.location.href=\'/dashboard/' + ${room.getId()} + '\''"></td>
+                            <td th:text="${room.getWidth()}" th:attr="onclick='window.location.href=\'/dashboard/' + ${room.getId()} + '\''"></td>
+                            <td th:text="${room.getHeight()}" th:attr="onclick='window.location.href=\'/dashboard/' + ${room.getId()} + '\''"></td>
+                            <td th:text="${room.getLength()}" th:attr="onclick='window.location.href=\'/dashboard/' + ${room.getId()} + '\''"></td>
+                            <td class="text-center" th:attr="onclick='window.location.href=\'/rooms/' + ${room.getId()} + '\''">
+                                <button title="Edit Room" class="btn">✏️</button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div th:insert="~{fragment/footer::footercopy}">footer</div>
+</body>
+</html>

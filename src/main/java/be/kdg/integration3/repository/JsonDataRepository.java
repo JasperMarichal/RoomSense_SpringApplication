@@ -63,6 +63,11 @@ public class JsonDataRepository implements DataRepository {
     public void addRoom(Room room, String email) {}
 
     @Override
+    public void updateRoom(int roomID, String roomName, double width, double length, double height, String userEmail) {
+
+    }
+
+    @Override
     public List<TemperatureData> getTemperatureRecordList() {
         return recordList.stream().filter(record -> record instanceof TemperatureData).map(rawDataRecord -> (TemperatureData) rawDataRecord).toList();
     }

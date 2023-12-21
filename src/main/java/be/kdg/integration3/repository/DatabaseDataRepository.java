@@ -116,7 +116,7 @@ public class DatabaseDataRepository implements DataRepository {
     private void getCO2(int roomID, Timestamp timestampEnd, Timestamp timestampStart) throws DataAccessException {
         List<CO2Data> CO2 = jdbcTemplate.query("SELECT * FROM co2_entry WHERE room_id = ?" +
                         "AND timestamp BETWEEN ? AND ?",
-                (rs, rowNum) -> new CO2Data(rs.getTimestamp("timestamp"), (int) (rs.getInt("value") * 24.4379277)),
+                (rs, rowNum) -> new CO2Data(rs.getTimestamp("timestamp"), rs.getInt("value")),
                 roomID, timestampEnd, timestampStart);
 
         CO2RecordList.addAll(CO2);
@@ -247,6 +247,17 @@ public class DatabaseDataRepository implements DataRepository {
                     room.getName(), email,
                     room.getWidth(), room.getLength(), room.getHeight());
         } catch (DataAccessException e) {
+            throw new DatabaseException("Can not connect to database", e);
+        }
+    }
+
+    @Override
+    public void updateRoom(int roomID, String roomName, double width, double length, double height, String userEmail) {
+        try {
+            logger.debug("Updating room " + roomID + "; new name = " + roomName + ", new (width, length, height) = (" + width + ", " + length + ", " + height + ")");
+            jdbcTemplate.update("UPDATE room SET room_name = ?, width = ?, length = ?, height = ? WHERE room_id = ? AND account = ?",
+                    roomName, width, length, height, roomID, userEmail);
+        } catch (DataAccessException e){
             throw new DatabaseException("Can not connect to database", e);
         }
     }

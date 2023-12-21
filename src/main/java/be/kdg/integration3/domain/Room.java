@@ -10,16 +10,16 @@ public class Room {
     public Room(int id, String name, double length, double width, double height) {
         this.id = id;
         this.name = name;
-        this.length = length;
-        this.width = width;
-        this.height = height;
+        this.length = Math.round(length * 100.0)/100.0;
+        this.width = Math.round(width * 100.0)/100.0;
+        this.height = Math.round(height * 100.0)/100.0;
     }
 
     public Room(String name, double length, double width, double height) {
         this.name = name;
-        this.length = length;
-        this.width = width;
-        this.height = height;
+        this.length = Math.round(length * 100.0)/100.0;
+        this.width = Math.round(width * 100.0)/100.0;
+        this.height = Math.round(height * 100.0)/100.0;
     }
 
     public int getId() {

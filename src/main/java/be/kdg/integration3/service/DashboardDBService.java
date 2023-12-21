@@ -54,6 +54,11 @@ public class DashboardDBService implements DashboardService{
     }
 
     @Override
+    public void updateRoom(int roomID, String roomName, double width, double length, double height, String userEmail) {
+        repository.updateRoom(roomID, roomName, width, length, height, userEmail);
+    }
+
+    @Override
     public double getAverageTemperature() {
         double totalTemp = repository.getTemperatureRecordList().stream().mapToInt(TemperatureData::getValue).sum();
         return totalTemp / repository.getTemperatureRecordList().size();

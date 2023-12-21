@@ -14,6 +14,9 @@ public interface DataRepository {
     List<Room> getUserRooms(String userAccount);
 
     void addRoom(Room room, String email);
+
+    void updateRoom(int roomID, String roomName, double width, double length, double height, String userEmail);
+
     List<TemperatureData> getTemperatureRecordList();
     List<HumidityData> getHumidityRecordList();
     List<CO2Data> getCO2RecordList();

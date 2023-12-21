@@ -67,6 +67,11 @@ public class DashboardJSONService implements DashboardService {
     }
 
     @Override
+    public void updateRoom(int roomID, String roomName, double width, double length, double height, String userEmail) {
+
+    }
+
+    @Override
     public double getAverageTemperature() {
         throw new RuntimeException("Not implemented");
     }
