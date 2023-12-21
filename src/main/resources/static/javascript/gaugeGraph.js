@@ -75,7 +75,7 @@ export function minMaxAverageGraph(minValue, maxValue, averageValue, textID, dat
             absoluteMin = 0;
             absoluteMax = 1100/25;
             minRecommend = 1/25;
-            maxRecommend = 1059/25;
+            maxRecommend = 1099/25;
 
             minValue = minValue/25;
             maxValue = maxValue/25;

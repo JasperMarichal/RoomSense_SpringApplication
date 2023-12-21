@@ -10,14 +10,17 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
-import java.time.*;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @Profile("jdbcrepository")
 public class DatabaseDataRepository implements DataRepository {
-    private final Logger logger = LoggerFactory.getLogger(JsonDataRepository.class);
+    private final Logger logger = LoggerFactory.getLogger(DatabaseDataRepository.class);
     private List<TemperatureData> temperatureRecordList;
     private List<HumidityData> humidityRecordList;
     private List<CO2Data> CO2RecordList;
@@ -36,9 +39,10 @@ public class DatabaseDataRepository implements DataRepository {
 
     /**
      * Runs the methods to get all the data between 2 timestamps from a certain room from the database
-     * @param roomID the room to look in
+     *
+     * @param roomID        the room to look in
      * @param startDateTime the start time
-     * @param endDateTime the end time
+     * @param endDateTime   the end time
      */
     @Override
     public void read(int roomID, LocalDateTime startDateTime, LocalDateTime endDateTime, boolean readSpikes) {
@@ -61,15 +65,16 @@ public class DatabaseDataRepository implements DataRepository {
             getCO2(roomID, timestampEnd, timestampStart);
             getNoise(roomID, timestampEnd, timestampStart);
             if (readSpikes) getSpikes(roomID, timestampEnd, timestampStart);
-        } catch (DataAccessException e){
+        } catch (DataAccessException e) {
             throw new DatabaseException("Can not connect to database", e);
         }
     }
 
     /**
      * Retrieves the temperature data between a certain time period from the database
-     * @param roomID the room to look in
-     * @param timestampEnd the end time
+     *
+     * @param roomID         the room to look in
+     * @param timestampEnd   the end time
      * @param timestampStart the start time
      * @throws DataAccessException if database is inaccessible will throw a DataAccessException
      */
@@ -82,10 +87,12 @@ public class DatabaseDataRepository implements DataRepository {
         temperatureRecordList.addAll(temperatures);
     }
 
+
     /**
      * Retrieves the humidity data between a certain time period from the database
-     * @param roomID the room to look in
-     * @param timestampEnd the end time
+     *
+     * @param roomID         the room to look in
+     * @param timestampEnd   the end time
      * @param timestampStart the start time
      * @throws DataAccessException if database is inaccessible will throw a DataAccessException
      */
@@ -100,8 +107,9 @@ public class DatabaseDataRepository implements DataRepository {
 
     /**
      * Retrieves the CO2 data between a certain time period from the database
-     * @param roomID the room to look in
-     * @param timestampEnd the end time
+     *
+     * @param roomID         the room to look in
+     * @param timestampEnd   the end time
      * @param timestampStart the start time
      * @throws DataAccessException if database is inaccessible will throw a DataAccessException
      */
@@ -116,8 +124,9 @@ public class DatabaseDataRepository implements DataRepository {
 
     /**
      * Retrieves the noise data between a certain time period from the database
-     * @param roomID the room to look in
-     * @param timestampEnd the end time
+     *
+     * @param roomID         the room to look in
+     * @param timestampEnd   the end time
      * @param timestampStart the start time
      * @throws DataAccessException if database is inaccessible will throw a DataAccessException
      */
@@ -132,8 +141,9 @@ public class DatabaseDataRepository implements DataRepository {
 
     /**
      * Retrieves the sound spikes between a certain time period from the database
-     * @param roomID the room to look in
-     * @param timestampEnd the end time
+     *
+     * @param roomID         the room to look in
+     * @param timestampEnd   the end time
      * @param timestampStart the start time
      * @throws DataAccessException if database is inaccessible will throw a DataAccessException
      */
@@ -152,42 +162,42 @@ public class DatabaseDataRepository implements DataRepository {
                     (rs, rowNum) -> rs.getInt(1), spike.getStartTime(), spike.getEndTime()).get(0);
             spike.setPeakAmplitude(maxAmplitude);
             int numberMeasurements = jdbcTemplate.query("SELECT COUNT(value) FROM raw_sound_entry WHERE timestamp BETWEEN ? AND ?",
-                      (rs, rowNum) -> rs.getInt(1), spike.getStartTime(), spike.getEndTime()).get(0);
+                    (rs, rowNum) -> rs.getInt(1), spike.getStartTime(), spike.getEndTime()).get(0);
             spike.setNumberMeasurements(numberMeasurements);
         });
-
 
         spikeRecordList.addAll(spikes);
     }
 
     /**
      * Gets all the data for a specific sound spike from the database
-     * @param roomId the room to look for the spike in
+     *
+     * @param roomId  the room to look for the spike in
      * @param spikeId the spike ID to look for
      * @return Returns all the data from the spike
      */
     @Override
-    public List<SoundData> getSpikeData(int roomId, int spikeId){
+    public List<SoundData> getSpikeData(int roomId, int spikeId) {
         try {
-            List<SoundData> spikeData = jdbcTemplate.query("SELECT * FROM raw_sound_entry WHERE timestamp " +
+            return jdbcTemplate.query("SELECT * FROM raw_sound_entry WHERE timestamp " +
                             "BETWEEN (SELECT start_entry FROM sound_spike WHERE spike_id = ? AND room_id = ?) " +
                             "AND (SELECT end_entry FROM sound_spike WHERE spike_id = ? AND room_id = ?)",
                     (rs, rowNum) -> new SoundData(rs.getTimestamp("timestamp"), rs.getInt("value")), spikeId, roomId, spikeId, roomId);
-            return spikeData;
-        } catch (DataAccessException e ){
+        } catch (DataAccessException e) {
             throw new DatabaseException("Can not connect to database", e);
         }
     }
 
     /**
      * Gets all the rooms that belong to a specific user
+     *
      * @param userAccount the email to search for
      * @return Returns the list of rooms
      */
     @Override
     public List<Room> getUserRooms(String userAccount) {
         try {
-            return jdbcTemplate.query("SELECT * FROM room WHERE account = ?",
+            return jdbcTemplate.query("SELECT * FROM room WHERE account = ? ORDER BY room_id",
                     (rs, rowNum) -> new Room(rs.getInt("room_id"), rs.getString("room_name"),
                             rs.getDouble("length"), rs.getDouble("width"), rs.getDouble("height")), userAccount);
         } catch (DataAccessException e) {
@@ -197,6 +207,7 @@ public class DatabaseDataRepository implements DataRepository {
 
     /**
      * Gets the last reading time for a specific room
+     *
      * @param roomID the room to look for
      * @return Returns the localDateTime of the last reading
      */
@@ -217,10 +228,10 @@ public class DatabaseDataRepository implements DataRepository {
 
             Timestamp lastTime = Timestamp.valueOf("1970-01-01 01:00:00");
 
-            if (!lastTemp.isEmpty()) if (lastTime.compareTo(lastTemp.get(0).getTimestamp()) < 0) lastTime = lastTemp.get(0).getTimestamp();
-            if (!lastHumid.isEmpty()) if (lastTime.compareTo(lastHumid.get(0).getTimestamp()) < 0) lastTime = lastHumid.get(0).getTimestamp();
-            if (!lastCO2.isEmpty()) if (lastTime.compareTo(lastCO2.get(0).getTimestamp()) < 0) lastTime = lastCO2.get(0).getTimestamp();
-            if (!lastNoise.isEmpty()) if (lastTime.compareTo(lastNoise.get(0).getTimestamp()) < 0) lastTime = lastNoise.get(0).getTimestamp();
+            if (!lastTemp.isEmpty() && (lastTime.compareTo(lastTemp.get(0).getTimestamp()) < 0)) lastTime = lastTemp.get(0).getTimestamp();
+            if (!lastHumid.isEmpty() && (lastTime.compareTo(lastHumid.get(0).getTimestamp()) < 0)) lastTime = lastHumid.get(0).getTimestamp();
+            if (!lastCO2.isEmpty() && (lastTime.compareTo(lastCO2.get(0).getTimestamp()) < 0)) lastTime = lastCO2.get(0).getTimestamp();
+            if (!lastNoise.isEmpty() && (lastTime.compareTo(lastNoise.get(0).getTimestamp()) < 0)) lastTime = lastNoise.get(0).getTimestamp();
 
             return lastTime.toLocalDateTime();
         } catch (DataAccessException e) {
@@ -235,7 +246,7 @@ public class DatabaseDataRepository implements DataRepository {
                             "VALUES (?, ?, ?, ?, ?)",
                     room.getName(), email,
                     room.getWidth(), room.getLength(), room.getHeight());
-        } catch (DataAccessException e){
+        } catch (DataAccessException e) {
             throw new DatabaseException("Can not connect to database", e);
         }
     }
@@ -274,5 +285,52 @@ public class DatabaseDataRepository implements DataRepository {
     @Override
     public List<SoundSpike> getSpikeRecordList() {
         return spikeRecordList;
+    }
+
+
+    /**
+     * Gets the average Co2 of a specific room over the specified period
+     *
+     * @param roomId the room to look for
+     * @param from the starting time to look for data
+     * @param to the ending time to look for the data
+     * @return Returns the average over the last X seconds
+     */
+    @Override
+    public double getAverageCo2(int roomId, Timestamp from, Timestamp to) {
+        return Optional.ofNullable(jdbcTemplate.queryForObject("SELECT AVG(value * 24.4379277) FROM co2_entry WHERE " +
+                        "room_id = ? AND timestamp BETWEEN ? AND ?",
+                Double.class, roomId, from, to)).orElse(0.0);
+    }
+
+
+    /**
+     * Gets the average humidity of a specific room over the specified period
+     *
+     * @param roomId the room to look for
+     * @param from the starting time to look for data
+     * @param to the ending time to look for the data
+     * @return Returns the average over the last X seconds
+     */
+    @Override
+    public double getAverageHumidity(int roomId, Timestamp from, Timestamp to) {
+        return Optional.ofNullable(jdbcTemplate.queryForObject("SELECT AVG(value) FROM humidity_entry WHERE " +
+                        "room_id = ? AND timestamp BETWEEN ? AND ?",
+                Double.class, roomId, from, to)).orElse(0.0);
+    }
+
+    /**
+     * Gets the average temperature of a specific room over the specified period
+     *
+     * @param roomId the room to look for
+     * @param from the starting time to look for data
+     * @param to the ending time to look for the data
+     * @return Returns the average over the last X seconds
+     */
+    @Override
+    public double getAverageTemp(int roomId, Timestamp from, Timestamp to) {
+        return Optional.ofNullable(jdbcTemplate.queryForObject("SELECT AVG(value) FROM temperature_entry WHERE " +
+                        "room_id = ? AND timestamp BETWEEN ? AND ?",
+                Double.class, roomId, from, to)).orElse(0.0);
     }
 }

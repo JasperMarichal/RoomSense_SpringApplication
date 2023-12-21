@@ -1,4 +1,4 @@
-import {minMaxAverageGraph, getDateTimeString} from "./gaugeGraph.js";
+import {getDateTimeString, minMaxAverageGraph} from "./gaugeGraph.js";
 
 let tempTimeToUse = [];
 let tempDataToUse = [];
@@ -22,8 +22,11 @@ let humidity = false;
 let CO2 = false;
 let noise = false;
 
+const VENTILATION_ALERT_ID = "ventilationAlertId";
 
 init()
+
+setInterval(ventilationSignal, 15000);
 
 /**
  * Checks if data is available for a datatype and adjusts variables as needed
@@ -36,6 +39,7 @@ function init() {
     noise = noiseList != null;
 
     getData();
+    ventilationSignal();
 }
 
 /**
@@ -46,23 +50,24 @@ function init() {
  * Calls methods to sort the data for the different data-types
  */
 function getData() {
+    console.log(CO2List)
 
-    if(temperature) {
+    if (temperature) {
         prepareTemperatureData();
         getStatistics(tempList, tempListTimes, "temp", "Temperature");
         tempChartCanvas = showChart(tempChartCanvas, "tempChart", "rgba(255,0,0,1)", tempTimeToUse, tempDataToUse, "Temperature", "(°C)", 2.5, 10, 40);
     }
-    if(humidity) {
+    if (humidity) {
         prepareHumidityData();
         getStatistics(humidList, humidListTimes, "humid", "Humidity");
         humidChartCanvas = showChart(humidChartCanvas, "humidChart", "rgba(0,128,255,1)", humidTimeToUse, humidDataToUse, "Humidity", "(%)", 5, 20, 80);
     }
-    if(CO2) {
+    if (CO2) {
         prepareCO2Data();
         getStatistics(CO2List, CO2ListTimes, "CO2", "CO2");
         CO2ChartCanvas = showChart(CO2ChartCanvas, "CO2Chart", "rgba(0,128,0,1)", CO2TimeToUse, CO2DataToUse, "CO2", "Concentration (ppm)", 250, 500, 5000);
     }
-    if(noise) {
+    if (noise) {
         prepareNoiseData();
         getStatistics(noiseList, noiseListTimes, "noise", "Noise");
         noiseChartCanvas = showChart(noiseChartCanvas, "noiseChart", "rgba(200,128,0,1)", noiseTimeToUse, noiseDataToUse, "Noise", "", 50, 0, 512);
@@ -81,7 +86,7 @@ function prepareTemperatureData() {
 
     let firstTime = Date.parse(tempListTimes[0]);
 
-    for (let i = 0; i < tempListTimes.length; i++){
+    for (let i = 0; i < tempListTimes.length; i++) {
         let time = Date.parse(tempListTimes[i]);
         let convertedTime = Math.round((time - firstTime) / 1000);
 
@@ -107,7 +112,7 @@ function prepareHumidityData() {
 
     let firstTime = Date.parse(humidListTimes[0]);
 
-    for (let i = 0; i < humidListTimes.length; i++){
+    for (let i = 0; i < humidListTimes.length; i++) {
         let time = Date.parse(humidListTimes[i]);
         let convertedTime = Math.round((time - firstTime) / 1000);
 
@@ -133,12 +138,12 @@ function prepareCO2Data() {
 
     let firstTime = Date.parse(CO2ListTimes[0]);
 
-    for (let i = 0; i < CO2ListTimes.length; i++){
+    for (let i = 0; i < CO2ListTimes.length; i++) {
         let time = Date.parse(CO2ListTimes[i])
         let convertedTime = Math.round((time - firstTime) / 1000);
 
         if ((CO2List[i] !== CO2List[i - 1] || CO2List[i] !== CO2List[i + 1] ||
-                (CO2DataToUse.length === 0) || (i === CO2ListTimes.length - 2)||
+                (CO2DataToUse.length === 0) || (i === CO2ListTimes.length - 2) ||
                 CO2TimeToUse[CO2TimeToUse.length - 1] - convertedTime < -50) &&
             !CO2TimeToUse.includes(convertedTime)) {
 
@@ -159,12 +164,12 @@ function prepareNoiseData() {
 
     let firstTime = Date.parse(noiseListTimes[0]);
 
-    for (let i = 0; i < noiseListTimes.length; i++){
+    for (let i = 0; i < noiseListTimes.length; i++) {
         let time = Date.parse(noiseListTimes[i])
         let convertedTime = Math.round((time - firstTime) / 1000);
 
         if ((noiseList[i] !== noiseList[i - 1] || noiseList[i] !== noiseList[i + 1] ||
-                (noiseDataToUse.length === 0) || (i === noiseListTimes.length - 2)||
+                (noiseDataToUse.length === 0) || (i === noiseListTimes.length - 2) ||
                 noiseTimeToUse[CO2TimeToUse.length - 1] - convertedTime < -50) &&
             !noiseTimeToUse.includes(convertedTime)) {
 
@@ -192,7 +197,7 @@ function prepareNoiseData() {
  * @param textID The start of the ID for the text objects for recommendations and insights
  * @param dataType The qualified name of the data type
  */
-function getStatistics(allDataInRange, allTimeInRange, textID, dataType){
+async function getStatistics(allDataInRange, allTimeInRange, textID, dataType) {
     const textObject = document.getElementById(textID + "Stats");
     const warnObject = document.getElementById(textID + "Warn");
     const recommendObject = document.getElementById(textID + "Recommend");
@@ -207,7 +212,7 @@ function getStatistics(allDataInRange, allTimeInRange, textID, dataType){
         if (data > maxData) maxData = data;
     })
 
-    if (allDataInRange.length === 0){
+    if (allDataInRange.length === 0) {
         textObject.innerHTML = "No Data For Time Period Available";
     } else {
         textObject.innerHTML = "🟦 Minimum " + dataType + ": " + minData +
@@ -221,7 +226,7 @@ function getStatistics(allDataInRange, allTimeInRange, textID, dataType){
 
         minMaxAverageGraph(minData, maxData, Math.round(total / allDataInRange.length), textID, dataType);
 
-        switch (dataType){
+        switch (dataType) {
             case "Temperature": {
                 if (maxData > 30) warnObject.innerHTML = warnObject.innerHTML + "<br>Maximum temperature is too high consider cooling the room!<br>"
                 if (minData < 20) warnObject.innerHTML = warnObject.innerHTML + "<br>Minimum temperature is too low consider heating the room!<br>"
@@ -261,7 +266,7 @@ function getStatistics(allDataInRange, allTimeInRange, textID, dataType){
 }
 
 function showChart(chartCanvas, chartID, lineColor, labels, data, datasetLabel, yUnits, stepSize, minValue, maxValue) {
-    if (chartCanvas){
+    if (chartCanvas) {
         chartCanvas.destroy();
     }
 
@@ -280,11 +285,15 @@ function showChart(chartCanvas, chartID, lineColor, labels, data, datasetLabel, 
             }]
         },
         options: {
-            plugins : {legend: false},
+            plugins: {legend: false},
             scales: {
                 yAxes: [{
                     ticks: {
-                        callback: function(value) {if (value % 1 === 0) {return value;}},
+                        callback: function (value) {
+                            if (value % 1 === 0) {
+                                return value;
+                            }
+                        },
                         stepSize: stepSize,
                         suggestedMin: minValue,
                         suggestedMax: maxValue,
@@ -303,4 +312,43 @@ function showChart(chartCanvas, chartID, lineColor, labels, data, datasetLabel, 
             }
         }
     });
+}
+
+const alertPlaceholder = document.getElementById('liveAlertPlaceholder')
+const appendAlert = (message, type, id) => {
+    const wrapper = document.createElement('div')
+    wrapper.innerHTML = [
+        `<div id="${id}" class="alert alert-${type} alert-dismissible" role="alert">`,
+        `   <div>${message}</div>`,
+        '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+        '</div>'
+    ].join('')
+
+    alertPlaceholder.append(wrapper)
+}
+
+/**
+ * Fetches the average values of Co2, Humidity and Temperature over a specified period of time.
+ * If one or more of those values are above a specified threshold,
+ * passes a signal to the webpage, letting the user know that the room needs to be ventilated.
+ * Refresh is done according to the value in refreshInterval.
+ */
+async function ventilationSignal() {
+    if (document.getElementById(VENTILATION_ALERT_ID)) {
+        return;
+    }
+
+    let pathArray = window.location.pathname.split("/");
+    let roomId = pathArray[2];
+    let response = await fetch(`/api/sensors?roomId=${roomId}&intervalSeconds=${refreshInterval}`);
+    if (!response.ok) {
+        throw new Error("HTTP-Error: " + response.status);
+    }
+
+    let sensorsOverview = await response.json();
+
+    const showAlert = sensorsOverview.results.some(e => e.aboveThreshold);
+    if (showAlert) {
+        appendAlert("You need to ventilate the room!", "warning", VENTILATION_ALERT_ID);
+    }
 }
