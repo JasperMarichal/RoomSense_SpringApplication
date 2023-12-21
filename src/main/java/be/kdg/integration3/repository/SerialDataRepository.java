@@ -59,7 +59,7 @@ public class SerialDataRepository implements DataRepository {
     }
 
     @Override
-    public RoomType getRoomType(int roomId) {
+    public String getRoomType(int roomId) {
         return null;
     }
 

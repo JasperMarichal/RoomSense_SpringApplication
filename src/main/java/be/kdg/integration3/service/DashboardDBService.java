@@ -127,7 +127,7 @@ public class DashboardDBService implements DashboardService{
     }
 
     @Override
-    public RoomType getRoomType(int roomId) {
+    public String getRoomType(int roomId) {
         return repository.getRoomType(roomId);
     }
 }

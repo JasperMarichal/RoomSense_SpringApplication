@@ -138,7 +138,7 @@ public class DatabaseDataRepository implements DataRepository {
     }
 
     @Override
-    public RoomType getRoomType(int roomId) {
+    public String getRoomType(int roomId) {
         Timestamp from = jdbcTemplate.queryForObject("SELECT MIN(timestamp) FROM noise_entry WHERE room_id = ?"
                 , Timestamp.class, roomId);
         Timestamp to = jdbcTemplate.queryForObject("SELECT MAX(timestamp) FROM noise_entry WHERE room_id = ?"
@@ -146,14 +146,14 @@ public class DatabaseDataRepository implements DataRepository {
         double AverageNoise = getAverageNoise(roomId, from, to);
         RoomType roomType;
 
-        if(AverageNoise >= 150){
+        if(AverageNoise >= 170){
             roomType = RoomType.aula;
-        } else if (AverageNoise <= 80) {
+        } else if (AverageNoise < 170 && AverageNoise > 150) {
             roomType = RoomType.group_work;
         } else {
             roomType = RoomType.individual_work;
         }
-        return roomType;
+        return roomType.getDescription();
     }
     /**
      * Retrieves the sound spikes between a certain time period from the database

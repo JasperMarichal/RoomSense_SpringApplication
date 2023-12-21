@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface DataRepository {
     void read(int roomID, LocalDateTime startDateTime, LocalDateTime endDateTime, boolean readSpikes);
-    public RoomType getRoomType(int roomId);
+    public String getRoomType(int roomId);
     List<SoundData> getSpikeData(int roomId, int spikeId);
 
     List<Room> getUserRooms(String userAccount);

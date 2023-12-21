@@ -34,7 +34,7 @@ public class RoomOverviewController {
         if (session.getAttribute("userEmail") == null) return "redirect:/login";
 
         List<Room> rooms = service.getUserRooms((String) session.getAttribute("userEmail"));
-        Map<Integer, RoomType> roomTypeMap = new HashMap<>();
+        Map<Integer, String> roomTypeMap = new HashMap<>();
         rooms.sort(Comparator.comparingInt(Room::getId));
 
         for (Room room: rooms) {

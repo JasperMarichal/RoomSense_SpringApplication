@@ -86,7 +86,7 @@ public class DashboardJSONService implements DashboardService {
     }
 
     @Override
-    public RoomType getRoomType(int roomId) {
+    public String getRoomType(int roomId) {
         return null;
     }
 }
