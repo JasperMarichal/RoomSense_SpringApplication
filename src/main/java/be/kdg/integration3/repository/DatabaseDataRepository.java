@@ -197,7 +197,7 @@ public class DatabaseDataRepository implements DataRepository {
     @Override
     public List<Room> getUserRooms(String userAccount) {
         try {
-            return jdbcTemplate.query("SELECT * FROM room WHERE account = ?",
+            return jdbcTemplate.query("SELECT * FROM room WHERE account = ? ORDER BY room_id",
                     (rs, rowNum) -> new Room(rs.getInt("room_id"), rs.getString("room_name"),
                             rs.getDouble("length"), rs.getDouble("width"), rs.getDouble("height")), userAccount);
         } catch (DataAccessException e) {
