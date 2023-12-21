@@ -12,6 +12,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Repository;
 
 import java.io.*;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,6 +49,11 @@ public class JsonDataRepository implements DataRepository {
         readAllFiles();
 
 //        System.out.println(getRecordList().toString());
+    }
+
+    @Override
+    public RoomType getRoomType(int roomId) {
+        return null;
     }
 
     @Override

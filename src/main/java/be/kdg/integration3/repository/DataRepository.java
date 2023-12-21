@@ -2,12 +2,13 @@ package be.kdg.integration3.repository;
 
 import be.kdg.integration3.domain.*;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
 public interface DataRepository {
     void read(int roomID, LocalDateTime startDateTime, LocalDateTime endDateTime, boolean readSpikes);
-
+    public RoomType getRoomType(int roomId);
     List<SoundData> getSpikeData(int roomId, int spikeId);
 
     List<Room> getUserRooms(String userAccount);

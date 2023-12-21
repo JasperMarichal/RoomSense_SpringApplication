@@ -30,4 +30,5 @@ public interface DashboardService {
     double getAverageTemperature();
     double getAverageHumidity();
     double getAverageCO2();
+    RoomType getRoomType(int roomId);
 }

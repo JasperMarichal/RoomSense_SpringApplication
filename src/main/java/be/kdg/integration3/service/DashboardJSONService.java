@@ -84,4 +84,9 @@ public class DashboardJSONService implements DashboardService {
     public double getAverageCO2() {
         return 0;
     }
+
+    @Override
+    public RoomType getRoomType(int roomId) {
+        return null;
+    }
 }

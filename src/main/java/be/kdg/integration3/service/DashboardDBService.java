@@ -125,4 +125,9 @@ public class DashboardDBService implements DashboardService{
     public List<CO2Data> getCO2List() {
         return repository.getCO2RecordList();
     }
+
+    @Override
+    public RoomType getRoomType(int roomId) {
+        return repository.getRoomType(roomId);
+    }
 }

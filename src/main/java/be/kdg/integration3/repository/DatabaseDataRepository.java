@@ -131,14 +131,19 @@ public class DatabaseDataRepository implements DataRepository {
         noiseRecordList.addAll(noise);
     }
 
-    public double getAverageNoise(int roomId, Timestamp from, Timestamp to) {
+    private double getAverageNoise(int roomId, Timestamp from, Timestamp to) {
         return Optional.ofNullable(jdbcTemplate.queryForObject("SELECT AVG(value) FROM noise_entry WHERE " +
                     "room_id = ? AND timestamp BETWEEN ? AND ?",
                 Double.class, roomId, from, to)).orElse(0.0);
     }
 
+    @Override
     public RoomType getRoomType(int roomId) {
-        int AverageNoise = getAverageNoise(roomId, ); //TODO: Finish this with Timestamps all time
+        Timestamp from = jdbcTemplate.queryForObject("SELECT MIN(timestamp) FROM noise_entry WHERE room_id = ?"
+                , Timestamp.class, roomId);
+        Timestamp to = jdbcTemplate.queryForObject("SELECT MAX(timestamp) FROM noise_entry WHERE room_id = ?"
+                , Timestamp.class, roomId);
+        double AverageNoise = getAverageNoise(roomId, from, to);
         RoomType roomType;
 
         if(AverageNoise >= 150){
