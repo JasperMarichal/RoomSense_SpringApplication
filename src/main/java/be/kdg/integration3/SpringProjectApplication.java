@@ -19,14 +19,14 @@ public class SpringProjectApplication {
 		var context = SpringApplication.run(SpringProjectApplication.class, args);
 	}
 
-	@Bean
-	public ErrorViewResolver customErrorViewResolver() {
-		return (request, status, model) -> {
-			if (status == HttpStatus.NOT_FOUND || status == HttpStatus.INTERNAL_SERVER_ERROR) {
-				return new ModelAndView("errorPage", Collections.emptyMap(), HttpStatus.OK);
-			}
-			return null;
-		};
-	}
+//	@Bean
+//	public ErrorViewResolver customErrorViewResolver() {
+//		return (request, status, model) -> {
+//			if (status == HttpStatus.NOT_FOUND || status == HttpStatus.INTERNAL_SERVER_ERROR) {
+//				return new ModelAndView("errorPage", Collections.emptyMap(), HttpStatus.OK);
+//			}
+//			return null;
+//		};
+//	}
 
 }

@@ -73,7 +73,7 @@ public class RoomOverviewController {
             service.updateRoom(roomID, viewModel.getRoomName(), viewModel.getWidth(),
                     viewModel.getLength(), viewModel.getHeight(), (String) session.getAttribute("userEmail"));
         } catch (DatabaseException e){
-            return "errorPage";
+            return "error";
         }
         return "redirect:/rooms/" + roomID;
     }

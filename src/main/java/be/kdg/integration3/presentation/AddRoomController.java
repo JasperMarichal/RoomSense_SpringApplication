@@ -47,7 +47,7 @@ public class AddRoomController {
         try {
             dashboardService.addRoom(addRoomViewModel.getRoomName(), addRoomViewModel.getWidth(), addRoomViewModel.getHeight(), addRoomViewModel.getHeight(), (String) session.getAttribute("userEmail"));
         } catch (DatabaseException e){
-            return "errorPage";
+            return "error";
         }
 
         return "redirect:/dashboard";
