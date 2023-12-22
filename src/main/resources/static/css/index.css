@@ -1,0 +1,30 @@
+#rs-bg-vid {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;
+    z-index: -10;
+    -webkit-filter: blur(8px);
+    -moz-filter: blur(8px);
+    -o-filter: blur(8px);
+    -ms-filter: blur(8px);
+    filter: blur(8px);
+}
+
+body {
+    background-color: #CED4DA;
+}
+
+.slogan {
+    color: #019BAF;
+    text-shadow: rgba(105, 105, 105, 0.69) 1px 1px;
+}
+
+.learn-more {
+    color: rgb(200, 200, 200);;
+}
+
+.learn-more:hover {
+    color: rgb(245, 245, 245);
+}
