@@ -34,7 +34,7 @@
                             <td th:text="${room.getName()}" th:attr="onclick='window.location.href=\'/dashboard/' + ${room.getId()} + '\''"></td>
                             <td th:id="'vent' + ${room.getId()}" th:attr="onclick='window.location.href=\'/dashboard/' + ${room.getId()} + '\''"></td>
                             <td th:text="${room.getId()}" th:attr="onclick='window.location.href=\'/dashboard/' + ${room.getId()} + '\''"></td>
-                            <td th:attr="onclick='window.location.href=\'/dashboard/' + ${room.getId()} + '\''"></td>
+                            <td th:text="${roomTypeMap.get(room.getId())}" th:attr="onclick='window.location.href=\'/dashboard/' + ${room.getId()} + '\''"></td>
                             <td th:text="${room.getWidth()}" th:attr="onclick='window.location.href=\'/dashboard/' + ${room.getId()} + '\''"></td>
                             <td th:text="${room.getHeight()}" th:attr="onclick='window.location.href=\'/dashboard/' + ${room.getId()} + '\''"></td>
                             <td th:text="${room.getLength()}" th:attr="onclick='window.location.href=\'/dashboard/' + ${room.getId()} + '\''"></td>

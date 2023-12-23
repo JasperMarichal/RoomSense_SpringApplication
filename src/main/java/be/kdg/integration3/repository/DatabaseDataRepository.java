@@ -140,6 +140,43 @@ public class DatabaseDataRepository implements DataRepository {
     }
 
     /**
+     * Retrieves the average noise level between a certain time period from the database
+     * @param roomId the room to look in
+     * @param to the end time
+     * @param from the start time
+     * @throws DataAccessException if database is inaccessible will throw a DataAccessException
+     */
+    private double getAverageNoise(int roomId, Timestamp from, Timestamp to) {
+        return Optional.ofNullable(jdbcTemplate.queryForObject("SELECT AVG(value) FROM noise_entry WHERE " +
+                    "room_id = ? AND timestamp BETWEEN ? AND ?",
+                Double.class, roomId, from, to)).orElse(0.0);
+    }
+
+    /**
+     * Retrieves the room type of a certain room
+     * @param roomId the room to look in
+     * @throws DataAccessException if database is inaccessible will throw a DataAccessException
+     */
+    @Override
+    public String getRoomType(int roomId) {
+        Timestamp from = jdbcTemplate.queryForObject("SELECT MIN(timestamp) FROM noise_entry WHERE room_id = ?"
+                , Timestamp.class, roomId);
+        Timestamp to = jdbcTemplate.queryForObject("SELECT MAX(timestamp) FROM noise_entry WHERE room_id = ?"
+                , Timestamp.class, roomId);
+        double AverageNoise = getAverageNoise(roomId, from, to);
+        RoomType roomType;
+
+        if(AverageNoise >= 170){
+            roomType = RoomType.aula;
+        } else if (AverageNoise < 170 && AverageNoise > 150) {
+            roomType = RoomType.group_work;
+        } else {
+            roomType = RoomType.individual_work;
+        }
+        return roomType.getDescription();
+    }
+
+    /**
      * Retrieves the sound spikes between a certain time period from the database
      *
      * @param roomID         the room to look in

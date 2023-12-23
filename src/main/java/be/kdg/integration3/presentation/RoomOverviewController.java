@@ -1,7 +1,9 @@
 package be.kdg.integration3.presentation;
 
 import be.kdg.integration3.domain.Room;
+import be.kdg.integration3.domain.RoomType;
 import be.kdg.integration3.presentation.viewmodel.AddRoomViewModel;
+import be.kdg.integration3.repository.DataRepository;
 import be.kdg.integration3.service.DashboardService;
 import be.kdg.integration3.util.exception.DatabaseException;
 import jakarta.servlet.http.HttpSession;
@@ -14,7 +16,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/rooms")
@@ -30,7 +34,15 @@ public class RoomOverviewController {
         if (session.getAttribute("userEmail") == null) return "redirect:/login";
 
         List<Room> rooms = service.getUserRooms((String) session.getAttribute("userEmail"));
+        Map<Integer, String> roomTypeMap = new HashMap<>();
         rooms.sort(Comparator.comparingInt(Room::getId));
+
+        for (Room room: rooms) {
+            int roomId = room.getId();
+            roomTypeMap.put(roomId, service.getRoomType(roomId));
+        }
+
+        model.addAttribute("roomTypeMap", roomTypeMap);
         model.addAttribute("rooms", rooms);
 
         return "roomOverview";

@@ -100,4 +100,9 @@ public class DashboardJSONService implements DashboardService {
     public double getAverageHumidity(int roomId, Instant from, Instant to) {
         throw new RuntimeException("Not implemented");
     }
+
+    @Override
+    public String getRoomType(int roomId) {
+        return null;
+    }
 }

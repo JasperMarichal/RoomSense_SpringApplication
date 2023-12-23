@@ -31,7 +31,7 @@ public interface DashboardService {
     double getAverageTemperature();
     double getAverageHumidity();
     double getAverageCO2();
-
+    String getRoomType(int roomId);
     double getAverageCo2(int roomId, Instant from, Instant to);
     double getAverageTemp(int roomId, Instant from, Instant to);
     double getAverageHumidity(int roomId, Instant from, Instant to);

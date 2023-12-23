@@ -59,6 +59,11 @@ public class SerialDataRepository implements DataRepository {
     }
 
     @Override
+    public String getRoomType(int roomId) {
+        return null;
+    }
+
+    @Override
     public List<SoundData> getSpikeData(int roomId, int spikeId) {
         return null;
     }
