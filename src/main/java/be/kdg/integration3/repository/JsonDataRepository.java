@@ -21,7 +21,7 @@ import java.util.List;
 @Repository
 @Profile("jsonrepository")
 public class JsonDataRepository implements DataRepository {
-    private boolean development = SpringProjectApplication.development;
+    private boolean development = SpringProjectApplication.DEVELOPMENT;
 
     private final Logger logger = LoggerFactory.getLogger(JsonDataRepository.class);
 
@@ -47,8 +47,6 @@ public class JsonDataRepository implements DataRepository {
         findFiles("CO2");
 
         readAllFiles();
-
-//        System.out.println(getRecordList().toString());
     }
 
     @Override
@@ -104,6 +102,21 @@ public class JsonDataRepository implements DataRepository {
         return null;
     }
 
+    @Override
+    public double getAverageCo2(int roomId, Timestamp from, Timestamp to) {
+        throw new RuntimeException("Not implemented");
+    }
+
+    @Override
+    public double getAverageHumidity(int roomId, Timestamp from, Timestamp to) {
+        throw new RuntimeException("Not implemented");
+    }
+
+    @Override
+    public double getAverageTemp(int roomId, Timestamp from, Timestamp to) {
+        throw new RuntimeException("Not implemented");
+    }
+
     private void findFiles(String name) {
         File root = new File("..\\JSONSaves\\");
         FilenameFilter filesFilter = (directory, filename) -> filename.startsWith(name);
@@ -128,7 +141,6 @@ public class JsonDataRepository implements DataRepository {
                     TemperatureData[] tempData = gson.fromJson(data, TemperatureData[].class);
                     for (TemperatureData dataPoint : tempData){
                         recordList.add(new TemperatureData(dataPoint.getTimestamp(), dataPoint.getValue()));
-//                        System.out.println(dataPoint);
                     }
                 } catch (IOException e) {
                     logger.error("Something went wrong reading temperature!");

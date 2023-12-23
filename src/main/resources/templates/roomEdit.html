@@ -67,8 +67,8 @@
                             <canvas th:id="roomIllustration" class="canvasRoom" th:width="250" th:height="250"></canvas>
                         </div>
                         <div th:if="${viewModel.getWidth() != 1 && viewModel.getLength() != 1 && viewModel.getHeight() != 1}">
-                            <canvas th:id="roomIllustration" class="canvasRoom" th:if="${viewModel.getWidth() * 160 > viewModel.getLength() * 160}" th:width="${viewModel.getWidth() * 160}" th:height="${viewModel.getHeight() * 180}"></canvas>
-                            <canvas th:id="roomIllustration" class="canvasRoom" th:if="${viewModel.getWidth() * 160 < viewModel.getLength() * 160}" th:width="${viewModel.getLength() * 160}" th:height="${viewModel.getHeight() * 200}"></canvas>
+                            <canvas th:id="roomIllustration" class="canvasRoom" th:if="${viewModel.getWidth() * 160 > viewModel.getLength() * 160}" th:width="${viewModel.getWidth() * 160}" th:height="${viewModel.getLength() * 100}"></canvas>
+                            <canvas th:id="roomIllustration" class="canvasRoom" th:if="${viewModel.getWidth() * 160 < viewModel.getLength() * 160}" th:width="${viewModel.getLength() * 160}" th:height="${viewModel.getLength() * 100}"></canvas>
                         </div>
                     </div>
                 </div>

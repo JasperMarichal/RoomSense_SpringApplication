@@ -23,4 +23,7 @@ public interface DataRepository {
     List<SoundData> getNoiseRecordList();
     LocalDateTime getLastReadingTime(int roomID);
     List<SoundSpike> getSpikeRecordList();
+    double getAverageCo2(int roomId, Timestamp from, Timestamp to);
+    double getAverageHumidity(int roomId, Timestamp from, Timestamp to);
+    double getAverageTemp(int roomId, Timestamp from, Timestamp to);
 }

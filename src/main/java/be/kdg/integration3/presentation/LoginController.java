@@ -53,7 +53,7 @@ public class LoginController {
             }
         } catch (DatabaseException e){
             logger.debug("Could not connect to the database");
-            return "errorPage";
+            return "error";
         }
     }
 }

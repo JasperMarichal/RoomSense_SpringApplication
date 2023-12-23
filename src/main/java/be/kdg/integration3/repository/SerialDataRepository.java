@@ -91,6 +91,21 @@ public class SerialDataRepository implements DataRepository {
         return null;
     }
 
+    @Override
+    public double getAverageCo2(int roomId, Timestamp from, Timestamp to) {
+        throw new RuntimeException("Not implemented");
+    }
+
+    @Override
+    public double getAverageHumidity(int roomId, Timestamp from, Timestamp to) {
+        throw new RuntimeException("Not implemented");
+    }
+
+    @Override
+    public double getAverageTemp(int roomId, Timestamp from, Timestamp to) {
+        throw new RuntimeException("Not implemented");
+    }
+
     private int parseSerial(char[] newSerialData) {
         int newDataCount = 0;
         for(char c : newSerialData) {

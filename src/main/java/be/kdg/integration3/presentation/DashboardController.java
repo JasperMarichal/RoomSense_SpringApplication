@@ -1,5 +1,6 @@
 package be.kdg.integration3.presentation;
 
+import be.kdg.integration3.config.SensorConfiguration;
 import be.kdg.integration3.domain.*;
 import be.kdg.integration3.presentation.viewmodel.DashboardViewModel;
 import be.kdg.integration3.service.DashboardService;
@@ -13,16 +14,17 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Controller
 @RequestMapping("/dashboard")
 public class DashboardController {
     private final DashboardService service;
+    SensorConfiguration metricConfiguration;
 
-    public DashboardController(DashboardService service) {
+    public DashboardController(DashboardService service, SensorConfiguration metricConfiguration) {
         this.service = service;
+        this.metricConfiguration = metricConfiguration;
     }
 
     /**
@@ -124,6 +126,7 @@ public class DashboardController {
 
         viewModelFromSession.setRoomId(roomId);
         session.setAttribute("dashboardViewModel", viewModelFromSession);
+        model.addAttribute("refreshInterval", metricConfiguration.getRefreshInterval());
 
         model.addAttribute("dashboardViewModel", viewModelFromSession);
 

@@ -8,3 +8,31 @@
     max-height: 207px;
     max-width: 415px;
 }
+
+
+#ventilationSignal {
+    width: 300px;
+    height: 30px;
+    background: #70a7c4;
+    color: white;
+    border-radius: 3px;
+    font-size: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 90px;
+    left: -300px;
+}
+
+.visible {
+    animation: movein 0.5s ease forwards;
+}
+
+@keyframes movein {
+    from { left: -300px; }
+    to   { left: 10px; }
+}
+
+
+

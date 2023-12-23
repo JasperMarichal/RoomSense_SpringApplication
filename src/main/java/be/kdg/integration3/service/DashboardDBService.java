@@ -4,6 +4,8 @@ import be.kdg.integration3.domain.*;
 import be.kdg.integration3.repository.DataRepository;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -72,6 +74,21 @@ public class DashboardDBService implements DashboardService{
     public double getAverageCO2() {
         double totalCO2 = repository.getCO2RecordList().stream().mapToInt(CO2Data::getValue).sum();
         return totalCO2 / repository.getCO2RecordList().size();
+    }
+
+    @Override
+    public double getAverageCo2(int roomId, Instant from, Instant to) {
+        return repository.getAverageCo2(roomId, Timestamp.from(from), Timestamp.from(to));
+    }
+
+    @Override
+    public double getAverageTemp(int roomId, Instant from, Instant to) {
+        return repository.getAverageTemp(roomId, Timestamp.from(from), Timestamp.from(to));
+    }
+
+    @Override
+    public double getAverageHumidity(int roomId, Instant from, Instant to) {
+        return repository.getAverageHumidity(roomId, Timestamp.from(from), Timestamp.from(to));
     }
 
     /**

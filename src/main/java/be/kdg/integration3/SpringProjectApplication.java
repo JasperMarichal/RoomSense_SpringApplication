@@ -10,23 +10,23 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Collections;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"be.kdg.integration3"})
 @EnableScheduling
 public class SpringProjectApplication {
-	public final static boolean development = true;
+	public static final boolean DEVELOPMENT = true;
 
 	public static void main(String[] args) {
 		var context = SpringApplication.run(SpringProjectApplication.class, args);
 	}
 
-	@Bean
-	public ErrorViewResolver customErrorViewResolver() {
-		return (request, status, model) -> {
-			if (status == HttpStatus.NOT_FOUND || status == HttpStatus.INTERNAL_SERVER_ERROR) {
-				return new ModelAndView("errorPage", Collections.emptyMap(), HttpStatus.OK);
-			}
-			return null;
-		};
-	}
+//	@Bean
+//	public ErrorViewResolver customErrorViewResolver() {
+//		return (request, status, model) -> {
+//			if (status == HttpStatus.NOT_FOUND || status == HttpStatus.INTERNAL_SERVER_ERROR) {
+//				return new ModelAndView("errorPage", Collections.emptyMap(), HttpStatus.OK);
+//			}
+//			return null;
+//		};
+//	}
 
 }
