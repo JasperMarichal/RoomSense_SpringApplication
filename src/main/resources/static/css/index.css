@@ -21,10 +21,42 @@ body {
     text-shadow: rgba(105, 105, 105, 0.69) 1px 1px;
 }
 
-.learn-more {
-    color: rgb(200, 200, 200);;
+.description {
+    color: rgb(20, 20, 20);
+    font-size: 1.2em;
+    background-color: #CED4DA99;
+    padding: 8px;
 }
 
-.learn-more:hover {
-    color: rgb(245, 245, 245);
+#product-pricing {
+    margin-top: 300px;
+}
+
+.price-main {
+    font-size: 2.3em;
+}
+
+.price-cents {
+    font-size: 1.1em;
+    margin-left: -4px;
+}
+
+.price-unit {
+    font-size: 0.95em;
+    color: dimgray;
+}
+
+.price-extra {
+    font-size: 0.8em;
+    color: darkgray;
+}
+
+#sub-plus-sign {
+    font-size: 6em;
+    color: #00800099;
+}
+
+#sub-or-sign {
+    font-size: 3em;
+    color: #80808099;
 }
