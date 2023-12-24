@@ -1,12 +1,12 @@
 # SpringProject
 ## Teamname = Int3-Team3 aka RoomSense
 
-### Team members:
-    - Abel Turlej
-    - Roman Gordon
-    - Anna Vorozhtsova
-    - Boldi Olajos
-    - Jasper Marichal
+### Team members
+- Abel Turlej
+- Roman Gordon
+- Anna Vorozhtsova
+- Boldizsar Olajos
+- Jasper Marichal
 
 ### Other projects:
 - ReadingSerial project used for connecting to the arduino and saving data to the database:
@@ -83,10 +83,10 @@
 ### Dependencies: 
 What libraries did you use and why
 
-    - Library name: jSerialComm
+- Library name: jSerialComm
 This library was used to connect to our arduino and read data when we were using serial and reading in the same project, it is now deprecated.
 
-    - Library name: Chart.js
+- Library name: Chart.js
 We use this library for data visualisation in form of graphs. 
 
 
