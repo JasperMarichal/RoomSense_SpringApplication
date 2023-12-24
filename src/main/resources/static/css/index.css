@@ -1,0 +1,62 @@
+#rs-bg-vid {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;
+    z-index: -10;
+    -webkit-filter: blur(8px);
+    -moz-filter: blur(8px);
+    -o-filter: blur(8px);
+    -ms-filter: blur(8px);
+    filter: blur(8px);
+}
+
+body {
+    background-color: #CED4DA;
+}
+
+.slogan {
+    color: #019BAF;
+    text-shadow: rgba(105, 105, 105, 0.69) 1px 1px;
+}
+
+.description {
+    color: rgb(20, 20, 20);
+    font-size: 1.2em;
+    background-color: #CED4DA99;
+    padding: 8px;
+}
+
+#product-pricing {
+    margin-top: 300px;
+}
+
+.price-main {
+    font-size: 2.3em;
+}
+
+.price-cents {
+    font-size: 1.1em;
+    margin-left: -4px;
+}
+
+.price-unit {
+    font-size: 0.95em;
+    color: dimgray;
+}
+
+.price-extra {
+    font-size: 0.8em;
+    color: darkgray;
+}
+
+#sub-plus-sign {
+    font-size: 6em;
+    color: #00800099;
+}
+
+#sub-or-sign {
+    font-size: 3em;
+    color: #80808099;
+}

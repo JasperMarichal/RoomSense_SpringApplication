@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+    <script defer th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
+    <title>Welcome to RoomSense</title>
+</head>
+<body>
+    <div th:if="${session.loggedIn}">
+        <div th:insert="~{fragment/navbar-logged-in::navbar-logged-in}">logged in</div>
+    </div>
+    <div th:unless="${session.loggedIn}">
+        <div th:insert="~{fragment/navbar-not-logged-in::navbar-not-logged-in}">logged out</div>
+    </div>
+    <video id="rs-bg-vid" autoplay="autoplay" muted="muted" loop="loop" >
+        <source th:src="@{/videos/rs-index-bg-vid.mp4}" type="video/mp4">
+    </video>
+    <main>
+        <div class="container justify-content-end">
+            <div class="row">
+            <div class="col-6">
+                <h1 class="slogan mt-5 mb-5">HELP YOUR ROOM MAKE SENSE</h1>
+                <p class="description rounded-2 mb-5">
+                    Our compact RoomSense™ device seamlessly integrates with any room,
+                    offering real-time insights into temperature, humidity, CO2 levels,
+                    and sound. More than just monitoring, RoomSense™ actively enhances
+                    your environment, providing personalized recommendations tailored
+                    for optimum productivity and assures a healthy work or living space.
+                </p>
+            </div>
+            </div>
+            <div id="product-pricing" class="row justify-content-between">
+                <div class="col-3">
+                    <div class="card bg-secondary-subtle border border-dark-subtle border-3 rounded-5">
+                        <div class="card-body">
+                            <h4 class="card-title">RoomSense™ Device</h4>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><span style="color: green">&#x2713;</span> Temperature Sensor</li>
+                            <li class="list-group-item"><span style="color: green">&#x2713;</span> Humidity Sensor</li>
+                            <li class="list-group-item"><span style="color: green">&#x2713;</span> CO₂ Sensor</li>
+                            <li class="list-group-item"><span style="color: green">&#x2713;</span> Noise Sensor</li>
+                            <li class="list-group-item"><span style="color: green">&#x2713;</span> Colored LED Indicator</li>
+                        </ul>
+                        <div class="card-body">
+                            <p class="card-text">
+                                The RoomSense™ Device is at the core of RoomSense, it captures the necessary data for
+                                all the other services we provide. Even without a subscription or a Wi-Fi connection
+                                your device will warn you in case the CO2 levels in your room get too high or even
+                                dangerous using the onboard LED indicator.
+                                <br>
+                                <b>
+                                <span class="price-main">€79</span>
+                                <span class="price-cents">99</span>
+                                <span class="price-unit">/device</span>
+                                </b>
+                            </p>
+                            <div class="text-center">
+                                <a href="#" class="btn btn-secondary disabled">Coming Soon</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="sub-plus-sign" class="col-2 text-center mt-auto mb-auto">
+                    <b>+</b>
+                </div>
+                <div class="col-3">
+                    <div class="card bg-secondary-subtle border border-dark-subtle border-3 rounded-5">
+                        <div class="card-body">
+                            <h4 class="card-title">Personal Plan</h4>
+                            <h6 class="card-subtitle mb-2 text-muted">for your home</h6>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><span style="color: green">&#x2713;</span> Full Data Storage</li>
+                            <li class="list-group-item"><span style="color: green">&#x2713;</span> Data Processing</li>
+                            <li class="list-group-item"><span style="color: green">&#x2713;</span> Personal Recommendations</li>
+                            <li class="list-group-item"><span style="color: red">&#x2717;</span> More than 3 devices</li>
+                            <li class="list-group-item">Free Installation*</li>
+                        </ul>
+                        <div class="card-body">
+                            <p class="card-text">
+                                * RoomSense provides <b>free installation</b> if you start with a <b>1-year or
+                                longer subscription</b>, material costs still apply.
+                                <br>
+                                <b>
+                                    <span class="price-main">€3</span>
+                                    <span class="price-cents">99</span>
+                                    <span class="price-unit">/month</span>
+                                    <span class="price-extra">per device</span>
+                                </b>
+                            </p>
+                            <div class="text-center">
+                                <a th:href="@{/sign-up}" class="btn btn-primary">Sign up Now</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="sub-or-sign" class="col-1 text-center mt-auto mb-auto">
+                    OR
+                </div>
+                <div class="col-3">
+                    <div class="card bg-secondary-subtle border border-dark-subtle border-3 rounded-5">
+                        <div class="card-body">
+                            <h4 class="card-title">Enterprise Plan</h4>
+                            <h6 class="card-subtitle mb-2 text-muted">for offices and schools</h6>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><span style="color: green">&#x2713;</span> Full Data Storage</li>
+                            <li class="list-group-item"><span style="color: green">&#x2713;</span> Data Processing</li>
+                            <li class="list-group-item"><span style="color: green">&#x2713;</span> Personal Recommendations</li>
+                            <li class="list-group-item"><span style="color: green">&#x2713;</span> More than 3 devices</li>
+                            <li class="list-group-item">Free Installation*</li>
+                        </ul>
+                        <div class="card-body">
+                            <p class="card-text">
+                                * RoomSense provides <b>free installation</b> if you start with a <b>1-year or
+                                longer subscription</b> for the first 100 devices, material costs still apply.
+                                <br>
+                                <b>
+                                    <span class="price-main">€9</span>
+                                    <span class="price-cents">99</span>
+                                    <span class="price-unit">/month</span>
+                                    <span class="price-extra">per device</span>
+                                </b>
+                            </p>
+                            <div class="text-center">
+                                <a th:href="@{/sign-up}" class="btn btn-primary">Sign up Now</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-5 mb-5 justify-content-center">
+                <div class="col-2 mt-5">
+                    <a class="btn btn-primary" th:href="@{/about-us}">More About Us</a>
+                </div>
+            </div>
+        </div>
+    </main>
+    <div th:insert="~{fragment/footer::footercopy}">footer</div>
+</body>
+</html>

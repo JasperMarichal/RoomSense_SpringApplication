@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class IndexController {
     @GetMapping("/")
     public String indexMapping(HttpSession session){
-        if (session.getAttribute("userEmail") == null) return "redirect:/about-us";
-        else return "redirect:/dashboard";
+        if(session.getAttribute("userEmail") != null) return "redirect:/dashboard";
+
+        return "index";
     }
 }
