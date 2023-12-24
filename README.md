@@ -16,7 +16,7 @@
 
 #### Application profiles:
 - jdbcrepository - The main profile for the website
-- jsonrepository **DEPRICATED**
+- jsonrepository **DEPRECATED**
     - The files: JsonDataRepository, SerialDataRepository and DashboardJSONService are all deprecated and no longer in use
 
 ### Installation and/or configuration instructions
