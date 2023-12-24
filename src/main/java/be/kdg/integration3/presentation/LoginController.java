@@ -29,7 +29,7 @@ public class LoginController {
     public String getLoginView(Model model) {
         model.addAttribute("loginviewmodel", new LoginViewModel());
         logger.info("Request for login view!");
-        return "/login";
+        return "login";
     }
 
     @PostMapping
@@ -37,7 +37,7 @@ public class LoginController {
         logger.info(String.format("Processing email: %s and password: %s", loginViewModel.getEmail(), loginViewModel.getPassword()));
         if (errors.hasErrors()) {
             errors.getAllErrors().forEach(error -> logger.error(error.toString()));
-            return "/login";
+            return "login";
         }
         try {
             if (service.correctUserDetails(loginViewModel.getEmail(), loginViewModel.getPassword())) {
@@ -49,7 +49,7 @@ public class LoginController {
             } else {
                 logger.info("login unsuccessful");
                 model.addAttribute("loginError", "User not found.");
-                return "/login";
+                return "login";
             }
         } catch (DatabaseException e){
             logger.debug("Could not connect to the database");

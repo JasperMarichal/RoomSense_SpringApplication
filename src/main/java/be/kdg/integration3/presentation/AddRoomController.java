@@ -41,7 +41,7 @@ public class AddRoomController {
         if (errors.hasErrors()) {
             errors.getAllErrors().forEach(error -> logger.error(error.toString()));
             model.addAttribute("addRoomError", "Incorrect values.");
-            return "/add-room";
+            return "add-room";
         }
 
         try {

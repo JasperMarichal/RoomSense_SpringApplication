@@ -34,7 +34,7 @@ public class SignupController {
         List<UserAccount.UseCaseType> useCases = Arrays.stream(UserAccount.UseCaseType.values()).toList();
         model.addAttribute("useCases", useCases);
         logger.debug("Request for sign up view");
-        return "/sign-up";
+        return "sign-up";
     }
 
     @PostMapping
@@ -45,12 +45,12 @@ public class SignupController {
                 errors.getAllErrors().forEach(error -> logger.error(error.toString()));
                 List<UserAccount.UseCaseType> useCases = Arrays.stream(UserAccount.UseCaseType.values()).toList();
                 model.addAttribute("useCases", useCases);
-                return "/sign-up";
+                return "sign-up";
             } else if (service.isEmailTaken(signupViewModel.getEmail())) {
                 model.addAttribute("userTaken", "");
                 List<UserAccount.UseCaseType> useCases = Arrays.stream(UserAccount.UseCaseType.values()).toList();
                 model.addAttribute("useCases", useCases);
-                return "/sign-up";
+                return "sign-up";
             } else {
                 service.addUserAccount(signupViewModel.getEmail(),
                         signupViewModel.getUsername(),

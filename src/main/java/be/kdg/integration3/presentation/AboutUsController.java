@@ -1,6 +1,5 @@
 package be.kdg.integration3.presentation;
 
-import be.kdg.integration3.presentation.viewmodel.LoginViewModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -16,6 +15,6 @@ public class AboutUsController {
     @GetMapping
     public String getAboutUsView(Model model) {
         logger.info("Request for about us view!");
-        return "/about-us";
+        return "about-us";
     }
 }
