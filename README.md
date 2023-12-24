@@ -1,6 +1,7 @@
-**Teamname** = Int3-Team3 aka RoomSense
+# SpringProject
+## Teamname = Int3-Team3 aka RoomSense
 
-**Team members**:
+### Team members:
 
     - Abel Turlej
     - Roman Gordon
@@ -8,7 +9,17 @@
     - Boldi Olajos
     - Jasper Marichal
 
-**Installation and/or configuration instructions**
+### Spring Profiles:
+#### Database profiles:
+- test - This profile will create a local database with the credentials supplied in application-test.properties, this will remove any existing data from that database and override it
+- prod - This profile will use the database hosted on the KdG servers, using application-prod.properties
+
+#### Application profiles:
+- jdbcrepository - The main profile for the website
+- jsonrepository **DEPRICATED**
+    - The files: JsonDataRepository, SerialDataRepository and DashboardJSONService are all deprecated and no longer in use
+
+### Installation and/or configuration instructions
     
 1. Install device
 
@@ -68,7 +79,8 @@
 
 
 
-**Dependencies**: what libraries did you use and why
+### Dependencies: 
+what libraries did you use and why
 
     Library name: jSerialComm
     We use this library to access our wifi router without external libraries and while remaining platform-independent.
@@ -78,7 +90,7 @@
     We use this library for data visualisation in form of graphs. 
 
 
-**Documentation of the interface with other systems (Arduino,...)**
+### Documentation of the interface with other systems (Arduino,...)
 
 The protocols currently in use are telnet and serial.
 
