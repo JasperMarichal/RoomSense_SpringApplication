@@ -2,7 +2,6 @@
 ## Teamname = Int3-Team3 aka RoomSense
 
 ### Team members:
-
     - Abel Turlej
     - Roman Gordon
     - Anna Vorozhtsova
@@ -85,10 +84,10 @@
 What libraries did you use and why
 
     - Library name: jSerialComm
-    This library was used to connect to our arduino and read data when we were using serial and reading in the same project, it is now deprecated.
+This library was used to connect to our arduino and read data when we were using serial and reading in the same project, it is now deprecated.
 
     - Library name: Chart.js
-    We use this library for data visualisation in form of graphs. 
+We use this library for data visualisation in form of graphs. 
 
 
 ### Documentation of the interface with other systems (Arduino,...)
