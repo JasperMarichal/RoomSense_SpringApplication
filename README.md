@@ -78,4 +78,25 @@
     We use this library for data visualisation in form of graphs. 
 
 
-Documentation of the interface with other systems (Arduino,...)
+**Documentation of the interface with other systems (Arduino,...)**
+
+The protocols currently in use are telnet and serial.
+
+To transmit the data we have made a simple format, where each datapoint is sent as a new line:
+
+The first character indicates the type of data:
+'T' for temperature
+'H' for humidity
+'C' for CO2
+'S' for sound
+
+The following characters must be digits. All other characters are ignored (unless its a newline), the number of digits 
+may differ but should be at least 1 digit.
+When a newline ('\n') is received, we try to parse the data and add it to a queue to be saved to the database.
+
+Note that we do not use carriage returns ('\r') - they should be assumed to be there whenever a '\n' character is received.
+
+Also, the data format and our processing of it does not depend on any particular protocol - it only expects to receive chunks of bytes that are assumed to contain ASCII text in this format. 
+
+The Spring project has no direct connection to the Arduino - it communicates only with the database.
+The ReadingSerial project saves the Arduino data to the database, from which Spring reads it.
