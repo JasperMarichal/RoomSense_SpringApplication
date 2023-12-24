@@ -28,17 +28,17 @@
 ### Installation and/or configuration instructions
     
 1. Install device
-    1.1. Mount the device to a wall or a place you want
-    1.2. Connect the device to your computer to connect to the wifi network
-    1.3. Plug the device into a power outlet
-    1.4. Once the device is connected to the wifi network you will have wireless connectivity
+    1. Mount the device to a wall or a place you want
+    2. Connect the device to your computer to connect to the wifi network
+    3. Plug the device into a power outlet
+    4. Once the device is connected to the wifi network you will have wireless connectivity
 
 
 2. Connect to website
-    2.1. Make an account on the website to monitor your rooms
-    2.2. Add a room to your account
-    2.3. Connect to the device to the local WiFi network (for setup steps see “Configure Device WiFi Network”)
-    2.4. Start collecting data from your device
+    1. Make an account on the website to monitor your rooms
+    2. Add a room to your account
+    3. Connect to the device to the local WiFi network (for setup steps see “Configure Device WiFi Network”)
+    4. Start collecting data from your device
 
 
 3. What will be possible? 
