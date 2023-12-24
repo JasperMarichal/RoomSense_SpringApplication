@@ -99,4 +99,5 @@ Note that we do not use carriage returns ('\r') - they should be assumed to be t
 Also, the data format and our processing of it does not depend on any particular protocol - it only expects to receive chunks of bytes that are assumed to contain ASCII text in this format. 
 
 The Spring project has no direct connection to the Arduino - it communicates only with the database.
-The ReadingSerial project saves the Arduino data to the database, from which Spring reads it.
+The ReadingSerial project saves the Arduino data to the database, from which Spring reads it. It needs to run
+on the same network as the RoomSense device.
