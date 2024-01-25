@@ -10,9 +10,9 @@
 
 ### Other projects:
 - ReadingSerial project used for connecting to the arduino and saving data to the database:
-    - https://gitlab.com/kdg-ti/integration-2.1/23-24/group-3/readingserial
+    - https://github.com/JasperMarichal/RoomSense_ReadingSerial
 - Arduino, project that houses both the arduino application and the application for the ESP8266
-    - https://gitlab.com/kdg-ti/integration-2.1/23-24/group-3/arduino
+    - https://github.com/JasperMarichal/RoomSense_Arduino
 
 ### Spring Profiles:
 #### Database profiles:
